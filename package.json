@@ -1,0 +1,22 @@
+{
+  "name": "footyiq",
+  "version": "0.1.0",
+  "description": "Multi-service soccer analytics platform with custom xG ML model (StatsBomb data). Monorepo housing web frontend, Node/Express API, Python ML pipeline, and shared database layer.",
+  "private": true,
+  "workspaces": [
+    "apps/web",
+    "services/api",
+    "services/ml",
+    "packages/db"
+  ],
+  "scripts": {
+    "dev": "echo 'Run service-specific dev scripts from each workspace'",
+    "build": "echo 'Build all services'",
+    "test": "echo 'Test all services'"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "devDependencies": {}
+}

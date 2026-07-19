@@ -1,0 +1,119 @@
+# ============================================================================
+# FootyIQ Local Development Environment (docker-compose.yml)
+# ============================================================================
+# PURPOSE:
+#   Orchestrates local services needed for development:
+#   - PostgreSQL database (packages/db layer)
+#   - Node.js runtime (apps/web + services/api)
+#   - Python runtime (services/ml pipeline)
+#
+# ARCHITECTURE MAPPING:
+#   - db (PostgreSQL):    Stores normalized match, event, and xG model data
+#   - api (Node/Express): REST API gateway; calls ML service, queries DB
+#   - web (React/Next):   Frontend; calls API endpoints
+#   - ml (Python):        xG model training & inference; writes predictions to DB
+#
+# USAGE:
+#   docker-compose up        # Start all services
+#   docker-compose down      # Stop all services
+# ============================================================================
+
+version: '3.8'
+
+services:
+  # ========================================================================
+  # PostgreSQL Database Service
+  # ========================================================================
+  # Used by: services/api, services/ml
+  # Stores: Match metadata, event logs, xG predictions, model artifacts
+  db:
+    image: postgres:15-alpine
+    container_name: footyiq_db
+    environment:
+      POSTGRES_USER: footyiq_user
+      POSTGRES_PASSWORD: footyiq_pass
+      POSTGRES_DB: footyiq_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      # Persist PostgreSQL data across container restarts
+      - footyiq_db_volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U footyiq_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ========================================================================
+  # Node.js API Service
+  # ========================================================================
+  # Location: services/api
+  # Exposes: REST endpoints for frontend; orchestrates DB queries & ML calls
+  # Note: Currently a placeholder. Full setup in Phase 1.
+  api:
+    build:
+      context: ./services/api
+      dockerfile: Dockerfile
+    container_name: footyiq_api
+    ports:
+      - "4000:4000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://footyiq_user:footyiq_pass@db:5432/footyiq_dev
+      NODE_ENV: development
+    volumes:
+      # Hot-reload source code during development
+      - ./services/api:/app/services/api
+    command: npm run dev
+
+  # ========================================================================
+  # Python ML Service
+  # ========================================================================
+  # Location: services/ml
+  # Responsibility: Train xG model on StatsBomb data; run inference; log results
+  # Note: Currently a placeholder. Full setup in Phase 1.
+  ml:
+    build:
+      context: ./services/ml
+      dockerfile: Dockerfile
+    container_name: footyiq_ml
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://footyiq_user:footyiq_pass@db:5432/footyiq_dev
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      # Mount ML code and data directories for iteration
+      - ./services/ml:/app/services/ml
+      - ./data:/app/data
+
+  # ========================================================================
+  # Next.js Web Frontend
+  # ========================================================================
+  # Location: apps/web
+  # Exposes: Frontend UI on port 3000; calls API on port 4000
+  # Note: Currently a placeholder. Full setup in Phase 1.
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: footyiq_web
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+      NODE_ENV: development
+    volumes:
+      # Hot-reload Next.js during development
+      - ./apps/web:/app/apps/web
+
+volumes:
+  footyiq_db_volume:
+    driver: local
