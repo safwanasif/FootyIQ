@@ -1,0 +1,62 @@
+# ============================================================================
+# FootyIQ ML Service – Python Dependencies
+# ============================================================================
+# PURPOSE:
+#   Isolated Python environment for the xG (expected goals) model pipeline.
+#   Includes data processing, ML training, model inference, and API serving.
+#
+# ACTIVATION:
+#   Inside services/ml folder: pip install -r requirements.txt
+# ============================================================================
+
+# ============================================================================
+# WEB FRAMEWORK & SERVER
+# ============================================================================
+# FastAPI: Modern, fast HTTP framework for building REST APIs in Python
+#   - Used for exposing xG model inference endpoints
+#   - Automatic OpenAPI/Swagger documentation
+fastapi
+
+# Uvicorn: ASGI server for running FastAPI applications
+#   - Lightweight, production-ready server for async Python web services
+#   - Will serve the ML inference API on port 5000
+uvicorn
+
+# ============================================================================
+# DATA PROCESSING & ANALYSIS
+# ============================================================================
+# Pandas: Data manipulation and analysis library
+#   - Used for ETL (extract, transform, load) of StatsBomb event data
+#   - Structures raw JSON shot events into tabular format for feature engineering
+#   - Handles data cleaning, filtering, and aggregation
+pandas>=2.2.0
+
+# StatsBombPy: Official Python SDK for StatsBomb open data
+#   - Downloads match and event data directly from StatsBomb's open repository
+#   - Automatically parses and structures soccer event JSON
+#   - Core data source for training xG model
+statsbombpy
+
+# ============================================================================
+# MACHINE LEARNING & MODEL TRAINING
+# ============================================================================
+# Scikit-Learn: Classic ML library with tree-based models
+#   - Used for initial xG model training (Random Forest, Gradient Boosting)
+#   - Feature scaling, train/test splitting, model evaluation metrics
+#   - Fast baseline model for shot outcome prediction
+scikit-learn>=1.4.0
+
+# PyTorch: Deep learning framework (optional, for future neural network xG)
+#   - Enables future expansion to neural network-based xG models
+#   - GPU acceleration for training large models
+#   - Currently included for forward compatibility; basic setup only
+torch
+
+# ============================================================================
+# FUTURE ADDITIONS (Phase 2+)
+# ============================================================================
+# numpy          – Numerical computing (implicit in pandas/sklearn)
+# sqlalchemy     – ORM for database interactions (Phase 2)
+# pydantic       – Data validation for FastAPI (Phase 2)
+# pytest         – Unit testing framework (Phase 2)
+# matplotlib     – Visualization for model analysis (Phase 2)
