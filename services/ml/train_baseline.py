@@ -22,6 +22,7 @@ DEPENDENCIES:
 ============================================================================
 """
 
+import joblib
 import sys
 import logging
 from pathlib import Path
@@ -47,6 +48,8 @@ logger = logging.getLogger("footyiq_train")
 # ============================================================================
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_PATH = SCRIPT_DIR / "data" / "world_cup_shots.csv"
+ARTIFACTS_DIR = SCRIPT_DIR / "artifacts"
+MODEL_ARTIFACT_PATH = ARTIFACTS_DIR / "baseline_xg.pkl"
 
 FEATURE_COLUMNS = ["distance_to_goal", "shot_angle"]
 TARGET_COLUMN = "is_goal"
@@ -193,6 +196,20 @@ def train_and_evaluate(df: pd.DataFrame) -> None:
         "  Interpretation: negative distance coef = farther shots score less; "
         "positive angle coef = wider angle scores more."
     )
+
+    # ------------------------------------------------------------------------
+    # SERIALIZE: Persist the trained model to disk for standalone inference.
+    # This decouples training (this script) from inference (predict.py) —
+    # predict.py never touches the training CSV, only this artifact.
+    # ------------------------------------------------------------------------
+    ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
+    joblib.dump(final_model, MODEL_ARTIFACT_PATH)
+    logger.info("=" * 72)
+    logger.info(f"MODEL ARTIFACT SAVED: {MODEL_ARTIFACT_PATH}")
+    logger.info(f"  Feature order expected at inference: {FEATURE_COLUMNS}")
+    logger.info("=" * 72)
+
+
 
 
 # ============================================================================
