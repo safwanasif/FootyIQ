@@ -1,0 +1,37 @@
+# ============================================================================
+# FootyIQ ML Service – Docker Build Context Exclusions (.dockerignore)
+# ============================================================================
+# PURPOSE:
+#   Prevents local environment artifacts and secrets from being copied into
+#   the Docker build context, keeping the image small and reproducible.
+# ============================================================================
+
+# Local Python virtual environment (never needed inside the container —
+# the container installs its own dependencies via requirements.txt)
+venv/
+
+# Compiled Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Git metadata (irrelevant inside the image, bloats build context)
+.git/
+.gitignore
+
+# Environment variable files (secrets should be injected at runtime,
+# never baked into the image)
+.env
+.env.local
+
+# IDE / editor configs
+.vscode/
+.idea/
+
+# Raw training data (not needed for inference-only container; ETL output
+# stays local, only the trained artifact ships)
+data/
+
+# OS-specific files
+.DS_Store
+Thumbs.db

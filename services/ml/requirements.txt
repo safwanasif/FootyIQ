@@ -1,62 +1,45 @@
 # ============================================================================
-# FootyIQ ML Service – Python Dependencies
+# FootyIQ ML Service – Container Runtime Dependencies (requirements.txt)
 # ============================================================================
 # PURPOSE:
-#   Isolated Python environment for the xG (expected goals) model pipeline.
-#   Includes data processing, ML training, model inference, and API serving.
+#   Minimal dependency set required to RUN the inference API (app.py) inside
+#   the Docker container. This intentionally excludes ETL/training-only
+#   libraries (statsbombpy, torch) to keep the production image lean —
+#   the container only serves predictions from a pre-trained artifact,
+#   it never trains or extracts data.
 #
-# ACTIVATION:
-#   Inside services/ml folder: pip install -r requirements.txt
+# NOTE FOR LOCAL DEV:
+#   If you re-run etl.py or train_baseline.py locally against this trimmed
+#   file, statsbombpy/torch will be missing. Reinstall them ad hoc for local
+#   training work, or maintain a separate requirements-dev.txt going forward.
 # ============================================================================
 
 # ============================================================================
 # WEB FRAMEWORK & SERVER
 # ============================================================================
-# FastAPI: Modern, fast HTTP framework for building REST APIs in Python
-#   - Used for exposing xG model inference endpoints
-#   - Automatic OpenAPI/Swagger documentation
-fastapi
+# FastAPI: Serves the /health and /api/v1/predict endpoints
+fastapi>=0.110.0
 
-# Uvicorn: ASGI server for running FastAPI applications
-#   - Lightweight, production-ready server for async Python web services
-#   - Will serve the ML inference API on port 5000
-uvicorn
+# Uvicorn: ASGI server that runs the FastAPI app inside the container
+uvicorn>=0.28.0
 
-# ============================================================================
-# DATA PROCESSING & ANALYSIS
-# ============================================================================
-# Pandas: Data manipulation and analysis library
-#   - Used for ETL (extract, transform, load) of StatsBomb event data
-#   - Structures raw JSON shot events into tabular format for feature engineering
-#   - Handles data cleaning, filtering, and aggregation
-pandas>=2.2.0
-
-# StatsBombPy: Official Python SDK for StatsBomb open data
-#   - Downloads match and event data directly from StatsBomb's open repository
-#   - Automatically parses and structures soccer event JSON
-#   - Core data source for training xG model
-statsbombpy
+# Pydantic: Request/response validation (ShotInput, XGResponse schemas)
+pydantic>=2.6.0
 
 # ============================================================================
-# MACHINE LEARNING & MODEL TRAINING
+# MODEL LOADING & INFERENCE
 # ============================================================================
-# Scikit-Learn: Classic ML library with tree-based models
-#   - Used for initial xG model training (Random Forest, Gradient Boosting)
-#   - Feature scaling, train/test splitting, model evaluation metrics
-#   - Fast baseline model for shot outcome prediction
+# Joblib: Deserializes the trained model from artifacts/baseline_xg.pkl
+joblib>=1.3.0
+
+# Scikit-Learn: Required to unpickle and run .predict_proba() on the
+# LogisticRegression object saved by train_baseline.py
 scikit-learn>=1.4.0
 
-# PyTorch: Deep learning framework (optional, for future neural network xG)
-#   - Enables future expansion to neural network-based xG models
-#   - GPU acceleration for training large models
-#   - Currently included for forward compatibility; basic setup only
-torch
+# NumPy: Constructs the feature array passed into predict_proba()
+numpy>=1.26.0
 
-# ============================================================================
-# FUTURE ADDITIONS (Phase 2+)
-# ============================================================================
-# numpy          – Numerical computing (implicit in pandas/sklearn)
-# sqlalchemy     – ORM for database interactions (Phase 2)
-# pydantic       – Data validation for FastAPI (Phase 2)
-# pytest         – Unit testing framework (Phase 2)
-# matplotlib     – Visualization for model analysis (Phase 2)
+# Pandas: Not called directly by app.py, but included as a scikit-learn/
+# joblib transitive dependency safeguard for pickle compatibility across
+# environments
+pandas>=2.2.0
