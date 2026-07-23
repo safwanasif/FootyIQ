@@ -2,20 +2,29 @@
 # FootyIQ Local Development Environment (docker-compose.yml)
 # ============================================================================
 # PURPOSE:
-#   Orchestrates local services needed for development:
-#   - PostgreSQL database (packages/db layer)
-#   - Node.js runtime (apps/web + services/api)
-#   - Python runtime (services/ml pipeline)
+#   Orchestrates the full backend ecosystem — PostgreSQL, Python ML service,
+#   and the Node/Express API gateway — onto a single virtual bridge network.
+#
+# CONTAINER DNS (architecture note):
+#   All three services attach to the `footyiq-net` bridge network. Docker's
+#   embedded DNS server resolves each service's NAME (db, ml, api) to that
+#   container's internal IP on this network automatically. This is why the
+#   `api` service's ML_SERVICE_URL is set to `http://ml:5000` instead of
+#   `http://localhost:5000` — "ml" is the hostname Docker resolves to the
+#   ml container, NOT a port on api's own container. localhost inside a
+#   container refers to that container itself, so this distinction matters:
+#   using localhost here would make api try to call itself and fail.
 #
 # ARCHITECTURE MAPPING:
-#   - db (PostgreSQL):    Stores normalized match, event, and xG model data
-#   - api (Node/Express): REST API gateway; calls ML service, queries DB
-#   - web (React/Next):   Frontend; calls API endpoints
-#   - ml (Python):        xG model training & inference; writes predictions to DB
+#   - db (PostgreSQL):    Stores match, event, and xG model data
+#   - ml (Python/FastAPI): Serves xG predictions from the trained model
+#   - api (Node/Express):  Gateway; validates requests, proxies to ml
 #
 # USAGE:
-#   docker-compose up        # Start all services
-#   docker-compose down      # Stop all services
+#   docker compose up --build -d     # Build images and start all services
+#   docker compose ps                # Check container status
+#   docker compose logs -f api       # Tail logs for a specific service
+#   docker compose down              # Stop and remove all containers
 # ============================================================================
 
 version: '3.8'
@@ -24,56 +33,29 @@ services:
   # ========================================================================
   # PostgreSQL Database Service
   # ========================================================================
-  # Used by: services/api, services/ml
-  # Stores: Match metadata, event logs, xG predictions, model artifacts
   db:
     image: postgres:15-alpine
     container_name: footyiq_db
     environment:
       POSTGRES_USER: footyiq_user
       POSTGRES_PASSWORD: footyiq_pass
-      POSTGRES_DB: footyiq_dev
+      POSTGRES_DB: footyiq
     ports:
       - "5432:5432"
     volumes:
-      # Persist PostgreSQL data across container restarts
-      - footyiq_db_volume:/var/lib/postgresql/data
+      # Named volume persists data across container restarts/rebuilds
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U footyiq_user"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - footyiq-net
 
   # ========================================================================
-  # Node.js API Service
+  # Python ML Inference Service
   # ========================================================================
-  # Location: services/api
-  # Exposes: REST endpoints for frontend; orchestrates DB queries & ML calls
-  # Note: Currently a placeholder. Full setup in Phase 1.
-  api:
-    build:
-      context: ./services/api
-      dockerfile: Dockerfile
-    container_name: footyiq_api
-    ports:
-      - "4000:4000"
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      DATABASE_URL: postgres://footyiq_user:footyiq_pass@db:5432/footyiq_dev
-      NODE_ENV: development
-    volumes:
-      # Hot-reload source code during development
-      - ./services/api:/app/services/api
-    command: npm run dev
-
-  # ========================================================================
-  # Python ML Service
-  # ========================================================================
-  # Location: services/ml
-  # Responsibility: Train xG model on StatsBomb data; run inference; log results
-  # Note: Currently a placeholder. Full setup in Phase 1.
   ml:
     build:
       context: ./services/ml
@@ -82,38 +64,47 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      DATABASE_URL: postgres://footyiq_user:footyiq_pass@db:5432/footyiq_dev
-      PYTHONUNBUFFERED: "1"
-    volumes:
-      # Mount ML code and data directories for iteration
-      - ./services/ml:/app/services/ml
-      - ./data:/app/data
+      - db
+    networks:
+      - footyiq-net
 
   # ========================================================================
-  # Next.js Web Frontend
+  # Node.js / TypeScript API Gateway
   # ========================================================================
-  # Location: apps/web
-  # Exposes: Frontend UI on port 3000; calls API on port 4000
-  # Note: Currently a placeholder. Full setup in Phase 1.
-  web:
+  api:
     build:
-      context: ./apps/web
+      context: ./services/api
       dockerfile: Dockerfile
-    container_name: footyiq_web
+    container_name: footyiq_api
     ports:
-      - "3000:3000"
-    depends_on:
-      - api
+      - "3001:3001"
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:4000
-      NODE_ENV: development
-    volumes:
-      # Hot-reload Next.js during development
-      - ./apps/web:/app/apps/web
+      # Resolved via Docker's internal DNS — "ml" is the service name
+      # above, not a literal hostname. See CONTAINER DNS note at top.
+      ML_SERVICE_URL: http://ml:5000
+      PORT: 3001
+      NODE_ENV: production
+    depends_on:
+      - ml
+      - db
+    networks:
+      - footyiq-net
 
+# ============================================================================
+# TOP-LEVEL NETWORK DEFINITION
+# ============================================================================
+# footyiq-net: custom bridge network. Docker Compose's default bridge
+# network already provides DNS resolution between services, but declaring
+# a named network explicitly documents the shared backend boundary and
+# keeps this project's containers isolated from other Docker projects
+# running on the same host.
+networks:
+  footyiq-net:
+    driver: bridge
+
+# ============================================================================
+# TOP-LEVEL VOLUME DEFINITION
+# ============================================================================
 volumes:
-  footyiq_db_volume:
+  pgdata:
     driver: local

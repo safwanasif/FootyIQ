@@ -1,0 +1,36 @@
+# ============================================================================
+# FootyIQ API Gateway — Docker Build Context Exclusions (.dockerignore)
+# ============================================================================
+# PURPOSE:
+#   Prevents local dev artifacts, secrets, and bloat from entering the
+#   Docker build context. Both build stages install their own node_modules
+#   fresh via npm ci — the local one must never be copied in.
+# ============================================================================
+
+# Local node_modules (each Docker stage installs its own via npm ci)
+node_modules/
+
+# Local compiled output (the Builder stage regenerates dist/ from source —
+# a stale local copy could mask a broken build)
+dist/
+
+# Environment variables / secrets — injected at container runtime via
+# docker-compose environment: block, never baked into the image
+.env
+.env.local
+
+# Git metadata
+.git/
+.gitignore
+
+# IDE / editor configs
+.vscode/
+.idea/
+
+# Test logs / artifacts
+*.log
+coverage/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
