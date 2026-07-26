@@ -1,0 +1,112 @@
+/**
+ * ============================================================================
+ * FootyIQ Web — API Gateway Client (lib/api.ts)
+ * ============================================================================
+ * PURPOSE:
+ *   Single point of contact between the frontend and services/api (Express
+ *   Gateway). Enforces the Gateway Pattern — this file is the ONLY place
+ *   fetch() targets the backend; components never construct URLs directly.
+ *
+ * ERROR MODEL:
+ *   All failures — network unreachable, non-2xx responses, malformed JSON —
+ *   are normalized into ApiError so calling components handle one shape,
+ *   not three different failure modes.
+ * ============================================================================
+ */
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
+if (!process.env.NEXT_PUBLIC_API_URL) {
+  // Loud warning rather than a silent fallback — catches a missing
+  // .env.local immediately instead of mysterious runtime fetch failures.
+  console.warn(
+    "NEXT_PUBLIC_API_URL is not set — falling back to http://localhost:3001."
+  );
+}
+
+// ----------------------------------------------------------------------------
+// RESPONSE SHAPES (mirrors services/api's XGResponse / health payload)
+// ----------------------------------------------------------------------------
+export interface PredictionResponse {
+  xg_probability: number;
+  distance_yards: number;
+  interpretation: string;
+}
+
+export interface HealthResponse {
+  status: string;
+  service: string;
+}
+
+// ----------------------------------------------------------------------------
+// NORMALIZED ERROR TYPE
+// ----------------------------------------------------------------------------
+export class ApiError extends Error {
+  public readonly status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
+/**
+ * GET /health — pings the Express Gateway. Used for the nav bar's live
+ * system status indicator. Never throws for a "down" gateway in a way that
+ * crashes the caller — callers catch ApiError and render an offline state.
+ */
+export async function checkHealth(signal?: AbortSignal): Promise<HealthResponse> {
+  try {
+    const res = await fetch(`${BASE_URL}/health`, { cache: "no-store", signal });
+    if (!res.ok) {
+      throw new ApiError(`Gateway health check returned ${res.status}`, res.status);
+    }
+    return await res.json();
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
+    // fetch() throws a generic TypeError on network failure (offline
+    // container, DNS failure, refused connection) — normalize it to 503.
+    throw new ApiError("Gateway unreachable", 503);
+  }
+}
+
+/**
+ * POST /api/v1/predict-proxy — the core xG inference call.
+ *
+ * @param distanceMeters - shot distance to goal, in meters
+ * @param angleDegrees   - shot angle subtended by the goalposts, in degrees
+ */
+export async function getXgPrediction(
+  distanceMeters: number,
+  angleDegrees: number,
+  signal?: AbortSignal
+): Promise<PredictionResponse> {
+  try {
+    const res = await fetch(`${BASE_URL}/api/v1/predict-proxy`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        distance_meters: distanceMeters,
+        angle_degrees: angleDegrees,
+      }),
+      signal,
+    });
+
+    if (!res.ok) {
+      // Attempt to surface the Gateway's structured error message
+      // (Zod validation details or the 502/503 relay from ml.client.ts).
+      const body = await res.json().catch(() => ({}));
+      throw new ApiError(
+        body?.message || body?.error || `Prediction request failed (${res.status})`,
+        res.status
+      );
+    }
+
+    return await res.json();
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
+    if (err instanceof DOMException && err.name === "AbortError") throw err;
+    throw new ApiError("Unable to reach the FootyIQ API Gateway.", 503);
+  }
+}

@@ -1,0 +1,22 @@
+/* ============================================================================
+   FootyIQ Web — Global Styles + Theme Config (globals.css)
+   ============================================================================
+   PURPOSE:
+     Tailwind v4 config-in-CSS pattern. The @theme block replaces what used
+     to live in tailwind.config.ts's theme.extend — custom font stacks,
+     custom shadows, etc. are declared here as CSS custom properties that
+     Tailwind auto-generates utility classes from.
+   ============================================================================ */
+@import "tailwindcss";
+
+@theme {
+  /* Monospaced data-readout font stack — generates font-mono utility */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Emerald glow shadow for high-value xG badges — generates shadow-emerald-glow */
+  --shadow-emerald-glow: 0 0 24px 2px rgba(16, 185, 129, 0.35);
+}
+
+body {
+  @apply bg-zinc-950 text-zinc-100 antialiased;
+}
