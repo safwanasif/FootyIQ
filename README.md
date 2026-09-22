@@ -65,12 +65,23 @@ Saved-shot coordinates use the attacking half of a 120 × 80 pitch (`60 ≤ x �
 
 ## Model scope
 
-The baseline uses distance to goal and the angle between the goalposts. The existing training pipeline uses match-grouped cross-validation and reports log loss, ROC-AUC, and Brier score. No verified evaluation results are published yet. The serialized baseline model is included so local inference can start without retraining.
+The baseline uses distance to goal and the angle between the goalposts. Evaluation on the local dataset of **3,770 shots from 147 matches**, using five folds grouped by match, produced **0.2697 log loss**, **0.0761 Brier score**, and **0.7581 ROC-AUC**. The training-fold goal-rate comparator scored 0.3092 log loss and 0.0842 Brier score. These are out-of-fold scores for the training procedure, not a separate external test of the serving artifact.
 
-This is a geometry-only baseline. It omits goalkeeper and defender positions, shot technique, body part, and game context. Quality labels in the UI are illustrative probability buckets. The model treats StatsBomb coordinate units as yards and converts API meters accordingly. Accuracy and calibration need to be assessed on the source dataset before making performance claims.
+See [the evaluation report](services/ml/reports/evaluation.md) for calibration, limitations, dataset fingerprint, and exact fold membership in the companion JSON. The 20–30% prediction bin averaged 24.01% predicted probability versus 17.63% observed goals; higher-probability bins have few examples. The serialized baseline model is included so local inference can start without retraining.
+
+With the existing ML environment, reproduce the report without changing the serving model:
+
+```powershell
+.\services\ml\venv\Scripts\python.exe -m unittest discover -s services/ml -p test_evaluate.py
+.\services\ml\venv\Scripts\python.exe services/ml/evaluate.py
+```
+
+For a fresh environment, create a Python 3.12+ virtual environment at `services/ml/venv` and install `services/ml/requirements.txt`. Evaluation requires the local `services/ml/data/world_cup_shots.csv`, which is not committed. The dataset SHA-256 in the report identifies the evaluated snapshot; regenerating with `etl.py` additionally requires `statsbombpy` and may retrieve changed upstream data. CI tests the evaluation logic using synthetic fixtures, rather than publishing scores from synthetic data.
+
+This is a geometry-only baseline. It omits goalkeeper and defender positions, shot technique, body part, and game context. Quality labels in the UI are illustrative probability buckets. The model treats StatsBomb coordinate units as yards and converts API meters accordingly. External validation on other competitions or future seasons is still needed before making broader performance claims.
 
 ## Current scope and next milestones
 
 This version is a local, single-user demo with one shared shot history and no account isolation. Compose credentials are local development defaults. Public deployment still needs a deliberate access model, deployment secrets, request limits, and production configuration.
 
-Next: publish reproducible model evaluation and calibration results, prepare the production deployment, and record a short end-to-end demo.
+Next: prepare access controls and production deployment configuration, then record a short end-to-end demo.
