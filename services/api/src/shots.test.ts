@@ -20,14 +20,14 @@ test("shot API validates, saves, paginates, deduplicates retries and handles fai
   let mlFailed = false;
   let calls = 0;
   const store: ShotStore = {
-    async find(id) { if (dbFailed) throw new Error("private DB detail"); return rows.get(id); },
-    async save(shot) {
+    async find(collectionId, id) { if (dbFailed) throw new Error("private DB detail"); return rows.get(`${collectionId}:${id}`); },
+    async save(collectionId, shot) {
       if (dbFailed) throw new Error("private DB detail");
-      const saved = rows.get(shot.id) ?? { ...shot, created_at: new Date().toISOString() };
-      rows.set(shot.id, saved);
+      const saved = rows.get(`${collectionId}:${shot.id}`) ?? { ...shot, created_at: new Date().toISOString() };
+      rows.set(`${collectionId}:${shot.id}`, saved);
       return saved;
     },
-    async list(limit, offset) { if (dbFailed) throw new Error("private DB detail"); return [...rows.values()].reverse().slice(offset, offset + limit); },
+    async list(collectionId, limit, offset) { if (dbFailed) throw new Error("private DB detail"); return [...rows.entries()].filter(([key]) => key.startsWith(`${collectionId}:`)).map(([, row]) => row).reverse().slice(offset, offset + limit); },
   };
   const app = express();
   app.use(express.json());
@@ -43,7 +43,10 @@ test("shot API validates, saves, paginates, deduplicates retries and handles fai
   const address = server.address();
   assert.ok(address && typeof address !== "string");
   const base = `http://127.0.0.1:${address.port}`;
+  const cookie = `footyiq_collection=${"a".repeat(64)}`;
+  const fetch = (url: string, options?: RequestInit) => globalThis.fetch(url, { ...options, headers: { Cookie: cookie, ...(options?.headers as Record<string, string>) } });
   const post = (body: unknown) => fetch(`${base}/shots`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  assert.equal((await globalThis.fetch(`${base}/shots`)).status, 401);
   assert.deepEqual(await (await fetch(`${base}/shots`)).json(), { shots: [], has_more: false });
   for (const invalid of [{}, { id: randomUUID(), x: 120, y: 40 }, { id: randomUUID(), x: 108, y: -1 }, { id: randomUUID(), x: "108", y: 40 }, { id: randomUUID(), x: 108, y: 40, xg_probability: 1 }]) {
     assert.equal((await post(invalid)).status, 422);
@@ -56,6 +59,10 @@ test("shot API validates, saves, paginates, deduplicates retries and handles fai
   assert.equal(saved.distance_yards, 12);
   assert.equal(saved.xg_probability, 0.142);
   assert.equal((await post(shot)).status, 200);
+  const stranger = await globalThis.fetch(`${base}/shots`, { headers: { Cookie: `footyiq_collection=${"b".repeat(64)}` } });
+  assert.deepEqual(await stranger.json(), { shots: [], has_more: false });
+  const strangerExport = await globalThis.fetch(`${base}/shots/export`, { headers: { Cookie: `footyiq_collection=${"b".repeat(64)}` } });
+  assert.ok(!(await strangerExport.text()).includes(shot.id));
   assert.equal(rows.size, 1);
   assert.equal(calls, 1);
   assert.equal((await post({ ...shot, y: 41 })).status, 409);

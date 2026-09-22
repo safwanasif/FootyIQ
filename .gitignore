@@ -131,3 +131,7 @@ services/ml/artifacts/*.pkl
 
 # TypeScript build cache
 *.tsbuildinfo
+
+# Browser regression outputs
+playwright-report/
+test-results/

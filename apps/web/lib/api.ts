@@ -16,6 +16,19 @@
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
+let collectionRequest: Promise<{ collection_id: string }> | null = null;
+function openCollection() {
+  if (!collectionRequest) {
+    collectionRequest = fetch(`${BASE_URL}/api/v1/session`, {
+      credentials: "include", cache: "no-store", signal: AbortSignal.timeout(10000),
+    }).then(async (response) => {
+      if (!response.ok) throw new ApiError("Unable to open your browser collection.", response.status);
+      return response.json() as Promise<{ collection_id: string }>;
+    }).catch((error) => { collectionRequest = null; throw error; });
+  }
+  return collectionRequest;
+}
+
 if (!process.env.NEXT_PUBLIC_API_URL) {
   // Loud warning rather than a silent fallback — catches a missing
   // .env.local immediately instead of mysterious runtime fetch failures.
@@ -121,10 +134,17 @@ export interface SavedShot extends PredictionResponse {
 
 async function shotRequest<T>(path: string, options?: RequestInit): Promise<T> {
   try {
-    const res = await fetch(`${BASE_URL}/api/v1/shots${path}`, {
-      ...options, cache: "no-store",
+    await openCollection();
+    const request = () => fetch(`${BASE_URL}/api/v1/shots${path}`, {
+      ...options, credentials: "include", cache: "no-store",
       signal: options?.signal ?? AbortSignal.timeout(15000),
     });
+    let res = await request();
+    if (res.status === 401) {
+      collectionRequest = null;
+      await openCollection();
+      res = await request();
+    }
     const body = await res.json();
     if (!res.ok) throw new ApiError(body.error || "Shot request failed", res.status);
     return body;
@@ -134,8 +154,9 @@ async function shotRequest<T>(path: string, options?: RequestInit): Promise<T> {
   }
 }
 
-export function listShots(offset: number, signal?: AbortSignal) {
-  return shotRequest<{ shots: SavedShot[]; has_more: boolean }>(`?limit=10&offset=${offset}`, { signal });
+export async function listShots(offset: number, signal?: AbortSignal) {
+  const result = await shotRequest<{ shots: SavedShot[]; has_more: boolean }>(`?limit=10&offset=${offset}`, { signal });
+  return { ...result, collection_id: (await openCollection()).collection_id };
 }
 
 export function shotExportUrl(offset: number) {

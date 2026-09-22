@@ -19,6 +19,7 @@ export default function ShotHistory({ shot, canSave, onSelect }: {
   const [saveFailed, setSaveFailed] = useState(false);
   const [savedPosition, setSavedPosition] = useState("");
   const [revision, setRevision] = useState(0);
+  const [collectionId, setCollectionId] = useState("");
   const pending = useRef<{ id: string; x: number; y: number } | null>(null);
   const saveLock = useRef(false);
   const positionKey = `${shot.x},${shot.y}`;
@@ -30,6 +31,7 @@ export default function ShotHistory({ shot, canSave, onSelect }: {
         if (controller.signal.aborted) return;
         setRows(result.shots);
         setHasMore(result.has_more);
+        setCollectionId(result.collection_id);
         setError("");
       })
       .catch((err: Error) => { if (!controller.signal.aborted) setError(err.message); })
@@ -64,7 +66,7 @@ export default function ShotHistory({ shot, canSave, onSelect }: {
 
   return (
     <section className="history-section" aria-labelledby="history-title">
-      <div className="section-heading"><div><p className="eyebrow">03 / Collect</p><h2 id="history-title">Your shot collection</h2><p>Keep interesting chances. Come back with a different perspective.</p></div><button className="button primary" disabled={!canSave || saving || savedPosition === positionKey} onClick={save}>{savedPosition === positionKey ? <Check size={16} /> : <Bookmark size={16} />}{saving ? "Saving…" : savedPosition === positionKey ? "Shot saved" : "Save current shot"}</button></div>
+      <div className="section-heading"><div><p className="eyebrow">03 / Collect</p><h2 id="history-title">Your shot collection</h2><p>Saved for this browser. No account needed.</p></div><button className="button primary" disabled={!canSave || saving || savedPosition === positionKey} onClick={save}>{savedPosition === positionKey ? <Check size={16} /> : <Bookmark size={16} />}{saving ? "Saving…" : savedPosition === positionKey ? "Shot saved" : "Save current shot"}</button></div>
       {message && <p role={saveFailed ? "alert" : "status"} className={saveFailed ? "save-message failed" : "save-message"}>{message}</p>}
       <div className="history-card" aria-busy={loading}>
         <div className="collection-toolbar"><span>{loading ? "Loading collection…" : error ? "Connection interrupted" : `${rows.length} ${rows.length === 1 ? "chance" : "chances"} on this page`}</span><div><button className="icon-button" disabled={loading} onClick={() => refresh(0)} aria-label="Refresh collection"><RefreshCw size={16} /></button><a className="text-button export-button" href={shotExportUrl(offset)} aria-disabled={loading || !!error || rows.length === 0} onClick={(event) => { if (loading || !!error || rows.length === 0) event.preventDefault(); }}><Download size={15} />Export page</a></div></div>
@@ -74,6 +76,7 @@ export default function ShotHistory({ shot, canSave, onSelect }: {
         </>}
         <div className="collection-footer"><span>Page {offset / 10 + 1} <span className="muted">· Newest first</span></span><div><button className="icon-button" disabled={loading || offset === 0} onClick={() => refresh(Math.max(0, offset - 10))} aria-label="Newer shots"><ChevronLeft size={18} /></button><button className="icon-button" disabled={loading || !!error || !hasMore} onClick={() => refresh(offset + 10)} aria-label="Older shots"><ChevronRight size={18} /></button></div></div>
       </div>
+      <details className="collection-details"><summary>About your browser collection</summary><p>A private cookie keeps your shots separate from other visitors. Clearing site cookies, letting the cookie expire, or changing browsers starts a new collection. The cookie lasts up to one year and renews when you return. Export your shots to keep a copy.</p>{collectionId && <><p>Your collection ID is used only for local imports of older shots. It cannot be used to sign in.</p><code>{collectionId}</code></>}</details>
     </section>
   );
 }

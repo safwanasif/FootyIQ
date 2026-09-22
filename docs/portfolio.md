@@ -18,7 +18,7 @@ Use the claims that match what you can explain and demonstrate:
 - Evaluated a distance-and-angle logistic regression on 3,770 shots across 147 matches using grouped cross-validation, achieving 0.758 ROC-AUC and a 9.7% lower Brier score than a training-fold goal-rate baseline.
 - Added idempotent saves, transactional schema migrations, database readiness checks, API failure tests, and GitHub Actions checks; verified PostgreSQL persistence and the browser save/revisit workflow.
 
-The performance numbers describe cross-validation of the training procedure on the local dataset. Do not describe them as production accuracy, an external benchmark, or proof of generalization to every competition. The app is currently a local single-user demo; do not claim public deployment, authentication, or multi-user isolation until those exist.
+The performance numbers describe cross-validation of the training procedure on the local dataset. Do not describe them as production accuracy, an external benchmark, or proof of generalization to every competition. The app currently separates anonymous browser collections with private cookies; do not describe that as user accounts, cross-device recovery, or public deployment.
 
 ## Engineering decisions worth discussing
 
@@ -31,7 +31,7 @@ The performance numbers describe cross-validation of the training procedure on t
 
 ## Remaining release work
 
-- Choose and implement an access model for a public demo, including who can save and view shots.
+- Review anonymous collection behavior for the public demo, including cookie retention and the lack of account recovery.
 - Configure production secrets, request limits, HTTPS, database backups, and service monitoring.
 - Deploy and test a clean installation and full workflow on the public URL.
 - Record the demo and add the public URL and screenshots to the README and resume.

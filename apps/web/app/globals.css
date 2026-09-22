@@ -118,6 +118,10 @@ h2 { font-size: 22px; letter-spacing: -.5px; font-weight: 500; margin: 0; }
 .mobile-history { display: none; }
 .save-message { font-size: 12px; color: var(--accent); margin: -6px 0 14px; }
 .save-message.failed { color: #f1b5a9; }
+.collection-details { margin-top: 15px; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.collection-details summary { cursor: pointer; }
+.collection-details p { margin: 10px 0; max-width: 650px; }
+.collection-details code { display: block; overflow-wrap: anywhere; color: var(--text); }
 .model-section { display: grid; grid-template-columns: 1fr 1.4fr; gap: 70px; padding: 52px 0; margin-top: 45px; border-top: 1px solid var(--line); }
 .model-intro h2 { font-size: 32px; line-height: 1.18; letter-spacing: -1px; }
 .model-intro > p:not(.eyebrow) { color: var(--muted); font-size: 12px; line-height: 1.8; max-width: 330px; margin: 18px 0; }

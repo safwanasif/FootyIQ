@@ -25,3 +25,45 @@ jobs:
           cache-dependency-path: services/ml/requirements.txt
       - run: python -m pip install -r services/ml/requirements.txt
       - run: python -m unittest discover -s services/ml -p test_evaluate.py
+  browser-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      E2E_DATABASE_URL: postgresql://footyiq_test:footyiq_test@localhost:5432/footyiq_e2e
+      NEXT_PUBLIC_API_URL: http://localhost:3002
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: footyiq_test
+          POSTGRES_PASSWORD: footyiq_test
+          POSTGRES_DB: footyiq_e2e
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U footyiq_test -d footyiq_e2e"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: services/ml/requirements.txt
+      - run: npm ci
+      - run: python -m pip install -r services/ml/requirements.txt
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

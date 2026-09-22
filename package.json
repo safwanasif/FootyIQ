@@ -15,10 +15,14 @@
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspace apps/web",
     "check": "npm run lint && npm run build",
-    "test": "npm run test --workspace services/api"
+    "test": "npm run test --workspace services/api",
+    "test:e2e": "playwright test"
   },
   "engines": {
     "node": ">=20.9.0",
     "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
   }
 }
