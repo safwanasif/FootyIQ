@@ -12,8 +12,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FootyIQ — xG Analytics Console",
-  description: "Real-time expected goals (xG) analytics powered by a custom logistic regression model.",
+  title: "FootyIQ — Explore the quality of every chance",
+  description: "An interactive football shot lab. Explore expected goals, compare chances, and discover the evidence behind an interpretable model.",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-zinc-950">{children}</body>
+      <body className="min-h-screen">{children}</body>
     </html>
   );
 }

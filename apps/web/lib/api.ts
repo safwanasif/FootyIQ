@@ -138,6 +138,10 @@ export function listShots(offset: number, signal?: AbortSignal) {
   return shotRequest<{ shots: SavedShot[]; has_more: boolean }>(`?limit=10&offset=${offset}`, { signal });
 }
 
+export function shotExportUrl(offset: number) {
+  return `${BASE_URL}/api/v1/shots/export?offset=${offset}`;
+}
+
 export function saveShot(shot: { id: string; x: number; y: number }) {
   return shotRequest<SavedShot>("", {
     method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(shot),

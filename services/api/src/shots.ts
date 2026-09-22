@@ -23,6 +23,21 @@ export function shotGeometry(x: number, y: number) {
 }
 export function createShotsRouter(store: ShotStore, predict = getXGPrediction) {
   const router = Router();
+  router.get("/shots/export", async (req, res) => {
+    const query = z.object({ offset: z.coerce.number().int().min(0).max(100000).default(0) }).safeParse(req.query);
+    if (!query.success) return res.status(422).json({ error: "Invalid pagination" });
+    try {
+      const rows = await store.list(10, query.data.offset);
+      const header = ["id", "saved_at", "x", "y", "distance_yards", "angle_degrees", "xg_probability"];
+      const csv = [header, ...rows.map((row) => [row.id, new Date(row.created_at).toISOString(), row.x, row.y, row.distance_yards, row.angle_degrees, row.xg_probability])]
+        .map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(",")).join("\r\n");
+      res.setHeader("Cache-Control", "no-store");
+      res.attachment(`footyiq-shots-page-${query.data.offset / 10 + 1}.csv`);
+      return res.type("text/csv").send(csv + "\r\n");
+    } catch {
+      return res.status(503).json({ error: "Unable to export shot history. Please retry." });
+    }
+  });
   router.get("/shots", async (req, res) => {
     const query = z.object({
       limit: z.coerce.number().int().min(1).max(50).default(10),

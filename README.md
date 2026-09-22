@@ -1,6 +1,8 @@
 # FootyIQ
 
-An interactive soccer expected-goals dashboard backed by a trained logistic-regression model. Place a shot on the attacking half, inspect its predicted goal probability, and save it to PostgreSQL for later comparison.
+An interactive soccer expected-goals dashboard backed by a trained logistic-regression model. Place a shot on the attacking half, pin a chance to compare positions, and save it to PostgreSQL. The responsive collection supports revisiting chances and exporting the visible page as CSV. An in-app model section explains the measured results and limitations.
+
+For a short demo walkthrough, engineering talking points, and evidence-based resume bullets, see the [portfolio guide](docs/portfolio.md).
 
 ## Architecture
 
@@ -20,7 +22,7 @@ docker compose up -d --build --wait --wait-timeout 120
 npm run dev:web
 ```
 
-Open http://localhost:3000. Click or drag on the pitch, or focus it and use arrow keys (Shift moves farther). Save a shot, then use **Revisit** in history to restore its position. History shows the prediction recorded at save time; revisiting requests a prediction from the currently loaded model.
+Open http://localhost:3000. Start with **Central chance**, **Tight angle**, or **Long range**. Click or drag on the pitch, or focus it and use arrow keys (Shift moves farther). Pin a chance and move to another position to compare probabilities in percentage points. Save a shot, then use **Revisit** in the collection to restore its position. History shows the prediction recorded at save time; revisiting requests a prediction from the currently loaded model. **Export page** downloads only the currently visible history page, preserving original numeric precision and unit labels.
 
 Local ports: web `3000`, gateway `3001`, ML `5000`, PostgreSQL `5432`. Compose provides the gateway's database connection. For gateway development outside Docker, copy `services/api/.env.example` to `services/api/.env`, stop the container API to free port 3001, then run `npm run dev:api`.
 
@@ -60,6 +62,7 @@ docker compose logs --tail 100 db ml api
 | POST | `/api/v1/predict-proxy` | Predict from `distance_meters` and `angle_degrees` |
 | POST | `/api/v1/shots` | Save `{ "id": "UUID", "x": 108, "y": 40 }` |
 | GET | `/api/v1/shots?limit=10&offset=0` | Newest saved shots and `has_more` |
+| GET | `/api/v1/shots/export?offset=0` | Download a 10-shot history page as CSV |
 
 Saved-shot coordinates use the attacking half of a 120 × 80 pitch (`60 ≤ x ≤ 119.9`, `0 ≤ y ≤ 80`). IDs support safe retries. Invalid inputs return 422; reuse of an ID for different coordinates returns 409; unavailable storage returns 503. History page size is capped at 50.
 

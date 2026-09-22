@@ -65,6 +65,15 @@ test("shot API validates, saves, paginates, deduplicates retries and handles fai
   assert.equal(page.has_more, true);
   const secondPage = await (await fetch(`${base}/shots?limit=1&offset=1`)).json() as { shots: SavedShot[] };
   assert.equal(secondPage.shots[0].id, shot.id);
+  const exported = await fetch(`${base}/shots/export`);
+  assert.equal(exported.status, 200);
+  assert.match(exported.headers.get("content-type")!, /text\/csv/);
+  assert.match(exported.headers.get("content-disposition")!, /attachment; filename="footyiq-shots-page-1.csv"/);
+  const csv = await exported.text();
+  assert.equal(csv.trim().split("\r\n").length, 3);
+  assert.ok(csv.includes(shot.id));
+  assert.ok(csv.includes('"distance_yards"'));
+  assert.equal((await fetch(`${base}/shots/export?offset=-1`)).status, 422);
   for (const query of ["limit=0", "limit=51", "offset=-1", "limit=nope"]) {
     assert.equal((await fetch(`${base}/shots?${query}`)).status, 422);
   }
@@ -74,6 +83,7 @@ test("shot API validates, saves, paginates, deduplicates retries and handles fai
   assert.equal((await post(shot)).status, 200); // Retry succeeds even while ML is offline.
   dbFailed = true;
   assert.equal((await fetch(`${base}/shots`)).status, 503);
+  assert.equal((await fetch(`${base}/shots/export`)).status, 503);
   const failed = await post({ id: randomUUID(), x: 100, y: 40 });
   assert.equal(failed.status, 503);
   assert.ok(!(await failed.text()).includes("private"));

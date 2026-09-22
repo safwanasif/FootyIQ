@@ -1,415 +1,167 @@
-/**
- * ============================================================================
- * FootyIQ Web — Main Dashboard (page.tsx)
- * ============================================================================
- * PURPOSE:
- *   Split-screen xG command console:
- *     LEFT:  Interactive SVG pitch (attacking half, StatsBomb coords 60-120
- *            x / 0-80 y). Click or drag to drop a shot marker.
- *     RIGHT: Live telemetry — distance, angle, xG probability badge, and
- *            interpretation — sourced from services/api's predict-proxy.
- *
- * GEOMETRY NOTE:
- *   distance_to_goal / shot_angle formulas here intentionally mirror
- *   services/ml/etl.py's compute_distance_to_goal() / compute_shot_angle()
- *   so the marker position and displayed telemetry are self-consistent.
- *   The BACKEND remains the source of truth for the actual xG prediction —
- *   these client-side values are for instant visual feedback only.
- *
- * ERROR HANDLING NOTE:
- *   React class-based Error Boundaries only catch errors thrown during
- *   render — they do NOT catch errors from async fetch() calls in event
- *   handlers or effects. Gateway-offline handling here is therefore done
- *   via explicit `apiError` state (the correct pattern for async failures),
- *   with a lightweight render-time ErrorBoundary layered on top as
- *   defense-in-depth against unexpected render crashes.
- * ============================================================================
- */
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import React from "react";
+import { useState, useEffect, useRef } from "react";
+import { ArrowDownRight, ArrowUpRight, ArrowRight, Crosshair, Code2, Layers3, Loader2, Pin, RotateCcw, X } from "lucide-react";
+import { checkHealth, getXgPrediction, type PredictionResponse } from "@/lib/api";
 import ShotHistory from "./shot-history";
-import { Activity, Wifi, WifiOff, Loader2, Crosshair, AlertTriangle } from "lucide-react";
-import { checkHealth, getXgPrediction, ApiError, type PredictionResponse } from "@/lib/api";
+import ModelEvidence from "./model-evidence";
 
-// ============================================================================
-// GEOMETRY CONSTANTS (mirrors services/ml/etl.py)
-// ============================================================================
-const GOAL_CENTER = { x: 120, y: 40 };
-const GOAL_POST_1 = { x: 120, y: 36 };
-const GOAL_POST_2 = { x: 120, y: 44 };
-const YARDS_PER_METER = 1.09361;
-
-// SVG viewBox: 4:3 ratio representing pitch width (80yd) x attacking depth (60yd)
-const VB_WIDTH = 800;
-const VB_HEIGHT = 600;
-
-type PitchCoord = { x: number; y: number }; // StatsBomb units (x:60-120, y:0-80)
-
-// ----------------------------------------------------------------------------
-// Geometry helpers
-// ----------------------------------------------------------------------------
-function computeDistanceToGoal(x: number, y: number): number {
-  return Math.sqrt((GOAL_CENTER.x - x) ** 2 + (GOAL_CENTER.y - y) ** 2);
-}
-
-function computeShotAngle(x: number, y: number): number {
-  const v1 = Math.atan2(GOAL_POST_1.y - y, GOAL_POST_1.x - x);
-  const v2 = Math.atan2(GOAL_POST_2.y - y, GOAL_POST_2.x - x);
-  let angle = Math.abs(v1 - v2);
+type Position = { x: number; y: number };
+type Comparison = Position & PredictionResponse;
+const PRESETS = [
+  { name: "Central chance", x: 108, y: 40, detail: "A clear view of goal" },
+  { name: "Tight angle", x: 110, y: 18, detail: "A narrow view of goal" },
+  { name: "Long range", x: 90, y: 40, detail: "More distance to overcome" },
+];
+function geometry({ x, y }: Position) {
+  const distance = Math.hypot(120 - x, 40 - y);
+  let angle = Math.abs(Math.atan2(36 - y, 120 - x) - Math.atan2(44 - y, 120 - x));
   if (angle > Math.PI) angle = 2 * Math.PI - angle;
-  return (angle * 180) / Math.PI;
+  return { distance, angle: angle * 180 / Math.PI };
 }
+function svgPoint({ x, y }: Position) { return { x: y * 10, y: (120 - x) * 10 }; }
 
-function pitchToSvg(pitch: PitchCoord): { x: number; y: number } {
-  return {
-    x: (pitch.y / 80) * VB_WIDTH,
-    y: VB_HEIGHT - ((pitch.x - 60) / 60) * VB_HEIGHT,
-  };
-}
-
-function svgToPitch(svgX: number, svgY: number): PitchCoord {
-  const y = (svgX / VB_WIDTH) * 80;
-  const x = 60 + ((VB_HEIGHT - svgY) / VB_HEIGHT) * 60;
-  return {
-    x: Math.min(119.9, Math.max(60, x)),
-    y: Math.min(80, Math.max(0, y)),
-  };
-}
-
-// ----------------------------------------------------------------------------
-// Interpretation -> color mapping (mirrors services/ml/app.py thresholds)
-// ----------------------------------------------------------------------------
-function interpretationStyles(interpretation: string): { text: string; badge: string; glow: boolean } {
-  switch (interpretation) {
-    case "High quality chance":
-      return { text: "text-emerald-400", badge: "bg-emerald-500/15 border-emerald-500/40 text-emerald-300", glow: true };
-    case "Good chance":
-      return { text: "text-emerald-300", badge: "bg-emerald-500/10 border-emerald-500/30 text-emerald-400", glow: false };
-    case "Moderate probability effort":
-      return { text: "text-amber-400", badge: "bg-amber-500/10 border-amber-500/30 text-amber-300", glow: false };
-    default:
-      return { text: "text-slate-400", badge: "bg-slate-500/10 border-slate-500/30 text-slate-400", glow: false };
-  }
-}
-
-// ============================================================================
-// LIGHTWEIGHT RENDER-TIME ERROR BOUNDARY (defense-in-depth)
-// ============================================================================
-class RenderErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  { hasError: boolean }
->{ 
-  constructor(props: { children: React.ReactNode }) {
-    super(props);
-    this.state = { hasError: false };
-  }
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="flex items-center gap-3 rounded-lg border border-red-500/40 bg-red-500/10 p-4 text-red-300">
-          <AlertTriangle className="h-5 w-5 shrink-0" />
-          <span className="font-mono text-sm">A rendering error occurred. Refresh to recover.</span>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
-
-// Need React import for the class component above (JSX runtime handles
-// the rest, but React.Component requires the named import explicitly).
-
-
-// ============================================================================
-// MAIN PAGE COMPONENT
-// ============================================================================
 export default function DashboardPage() {
-  const [shot, setShot] = useState<PitchCoord>({ x: 108, y: 40 }); // default: 12 yards from goal
+  const [shot, setShot] = useState<Position>({ x: 108, y: 40 });
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [apiError, setApiError] = useState<ApiError | null>(null);
-  const [gatewayStatus, setGatewayStatus] = useState<"checking" | "online" | "offline">("checking");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [status, setStatus] = useState<"checking" | "online" | "offline">("checking");
+  const [comparison, setComparison] = useState<Comparison | null>(null);
+  const [retry, setRetry] = useState(0);
+  const dragging = useRef(false);
+  const sequence = useRef(0);
+  const { distance, angle } = geometry(shot);
+  const marker = svgPoint(shot);
+  const pinned = comparison ? svgPoint(comparison) : null;
+  const ready = !loading && !!prediction && !error;
 
-  const isDragging = useRef(false);
-  const requestSeq = useRef(0); // guards against out-of-order fetch responses
-
-  // --------------------------------------------------------------------------
-  // HEALTH POLLING — live system status indicator in the nav bar
-  // --------------------------------------------------------------------------
   useEffect(() => {
     const controller = new AbortController();
-
-    const poll = async () => {
+    async function poll() {
       try {
-        await checkHealth(controller.signal);
-        setGatewayStatus("online");
-      } catch {
-        setGatewayStatus("offline");
-      }
-    };
-
-    poll();
-    const interval = setInterval(poll, 10_000);
-    return () => {
-      clearInterval(interval);
-      controller.abort();
-    };
-  }, []);
-
-  // --------------------------------------------------------------------------
-  // PREDICTION FETCH — triggered whenever the shot marker moves
-  // --------------------------------------------------------------------------
-  const fetchPrediction = useCallback(async (coord: PitchCoord, signal: AbortSignal) => {
-    const seq = ++requestSeq.current;
-    setIsLoading(true);
-    setApiError(null);
-
-    const distanceYards = computeDistanceToGoal(coord.x, coord.y);
-    const angleDegrees = computeShotAngle(coord.x, coord.y);
-    const distanceMeters = distanceYards / YARDS_PER_METER;
-
-    try {
-      const result = await getXgPrediction(distanceMeters, angleDegrees, signal);
-      // Ignore stale responses from superseded rapid clicks/drags
-      if (seq === requestSeq.current && !signal.aborted) {
-        setPrediction(result);
-      }
-    } catch (err) {
-      if (seq === requestSeq.current && !signal.aborted) {
-        setApiError(err instanceof ApiError ? err : new ApiError("Unable to retrieve a prediction.", 500));
-        setPrediction(null);
-      }
-    } finally {
-      if (seq === requestSeq.current && !signal.aborted) setIsLoading(false);
+        await checkHealth(AbortSignal.any([controller.signal, AbortSignal.timeout(5000)]));
+        if (!controller.signal.aborted) setStatus("online");
+      } catch { if (!controller.signal.aborted) setStatus("offline"); }
     }
+    void poll();
+    const timer = setInterval(poll, 10000);
+    return () => { controller.abort(); clearInterval(timer); };
   }, []);
 
   useEffect(() => {
     const controller = new AbortController();
-    const timer = setTimeout(() => fetchPrediction(shot, controller.signal), 150);
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
+    const current = ++sequence.current;
+    const timer = setTimeout(async () => {
+      const point = geometry(shot);
+      try {
+        const result = await getXgPrediction(point.distance / 1.09361, point.angle,
+          AbortSignal.any([controller.signal, AbortSignal.timeout(10000)]));
+        if (!controller.signal.aborted && current === sequence.current) setPrediction(result);
+      } catch {
+        if (!controller.signal.aborted && current === sequence.current) {
+          setError("We couldn’t calculate this chance. Check the connection and try again.");
+          setPrediction(null);
+        }
+      } finally { if (!controller.signal.aborted && current === sequence.current) setLoading(false); }
+    }, 150);
+    return () => { controller.abort(); clearTimeout(timer); };
+  }, [shot, retry]);
+
+  function selectShot(position: Position) {
+    ++sequence.current;
+    setLoading(true);
+    setPrediction(null);
+    setError("");
+    setShot({ x: position.x, y: position.y });
+  }
+  function movePointer(event: React.PointerEvent<SVGSVGElement>) {
+    const svg = event.currentTarget;
+    const matrix = svg.getScreenCTM();
+    if (!matrix) return;
+    // Includes viewBox padding and letterboxing, keeping the marker under the pointer.
+    const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix.inverse());
+    selectShot({ x: Math.min(119.9, Math.max(60, 120 - point.y / 10)), y: Math.min(80, Math.max(0, point.x / 10)) });
+  }
+  function moveKeyboard(event: React.KeyboardEvent<SVGSVGElement>) {
+    const step = event.shiftKey ? 5 : 1;
+    const moves: Record<string, Position> = {
+      ArrowUp: { x: Math.min(119.9, shot.x + step), y: shot.y },
+      ArrowDown: { x: Math.max(60, shot.x - step), y: shot.y },
+      ArrowLeft: { x: shot.x, y: Math.max(0, shot.y - step) },
+      ArrowRight: { x: shot.x, y: Math.min(80, shot.y + step) },
     };
-  }, [shot, fetchPrediction]);
-
-  // --------------------------------------------------------------------------
-  // PITCH CLICK / DRAG HANDLING
-  // --------------------------------------------------------------------------
-  const updateShotFromEvent = (e: React.PointerEvent<SVGSVGElement>) => {
-    const svg = e.currentTarget;
-    const rect = svg.getBoundingClientRect();
-    const scaleX = VB_WIDTH / rect.width;
-    const scaleY = VB_HEIGHT / rect.height;
-    const svgX = (e.clientX - rect.left) * scaleX;
-    const svgY = (e.clientY - rect.top) * scaleY;
-    setIsLoading(true);
-    setPrediction(null);
-    setApiError(null);
-    setShot(svgToPitch(svgX, svgY));
-  };
-
-  const selectShot = (coord: PitchCoord) => {
-    setIsLoading(true);
-    setPrediction(null);
-    setApiError(null);
-    setShot(coord);
-  };
-
-  const handlePointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
-    e.currentTarget.setPointerCapture(e.pointerId);
-    isDragging.current = true;
-    updateShotFromEvent(e);
-  };
-  const handlePointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
-    if (isDragging.current) updateShotFromEvent(e);
-  };
-  const stopDragging = () => {
-    isDragging.current = false;
-  };
-
-  const markerSvg = pitchToSvg(shot);
-  const post1Svg = pitchToSvg(GOAL_POST_1);
-  const post2Svg = pitchToSvg(GOAL_POST_2);
-  const styles = prediction ? interpretationStyles(prediction.interpretation) : null;
+    if (moves[event.key]) { event.preventDefault(); selectShot(moves[event.key]); }
+  }
+  const delta = ready && comparison ? (prediction!.xg_probability - comparison.xg_probability) * 100 : null;
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-zinc-100">
-      {/* ==================================================================
-          TOP NAVIGATION — live system health indicator
-      ================================================================== */}
-      <header className="border-b border-slate-800 bg-zinc-950/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
-            <Crosshair className="h-5 w-5 text-emerald-400" />
-            <span className="font-mono text-lg font-semibold tracking-tight">FootyIQ</span>
-            <span className="ml-2 font-mono text-xs text-slate-500">xG Analytics Console</span>
-          </div>
-
-          <div
-            className={`flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-xs ${
-              gatewayStatus === "online"
-                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
-                : gatewayStatus === "offline"
-                ? "border-red-500/40 bg-red-500/10 text-red-300"
-                : "border-slate-700 bg-slate-800/40 text-slate-400"
-            }`}
-          >
-            {gatewayStatus === "online" && <Wifi className="h-3.5 w-3.5" />}
-            {gatewayStatus === "offline" && <WifiOff className="h-3.5 w-3.5" />}
-            {gatewayStatus === "checking" && <Activity className="h-3.5 w-3.5 animate-pulse" />}
-            {gatewayStatus === "online"
-              ? "GATEWAY ONLINE"
-              : gatewayStatus === "offline"
-              ? "GATEWAY OFFLINE"
-              : "CHECKING..."}
-          </div>
-        </div>
+    <main id="main-content">
+      <a href="#shot-lab" className="skip-link">Skip to shot analysis</a>
+      <header className="site-header">
+        <a className="brand" href="#main-content" aria-label="FootyIQ home"><span className="brand-icon"><Crosshair size={21} /></span>Footy<span>IQ</span></a>
+        <nav aria-label="Main navigation"><a href="#shot-lab">Shot lab</a><a href="#history-title">Collection</a><a href="#model-title">The model</a></nav>
+        <a className="source-link" aria-label="View source code on GitHub" href="https://github.com/safwanasif/FootyIQ" target="_blank" rel="noreferrer"><Code2 size={17} /><span>Source code</span></a>
       </header>
 
-      <RenderErrorBoundary>
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 p-6 md:grid-cols-2">
-          {/* ================================================================
-              LEFT: INTERACTIVE SVG PITCH
-          ================================================================ */}
-          <section className="rounded-xl border border-slate-800 bg-zinc-900/40 p-4 backdrop-blur-sm">
-            <h2 className="mb-3 font-mono text-xs uppercase tracking-widest text-slate-500">
-              Attacking Half — Click or Drag to Place Shot
-            </h2>
-            <svg
-              viewBox={`0 0 ${VB_WIDTH} ${VB_HEIGHT}`}
-              className="w-full touch-none cursor-crosshair rounded-lg border border-slate-800 bg-emerald-950/20"
-              aria-label="Interactive soccer pitch. Click or drag to place a shot."
-              role="group"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                const step = e.shiftKey ? 5 : 1;
-                const moves: Record<string, PitchCoord> = {
-                  ArrowUp: { x: Math.min(119.9, shot.x + step), y: shot.y },
-                  ArrowDown: { x: Math.max(60, shot.x - step), y: shot.y },
-                  ArrowLeft: { x: shot.x, y: Math.max(0, shot.y - step) },
-                  ArrowRight: { x: shot.x, y: Math.min(80, shot.y + step) },
-                };
-                if (moves[e.key]) { e.preventDefault(); selectShot(moves[e.key]); }
-              }}
-              onPointerDown={handlePointerDown}
-              onPointerMove={handlePointerMove}
-              onPointerUp={stopDragging}
-              onPointerCancel={stopDragging}
-              onLostPointerCapture={stopDragging}
-            >
-              {/* Pitch boundary */}
-              <rect x={0} y={0} width={VB_WIDTH} height={VB_HEIGHT} fill="none" stroke="#1e293b" strokeWidth={2} />
+      <div className="workspace">
+        <section className="intro" aria-labelledby="page-title">
+          <div><p className="eyebrow"><span /> Football, through the numbers</p><h1 id="page-title">Every shot tells a story.</h1><p className="intro-copy">Explore the space. Find the angle. See what makes a chance count.</p></div>
+          <div className="intro-note"><Layers3 size={19} /><span>A football analytics project<br /><strong>Built on real shot data</strong></span></div>
+        </section>
 
-              {/* Penalty box (18-yard box): statsbomb x 102-120, y 18-62 */}
-              <rect
-                x={(18 / 80) * VB_WIDTH}
-                y={0}
-                width={((62 - 18) / 80) * VB_WIDTH}
-                height={((120 - 102) / 60) * VB_HEIGHT}
-                fill="none"
-                stroke="#334155"
-                strokeWidth={1.5}
-              />
+        <section id="shot-lab" className="lab" aria-label="Interactive shot analysis">
+          <div className="pitch-panel">
+            <div className="panel-heading"><div><p className="eyebrow">01 / Explore</p><h2>The shot lab</h2></div><span className="subtle-tag">Attacking half</span></div>
+            <div className="pitch-wrap">
+              <svg viewBox="-20 -30 840 650" className="pitch" role="group" tabIndex={0}
+                aria-label="Interactive soccer pitch" aria-describedby="pitch-help"
+                onKeyDown={moveKeyboard}
+                onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); dragging.current = true; movePointer(e); }}
+                onPointerMove={(e) => { if (dragging.current) movePointer(e); }}
+                onPointerUp={() => { dragging.current = false; }} onPointerCancel={() => { dragging.current = false; }}
+                onLostPointerCapture={() => { dragging.current = false; }}>
+                <defs><pattern id="grass" width="800" height="120" patternUnits="userSpaceOnUse"><rect width="800" height="60" fill="#163b32" /><rect y="60" width="800" height="60" fill="#12352d" /></pattern></defs>
+                <rect width="800" height="600" fill="url(#grass)" />
+                <g fill="none" stroke="#8aad98" strokeWidth="1.8" opacity="0.65">
+                  <rect width="800" height="600" /><rect x="180" width="440" height="180" />
+                  <rect x="300" width="200" height="60" /><path d="M320 180 A100 100 0 0 0 480 180" />
+                  <path d="M300 600 A100 100 0 0 1 500 600" /><circle cx="400" cy="120" r="3" fill="#8aad98" />
+                  <path d="M360 0 V-16 H440 V0" strokeWidth="3" stroke="#e5ecdb" />
+                </g>
+                <polygon points={`${marker.x},${marker.y} 360,0 440,0`} fill="#d7f58c" opacity="0.10" />
+                <path d={`M360 0 L${marker.x} ${marker.y} L440 0`} fill="none" stroke="#d7f58c" strokeDasharray="5 6" opacity="0.7" />
+                {pinned && <g><circle cx={pinned.x} cy={pinned.y} r="12" fill="#12352d" stroke="#f3b479" strokeWidth="3" strokeDasharray="4 3" /><text x={pinned.x > 740 ? pinned.x - 20 : pinned.x + 20} y={Math.max(20, pinned.y - 15)} textAnchor={pinned.x > 740 ? "end" : "start"} fill="#f3b479" fontSize="16">Pinned</text></g>}
+                <circle cx={marker.x} cy={marker.y} r="24" fill="#d7f58c" opacity="0.12" />
+                <circle cx={marker.x} cy={marker.y} r="11" fill="#d7f58c" stroke="#10261f" strokeWidth="3" />
+                <circle cx={marker.x} cy={marker.y} r="3" fill="#10261f" />
+              </svg>
+              <span className="pitch-direction">↑ Attacking direction</span>
+            </div>
+            <p id="pitch-help" className="pitch-help">Click or drag to place a shot. Keyboard: arrow keys; Shift for larger steps.</p>
+            <div className="presets" aria-label="Example shot positions">{PRESETS.map((preset) => <button key={preset.name} className={shot.x === preset.x && shot.y === preset.y ? "preset selected" : "preset"} onClick={() => selectShot(preset)} aria-pressed={shot.x === preset.x && shot.y === preset.y}><span>{preset.name}<ArrowUpRight size={15} /></span><small>{preset.detail}</small></button>)}</div>
+          </div>
 
-              {/* Six-yard box: statsbomb x 114-120, y 30-50 */}
-              <rect
-                x={(30 / 80) * VB_WIDTH}
-                y={0}
-                width={((50 - 30) / 80) * VB_WIDTH}
-                height={((120 - 114) / 60) * VB_HEIGHT}
-                fill="none"
-                stroke="#334155"
-                strokeWidth={1.5}
-              />
-
-              {/* Goal mouth */}
-              <line x1={post1Svg.x} y1={post1Svg.y} x2={post2Svg.x} y2={post2Svg.y} stroke="#10b981" strokeWidth={4} />
-
-              {/* Angle visualization: shot marker -> each goalpost */}
-              <line x1={markerSvg.x} y1={markerSvg.y} x2={post1Svg.x} y2={post1Svg.y} stroke="#10b981" strokeWidth={1} strokeDasharray="4 4" opacity={0.5} />
-              <line x1={markerSvg.x} y1={markerSvg.y} x2={post2Svg.x} y2={post2Svg.y} stroke="#10b981" strokeWidth={1} strokeDasharray="4 4" opacity={0.5} />
-
-              {/* Shot marker */}
-              <circle cx={markerSvg.x} cy={markerSvg.y} r={9} fill="#10b981" fillOpacity={0.25} stroke="#10b981" strokeWidth={2} />
-              <circle cx={markerSvg.x} cy={markerSvg.y} r={3} fill="#10b981" />
-            </svg>
-            <p className="mt-2 text-xs text-slate-400">Keyboard: focus the pitch and use arrow keys. Hold Shift for larger steps.</p>
+          <section className="insight-panel" aria-labelledby="insight-title">
+            <div className="panel-heading"><div><p className="eyebrow">02 / Understand</p><h2 id="insight-title">Chance quality</h2></div><span className={`connection ${status}`} title="API and database connection"><i />{status === "online" ? "Connected" : status === "offline" ? "Offline" : "Connecting"}</span></div>
+            <div className="probability-block" aria-live="polite" aria-atomic="true">
+              <p className="metric-label">Expected goals <span>/ xG</span></p>
+              <div className="probability">{loading ? <Loader2 aria-label="Calculating" className="loading-ring" size={42} /> : prediction ? <>{(prediction.xg_probability * 100).toFixed(1)}<span>%</span></> : <span>Unavailable</span>}</div>
+              <p className="chance-label">{loading ? "Reading the chance…" : prediction?.interpretation ?? "Prediction unavailable"}</p>
+              <div className="probability-track" aria-hidden="true"><span style={{ width: ready ? `${prediction!.xg_probability * 100}%` : "0%" }} /></div>
+              <div className="scale-labels"><span>Less likely</span><span>More likely</span></div>
+            </div>
+            <dl className="geometry"><div><dt>Distance to goal</dt><dd>{distance.toFixed(1)} <span>yd</span></dd></div><div><dt>View of goal</dt><dd>{angle.toFixed(1)}<span>°</span></dd></div></dl>
+            {error ? <div className="error-note" role="alert"><p>{error}</p><button className="button secondary" onClick={() => { setLoading(true); setError(""); setRetry((n) => n + 1); }}><RotateCcw size={15} />Retry prediction</button></div> : <p className="explanation">{ready ? <>Roughly <strong>{Math.round(prediction!.xg_probability * 100)} in 100</strong> comparable chances would score according to this model.</> : "Move the marker to explore how distance and angle influence the prediction."} <a href="#model-title">How it works <ArrowRight size={12} /></a></p>}
+            <div className="compare-area">
+              {comparison ? <><div className="compare-heading"><span><Pin size={14} /> Pinned chance · {(comparison.xg_probability * 100).toFixed(1)}%</span><button className="icon-button" aria-label="Clear pinned comparison" onClick={() => setComparison(null)}><X size={17} /></button></div><p className="comparison-result">{delta === null ? "Calculating comparison…" : <>{delta >= 0 ? <ArrowUpRight size={20} /> : <ArrowDownRight size={20} />}<strong>{delta > 0 ? "+" : ""}{delta.toFixed(1)}</strong> percentage points</>}</p><button className="text-button" onClick={() => selectShot(comparison)}>Return to pinned position</button></> : <><p>What changes when you move wider?</p><button className="button secondary" disabled={!ready} onClick={() => setComparison({ ...shot, ...prediction! })}><Pin size={15} />Pin this chance to compare</button></>}
+            </div>
           </section>
-
-          {/* ================================================================
-              RIGHT: TELEMETRY CARD
-          ================================================================ */}
-          <section className="rounded-xl border border-slate-800 bg-zinc-900/40 p-6 backdrop-blur-sm">
-            <h2 className="mb-4 font-mono text-xs uppercase tracking-widest text-slate-500">
-              Shot Telemetry
-            </h2>
-
-            {apiError ? (
-              <div className="flex items-start gap-3 rounded-lg border border-red-500/40 bg-red-500/10 p-4">
-                <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
-                <div>
-                  <p className="font-mono text-sm font-semibold text-red-300">{apiError.status} — Prediction unavailable</p>
-                  <p className="mt-1 font-mono text-xs text-red-400/80">{apiError.message}</p>
-                  <p className="mt-2 font-mono text-xs text-slate-500">
-                    Try moving the marker again in a moment.
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-5">
-                {/* Distance */}
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                  <span className="font-mono text-sm text-slate-400">Distance</span>
-                  <span className="font-mono text-lg text-zinc-100">
-                    {computeDistanceToGoal(shot.x, shot.y).toFixed(2)} <span className="text-slate-500">yd</span>
-                  </span>
-                </div>
-
-                {/* Angle */}
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                  <span className="font-mono text-sm text-slate-400">Shot Angle</span>
-                  <span className="font-mono text-lg text-zinc-100">
-                    {computeShotAngle(shot.x, shot.y).toFixed(2)} <span className="text-slate-500">deg</span>
-                  </span>
-                </div>
-
-                {/* xG Probability */}
-                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                  <span className="font-mono text-sm text-slate-400">Expected Goals (xG)</span>
-                  {isLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin text-slate-500" />
-                  ) : prediction ? (
-                    <span
-                      className={`rounded-full border px-3 py-1 font-mono text-lg font-semibold ${styles?.badge} ${
-                        styles?.glow ? "shadow-emerald-glow" : ""
-                      }`}
-                    >
-                      {(prediction.xg_probability * 100).toFixed(2)}%
-                    </span>
-                  ) : (
-                    <span className="font-mono text-sm text-slate-600">—</span>
-                  )}
-                </div>
-
-                {/* Interpretation */}
-                <div className="pt-1">
-                  <span className="font-mono text-sm text-slate-400">Interpretation</span>
-                  <p className={`mt-1 font-mono text-base font-medium ${styles?.text ?? "text-slate-500"}`}>
-                    {isLoading ? "Calculating..." : prediction?.interpretation ?? "Awaiting shot placement..."}
-                  </p>
-                </div>
-              </div>
-            )}
-          </section>
-        </div>
-        <ShotHistory shot={shot} canSave={!isLoading && !!prediction && !apiError} onSelect={selectShot} />
-      </RenderErrorBoundary>
+        </section>
+        <ShotHistory shot={shot} canSave={ready} onSelect={selectShot} />
+        <ModelEvidence />
+        <footer className="site-footer"><span>FootyIQ <span className="footer-divider">/</span> Independent football analytics</span><a href="https://github.com/safwanasif/FootyIQ" target="_blank" rel="noreferrer">Explore the engineering <ArrowUpRight size={14} /></a></footer>
+      </div>
     </main>
   );
 }
