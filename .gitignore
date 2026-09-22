@@ -1,0 +1,133 @@
+# ============================================================================
+# FootyIQ .gitignore – Monorepo-level exclusions
+# ============================================================================
+# PURPOSE:
+#   Prevents committing sensitive, generated, or environment-specific files
+#   that should never enter version control. Service-specific .gitignore files
+#   may add additional rules per workspace (e.g., Python venvs, dist/ builds).
+# ============================================================================
+
+# ============================================================================
+# ENVIRONMENT & SECRETS
+# ============================================================================
+# Local environment variable files (database passwords, API keys, etc.)
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ============================================================================
+# NODE.JS / npm
+# ============================================================================
+# Node module installations (regenerated via npm install)
+node_modules/
+npm-debug.log
+npm-error.log
+yarn-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+
+# Package lock files (optional; include if enforcing exact versions)
+# Uncomment lines below to enforce lockfile commit strategy:
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# ============================================================================
+# PYTHON
+# ============================================================================
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter notebooks (local iterations)
+.ipynb_checkpoints/
+*.ipynb
+
+# Poetry / pipenv lock files (optional)
+poetry.lock
+Pipfile.lock
+
+# Model checkpoints & training artifacts
+*.pkl
+*.joblib
+*.pth
+models/checkpoints/
+
+# ============================================================================
+# DATA & ARTIFACTS
+# ============================================================================
+# StatsBomb data and downloaded datasets (regenerate from source)
+data/raw/
+data/processed/
+*.csv
+services/ml/data/**/*.json
+!data/schema/
+
+# ML model outputs and logs
+logs/
+runs/
+wandb/
+.mlflow/
+
+# ============================================================================
+# IDE & EDITOR
+# ============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================================================
+# DOCKER
+# ============================================================================
+# Local volumes aren't tracked; Docker state is ephemeral
+.docker/
+docker-compose.override.yml
+
+# ============================================================================
+# OS-SPECIFIC (Windows)
+# ============================================================================
+# Windows thumbnail cache
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+
+# Windows shortcuts
+*.lnk
+
+# Recycle Bin
+$RECYCLE.BIN/
+
+# ============================================================================
+# PROJECT-SPECIFIC
+# ============================================================================
+# Local project notes (keep in OneNote, not Git)
+*.local
+
+# Ignore generated ML model artifacts
+services/ml/artifacts/*.pkl
+!services/ml/artifacts/baseline_xg.pkl
+
+# TypeScript build cache
+*.tsbuildinfo

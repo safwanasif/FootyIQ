@@ -1,0 +1,13 @@
+# API build context: allow only required manifests and source.
+**
+!package.json
+!package-lock.json
+!apps/
+!apps/web/
+!apps/web/package.json
+!services/
+!services/api/
+!services/api/package.json
+!services/api/tsconfig.json
+!services/api/src/
+!services/api/src/**

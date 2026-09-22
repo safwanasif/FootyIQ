@@ -1,0 +1,29 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "FootyIQ frontend — Next.js dashboard with interactive xG pitch visualizer, talking exclusively to the Express API Gateway per the Gateway Pattern.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "lucide-react": "1.26.0",
+    "next": "16.3.5",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "^20",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.5",
+    "postcss": "8.5.23",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3"
+  }
+}

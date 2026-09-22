@@ -110,3 +110,36 @@ export async function getXgPrediction(
     throw new ApiError("Unable to reach the FootyIQ API Gateway.", 503);
   }
 }
+
+export interface SavedShot extends PredictionResponse {
+  id: string;
+  x: number;
+  y: number;
+  angle_degrees: number;
+  created_at: string;
+}
+
+async function shotRequest<T>(path: string, options?: RequestInit): Promise<T> {
+  try {
+    const res = await fetch(`${BASE_URL}/api/v1/shots${path}`, {
+      ...options, cache: "no-store",
+      signal: options?.signal ?? AbortSignal.timeout(15000),
+    });
+    const body = await res.json();
+    if (!res.ok) throw new ApiError(body.error || "Shot request failed", res.status);
+    return body;
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    throw new ApiError("Unable to reach shot history. Please retry.", 503);
+  }
+}
+
+export function listShots(offset: number, signal?: AbortSignal) {
+  return shotRequest<{ shots: SavedShot[]; has_more: boolean }>(`?limit=10&offset=${offset}`, { signal });
+}
+
+export function saveShot(shot: { id: string; x: number; y: number }) {
+  return shotRequest<SavedShot>("", {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(shot),
+  });
+}

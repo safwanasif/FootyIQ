@@ -14,10 +14,10 @@
 # ============================================================================
 
 # --- Base Image ---
-# python:3.11-slim: Official lightweight Debian-based Python image.
-# Chosen over full python:3.11 to minimize image size while still providing
+# python:3.12-slim: Supports the pinned NumPy runtime (Python >=3.12).
+# Chosen over full python:3.12 to minimize image size while still providing
 # a complete Python runtime compatible with scikit-learn/numpy wheels.
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 # --- Working Directory ---
 # All subsequent COPY/RUN instructions operate relative to /app inside

@@ -27,8 +27,6 @@
 #   docker compose down              # Stop and remove all containers
 # ============================================================================
 
-version: '3.8'
-
 services:
   # ========================================================================
   # PostgreSQL Database Service
@@ -46,7 +44,7 @@ services:
       # Named volume persists data across container restarts/rebuilds
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U footyiq_user"]
+      test: ["CMD-SHELL", "pg_isready -U footyiq_user -d footyiq"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -63,30 +61,47 @@ services:
     container_name: footyiq_ml
     ports:
       - "5000:5000"
-    depends_on:
-      - db
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import json, urllib.request; r = json.load(urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=3)); raise SystemExit(0 if r.get('model_loaded') is True else 1)"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     networks:
       - footyiq-net
 
-  # ========================================================================
-  # Node.js / TypeScript API Gateway
-  # ========================================================================
   api:
     build:
-      context: ./services/api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: services/api/Dockerfile
     container_name: footyiq_api
     ports:
       - "3001:3001"
     environment:
-      # Resolved via Docker's internal DNS — "ml" is the service name
-      # above, not a literal hostname. See CONTAINER DNS note at top.
       ML_SERVICE_URL: http://ml:5000
+      DATABASE_URL: postgresql://footyiq_user:footyiq_pass@db:5432/footyiq
+      WEB_ORIGIN: http://localhost:3000
       PORT: 3001
       NODE_ENV: production
     depends_on:
-      - ml
-      - db
+      ml:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3001/health', {signal: AbortSignal.timeout(3000)}).then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - footyiq-net
 

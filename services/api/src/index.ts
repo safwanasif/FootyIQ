@@ -1,69 +1,41 @@
-/**
- * ============================================================================
- * FootyIQ API Gateway — Express Server Entry Point (index.ts)
- * ============================================================================
- * PURPOSE:
- *   Bootstraps the Express application: middleware (CORS, JSON parsing),
- *   route mounting, and server startup. This service is the API gateway
- *   between the future React frontend (apps/web) and the Python ML
- *   microservice (services/ml) — it never talks to Postgres directly in
- *   this phase; that comes with packages/db integration later.
- *
- * PORT:
- *   Bound to 3001 to avoid clashing with Next.js (3000) and FastAPI (5000).
- *
- * USAGE:
- *   npm run dev
- * ============================================================================
- */
-
-import express, { Express, Request, Response } from "express";
+import "dotenv/config";
+import express, { type ErrorRequestHandler } from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import { predictRouter } from "./routes/predict.route";
+import { createShotsRouter } from "./shots";
+import { migrate, pool, shotStore } from "./database";
 
-// ----------------------------------------------------------------------------
-// Load environment variables from .env before anything else references them
-// (ml.client.ts reads process.env.ML_SERVICE_URL at call time, so this must
-// run first).
-// ----------------------------------------------------------------------------
-dotenv.config();
-
-const app: Express = express();
-const PORT = process.env.PORT || 3001;
-
-// ----------------------------------------------------------------------------
-// MIDDLEWARE
-// ----------------------------------------------------------------------------
-// CORS: Allows the future React frontend (different origin/port) to call
-// this API. Wide open for local dev; restrict to specific origins in Phase 3.
-app.use(cors());
-
-// JSON body parsing: Required for req.body to be populated on POST requests.
-app.use(express.json());
-
-// ----------------------------------------------------------------------------
-// HEALTH CHECK
-// ----------------------------------------------------------------------------
-// GET /health — confirms the gateway itself is alive. Does NOT check
-// downstream ML service health; that's what predict-proxy's error handling
-// surfaces on-demand via 503.
-app.get("/health", (_req: Request, res: Response) => {
-  res.status(200).json({ status: "ok", service: "footyiq-api-gateway" });
+const app = express();
+app.use(cors({ origin: process.env.WEB_ORIGIN || "http://localhost:3000" }));
+app.use(express.json({ limit: "16kb" }));
+app.get("/health", async (_req, res) => {
+  try {
+    await pool.query("SELECT 1");
+    res.json({ status: "ok", service: "footyiq-api-gateway", database: "ok" });
+  } catch {
+    res.status(503).json({ status: "unavailable", service: "footyiq-api-gateway", database: "unavailable" });
+  }
 });
+app.use("/api/v1", predictRouter, createShotsRouter(shotStore));
+const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
+  const status = error.type === "entity.parse.failed" ? 400 : error.type === "entity.too.large" ? 413 : 500;
+  res.status(status).json({ error: status === 400 ? "Invalid JSON" : status === 413 ? "Request too large" : "Internal server error" });
+};
+app.use(errorHandler);
 
-// ----------------------------------------------------------------------------
-// ROUTE MOUNTING
-// ----------------------------------------------------------------------------
-// All prediction-related routes live under /api/v1
-app.use("/api/v1", predictRouter);
-
-// ----------------------------------------------------------------------------
-// SERVER STARTUP
-// ----------------------------------------------------------------------------
-app.listen(PORT, () => {
-  console.log(`FootyIQ API Gateway running at http://localhost:${PORT}`);
-  console.log(`  Health check:     GET  http://localhost:${PORT}/health`);
-  console.log(`  Predict (proxy):  POST http://localhost:${PORT}/api/v1/predict-proxy`);
-  console.log(`  Forwarding to ML: ${process.env.ML_SERVICE_URL || "http://localhost:5000"}`);
+async function start() {
+  if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required. See services/api/.env.example.");
+  await migrate();
+  const server = app.listen(process.env.PORT || 3001, () => console.log("FootyIQ API ready; database migrations applied."));
+  const shutdown = () => {
+    server.close(() => { void pool.end().then(() => process.exit(0)); });
+    setTimeout(() => process.exit(1), 10000).unref();
+  };
+  process.once("SIGTERM", shutdown);
+  process.once("SIGINT", shutdown);
+}
+void start().catch(async (error) => {
+  console.error("API startup failed:", error.message);
+  await pool.end();
+  process.exitCode = 1;
 });

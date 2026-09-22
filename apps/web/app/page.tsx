@@ -29,6 +29,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import React from "react";
+import ShotHistory from "./shot-history";
 import { Activity, Wifi, WifiOff, Loader2, Crosshair, AlertTriangle } from "lucide-react";
 import { checkHealth, getXgPrediction, ApiError, type PredictionResponse } from "@/lib/api";
 
@@ -72,7 +73,7 @@ function svgToPitch(svgX: number, svgY: number): PitchCoord {
   const y = (svgX / VB_WIDTH) * 80;
   const x = 60 + ((VB_HEIGHT - svgY) / VB_HEIGHT) * 60;
   return {
-    x: Math.min(120, Math.max(60, x)),
+    x: Math.min(119.9, Math.max(60, x)),
     y: Math.min(80, Math.max(0, y)),
   };
 }
@@ -128,10 +129,10 @@ class RenderErrorBoundary extends React.Component<
 // MAIN PAGE COMPONENT
 // ============================================================================
 export default function DashboardPage() {
-  const [shot, setShot] = useState<PitchCoord>({ x: 108, y: 40 }); // default: top of the box
+  const [shot, setShot] = useState<PitchCoord>({ x: 108, y: 40 }); // default: 12 yards from goal
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [apiError, setApiError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [apiError, setApiError] = useState<ApiError | null>(null);
   const [gatewayStatus, setGatewayStatus] = useState<"checking" | "online" | "offline">("checking");
 
   const isDragging = useRef(false);
@@ -163,7 +164,7 @@ export default function DashboardPage() {
   // --------------------------------------------------------------------------
   // PREDICTION FETCH — triggered whenever the shot marker moves
   // --------------------------------------------------------------------------
-  const fetchPrediction = useCallback(async (coord: PitchCoord) => {
+  const fetchPrediction = useCallback(async (coord: PitchCoord, signal: AbortSignal) => {
     const seq = ++requestSeq.current;
     setIsLoading(true);
     setApiError(null);
@@ -173,45 +174,59 @@ export default function DashboardPage() {
     const distanceMeters = distanceYards / YARDS_PER_METER;
 
     try {
-      const result = await getXgPrediction(distanceMeters, angleDegrees);
+      const result = await getXgPrediction(distanceMeters, angleDegrees, signal);
       // Ignore stale responses from superseded rapid clicks/drags
-      if (seq === requestSeq.current) {
+      if (seq === requestSeq.current && !signal.aborted) {
         setPrediction(result);
       }
     } catch (err) {
-      if (seq === requestSeq.current) {
-        const message = err instanceof ApiError ? err.message : "Unexpected error contacting the Gateway.";
-        setApiError(message);
+      if (seq === requestSeq.current && !signal.aborted) {
+        setApiError(err instanceof ApiError ? err : new ApiError("Unable to retrieve a prediction.", 500));
         setPrediction(null);
       }
     } finally {
-      if (seq === requestSeq.current) setIsLoading(false);
+      if (seq === requestSeq.current && !signal.aborted) setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional:
-    fetchPrediction(shot);
+    const controller = new AbortController();
+    const timer = setTimeout(() => fetchPrediction(shot, controller.signal), 150);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [shot, fetchPrediction]);
 
   // --------------------------------------------------------------------------
   // PITCH CLICK / DRAG HANDLING
   // --------------------------------------------------------------------------
-  const updateShotFromEvent = (e: React.MouseEvent<SVGSVGElement>) => {
+  const updateShotFromEvent = (e: React.PointerEvent<SVGSVGElement>) => {
     const svg = e.currentTarget;
     const rect = svg.getBoundingClientRect();
     const scaleX = VB_WIDTH / rect.width;
     const scaleY = VB_HEIGHT / rect.height;
     const svgX = (e.clientX - rect.left) * scaleX;
     const svgY = (e.clientY - rect.top) * scaleY;
+    setIsLoading(true);
+    setPrediction(null);
+    setApiError(null);
     setShot(svgToPitch(svgX, svgY));
   };
 
-  const handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
+  const selectShot = (coord: PitchCoord) => {
+    setIsLoading(true);
+    setPrediction(null);
+    setApiError(null);
+    setShot(coord);
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
     isDragging.current = true;
     updateShotFromEvent(e);
   };
-  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+  const handlePointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
     if (isDragging.current) updateShotFromEvent(e);
   };
   const stopDragging = () => {
@@ -268,11 +283,25 @@ export default function DashboardPage() {
             </h2>
             <svg
               viewBox={`0 0 ${VB_WIDTH} ${VB_HEIGHT}`}
-              className="w-full cursor-crosshair rounded-lg border border-slate-800 bg-emerald-950/20"
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={stopDragging}
-              onMouseLeave={stopDragging}
+              className="w-full touch-none cursor-crosshair rounded-lg border border-slate-800 bg-emerald-950/20"
+              aria-label="Interactive soccer pitch. Click or drag to place a shot."
+              role="group"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                const step = e.shiftKey ? 5 : 1;
+                const moves: Record<string, PitchCoord> = {
+                  ArrowUp: { x: Math.min(119.9, shot.x + step), y: shot.y },
+                  ArrowDown: { x: Math.max(60, shot.x - step), y: shot.y },
+                  ArrowLeft: { x: shot.x, y: Math.max(0, shot.y - step) },
+                  ArrowRight: { x: shot.x, y: Math.min(80, shot.y + step) },
+                };
+                if (moves[e.key]) { e.preventDefault(); selectShot(moves[e.key]); }
+              }}
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={stopDragging}
+              onPointerCancel={stopDragging}
+              onLostPointerCapture={stopDragging}
             >
               {/* Pitch boundary */}
               <rect x={0} y={0} width={VB_WIDTH} height={VB_HEIGHT} fill="none" stroke="#1e293b" strokeWidth={2} />
@@ -282,7 +311,7 @@ export default function DashboardPage() {
                 x={(18 / 80) * VB_WIDTH}
                 y={0}
                 width={((62 - 18) / 80) * VB_WIDTH}
-                height={((102 - 60) / 60) * VB_HEIGHT}
+                height={((120 - 102) / 60) * VB_HEIGHT}
                 fill="none"
                 stroke="#334155"
                 strokeWidth={1.5}
@@ -293,7 +322,7 @@ export default function DashboardPage() {
                 x={(30 / 80) * VB_WIDTH}
                 y={0}
                 width={((50 - 30) / 80) * VB_WIDTH}
-                height={((114 - 60) / 60) * VB_HEIGHT}
+                height={((120 - 114) / 60) * VB_HEIGHT}
                 fill="none"
                 stroke="#334155"
                 strokeWidth={1.5}
@@ -310,6 +339,7 @@ export default function DashboardPage() {
               <circle cx={markerSvg.x} cy={markerSvg.y} r={9} fill="#10b981" fillOpacity={0.25} stroke="#10b981" strokeWidth={2} />
               <circle cx={markerSvg.x} cy={markerSvg.y} r={3} fill="#10b981" />
             </svg>
+            <p className="mt-2 text-xs text-slate-400">Keyboard: focus the pitch and use arrow keys. Hold Shift for larger steps.</p>
           </section>
 
           {/* ================================================================
@@ -324,10 +354,10 @@ export default function DashboardPage() {
               <div className="flex items-start gap-3 rounded-lg border border-red-500/40 bg-red-500/10 p-4">
                 <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
                 <div>
-                  <p className="font-mono text-sm font-semibold text-red-300">503 Service Unavailable</p>
-                  <p className="mt-1 font-mono text-xs text-red-400/80">{apiError}</p>
+                  <p className="font-mono text-sm font-semibold text-red-300">{apiError.status} — Prediction unavailable</p>
+                  <p className="mt-1 font-mono text-xs text-red-400/80">{apiError.message}</p>
                   <p className="mt-2 font-mono text-xs text-slate-500">
-                    Confirm the Express Gateway container is running on :3001.
+                    Try moving the marker again in a moment.
                   </p>
                 </div>
               </div>
@@ -378,6 +408,7 @@ export default function DashboardPage() {
             )}
           </section>
         </div>
+        <ShotHistory shot={shot} canSave={!isLoading && !!prediction && !apiError} onSelect={selectShot} />
       </RenderErrorBoundary>
     </main>
   );

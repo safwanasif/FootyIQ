@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    /* ------------------------------------------------------------------ */
+    /* MODULE SYSTEM: Node16 resolves modules based on package.json's      */
+    /* "type" field (set to "commonjs" in our package.json), and replaces  */
+    /* the deprecated "node10"/"node" moduleResolution setting. Emits      */
+    /* CommonJS output — same runtime behavior as before, future-proofed.  */
+    /* ------------------------------------------------------------------ */
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "target": "ES2020",
+    "lib": ["ES2020"],
+
+    /* ------------------------------------------------------------------ */
+    /* OUTPUT: Compiled JS goes to dist/, source lives in src/             */
+    /* ------------------------------------------------------------------ */
+    "outDir": "./dist",
+    "rootDir": "./src",
+
+    /* ------------------------------------------------------------------ */
+    /* STRICTNESS: Full strict mode mandate; catches null/undefined bugs  */
+    /* and implicit 'any' at compile time rather than in production.      */
+    /* ------------------------------------------------------------------ */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    /* ------------------------------------------------------------------ */
+    /* INTEROP: Allows clean `import express from 'express'` syntax for   */
+    /* CommonJS packages that don't natively support ES module imports.   */
+    /* ------------------------------------------------------------------ */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* ------------------------------------------------------------------ */
+    /* SKIP LIB CHECK: Speeds up compilation by not re-checking .d.ts      */
+    /* files inside node_modules (safe — those are already validated).    */
+    /* ------------------------------------------------------------------ */
+    "skipLibCheck": true,
+
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

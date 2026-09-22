@@ -1,0 +1,33 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "FootyIQ API Gateway — Express/TypeScript service that validates shot requests via Zod and proxies xG predictions to the Python ML microservice.",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "tsx --test src/shots.test.ts",
+    "test:integration": "tsx --test src/database.integration.test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.18.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "8.23.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.1.1",
+    "@types/pg": "8.23.1",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2"
+  }
+}
