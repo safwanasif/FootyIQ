@@ -1,0 +1,17 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { validatePrediction, MLServiceError } from "./services/ml.client";
+
+test("ML boundary rejects invalid probabilities, geometry and text", () => {
+  const shot = { distance_meters: 11, angle_degrees: 37 };
+  const valid = { xg_probability: .142, distance_yards: 12.0297, interpretation: "Moderate chance" };
+  assert.deepEqual(validatePrediction({ ...valid, private_field: "removed" }, shot), valid);
+  for (const invalid of [null, {}, { ...valid, xg_probability: "0.5" },
+    { ...valid, xg_probability: NaN }, { ...valid, xg_probability: Infinity },
+    { ...valid, xg_probability: -0.1 }, { ...valid, xg_probability: 1.1 },
+    { ...valid, distance_yards: 11 }, { ...valid, distance_yards: Infinity },
+    { ...valid, interpretation: " " }, { ...valid, interpretation: "a".repeat(201) }]) {
+    assert.throws(() => validatePrediction(invalid, shot), (error: unknown) =>
+      error instanceof MLServiceError && error.statusCode === 502);
+  }
+});

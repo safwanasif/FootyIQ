@@ -109,3 +109,33 @@ This is a geometry-only baseline. It omits goalkeeper and defender positions, sh
 This version is a local demo with separate anonymous browser collections. It has no sign-in or cross-device recovery. Compose credentials are local development defaults. Local HTTP explicitly sets `COOKIE_SECURE=false`; HTTPS deployment must set it to `true` and serve the frontend and API on the same site so SameSite cookies work. `WEB_ORIGIN` must match the frontend origin exactly. Public deployment still needs deployment secrets, request limits, and production configuration.
 
 Next: add request limits and finish production configuration before a free-hosting deployment and recorded demo.
+
+## Expanded-data experiment
+
+The research pipeline now acquires **30,011 unique shots across 1,206 matches and 12 senior men's competitions**, excluding penalties and shootouts. It uses StatsBomb Open Data revision `4b73468fc5b0f1950f9f66fada70ad3a4f9327cb`, seasons starting in 2015 onward, deterministic competition/match ordering, and complete matches. Downloads are cached locally; failures stop acquisition rather than silently dropping unavailable matches. Allow several GB of disk space for source event files. Raw data and candidate artifacts are not committed.
+
+Data source: [StatsBomb Open Data](https://github.com/statsbomb/open-data). Its [source terms](https://github.com/statsbomb/open-data/blob/master/LICENSE.pdf) apply. The pinned source URLs, per-match hashes, exclusions and dataset fingerprint are in [the dataset manifest](services/ml/reports/expanded/dataset.json). Coverage is selective and is not representative of all football.
+
+Reproduce using Python 3.12 or newer from the project root:
+
+```powershell
+python -m venv services/ml/venv
+.\services\ml\venv\Scripts\python.exe -m pip install -r services/ml/requirements.txt
+.\services\ml\venv\Scripts\python.exe services/ml/expand_data.py
+.\services\ml\venv\Scripts\python.exe services/ml/scale_experiment.py
+.\services\ml\venv\Scripts\python.exe -m unittest discover -s services/ml -p 'test_*.py'
+```
+
+If that virtual environment already exists, skip its creation. Acquisition uses the Python standard library plus the pinned pandas dependency; it does not require `statsbombpy`. The older World Cup ETL remains separate.
+
+The [scaling comparison](services/ml/reports/expanded/comparison.md) evaluates nested training samples on the **same 6,022 held-out shots**. Brier score was 0.07498 for 3,785 training shots and 0.07512 for 23,989. The paired match-bootstrap interval crosses zero: this experiment does **not** establish an improvement from more data. Five-fold evaluation on the full expanded dataset is documented separately. Its AUC must not be directly compared with the original World Cup score because the evaluation populations differ.
+
+The separate `expanded_candidate.pkl` is an experimental full-data fit. The serving artifact, app evidence panel, and original evaluation remain unchanged; the inference Docker image includes only the serving artifact.
+
+## API safeguards
+
+Per-IP, per-minute limits: session initialization 30, predictions 240, saves 60, and collection reads/exports 120. Exhausted limits return HTTP 429 with `Retry-After`; memory is bounded. Limits are process-local and reset on restart. Forwarded IP headers are deliberately untrusted. Behind a reverse proxy, visitors will share the proxy's budget until deployment-specific trusted proxy configuration is implemented; multiple instances require a shared limiter.
+
+Startup validates the database URL, ML service origin, port, frontend origin and cookie setting. Public frontend origins require HTTPS and secure cookies; local HTTP is supported explicitly. Model responses are checked for finite probabilities in [0,1], matching distance conversion and bounded text; upstream response bodies and connection URLs are not sent to browsers.
+
+See the [release checklist](docs/release-checklist.md) for remaining model, accessibility, documentation and deployment work.

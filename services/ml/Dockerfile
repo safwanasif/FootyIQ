@@ -39,7 +39,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py .
 COPY predict.py .
 COPY train_baseline.py .
-COPY artifacts/ ./artifacts/
+COPY artifacts/baseline_xg.pkl ./artifacts/baseline_xg.pkl
 
 # --- Expose Port ---
 # Documents that the container listens on port 5000. Does not itself

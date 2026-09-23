@@ -135,3 +135,4 @@ services/ml/artifacts/*.pkl
 # Browser regression outputs
 playwright-report/
 test-results/
+services/ml/data/source-cache/

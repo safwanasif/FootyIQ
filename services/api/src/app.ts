@@ -3,6 +3,7 @@ import cors from "cors";
 import { predictRouter } from "./routes/predict.route";
 import { createShotsRouter, type ShotStore } from "./shots";
 import { openCollection } from "./collection";
+import { requestLimit } from "./rate-limit";
 
 export function createApp(store: ShotStore, checkDatabase: () => Promise<unknown>, options: {
   webOrigin?: string; secureCookies?: boolean;
@@ -21,6 +22,11 @@ export function createApp(store: ShotStore, checkDatabase: () => Promise<unknown
     }
     next();
   });
+  app.use("/api/v1/session", requestLimit(30));
+  app.use("/api/v1/predict-proxy", requestLimit(240));
+  const saveLimit = requestLimit(60);
+  const readLimit = requestLimit(120);
+  app.use("/api/v1/shots", (req, res, next) => (req.method === "POST" ? saveLimit : readLimit)(req, res, next));
   app.use(express.json({ limit: "16kb" }));
   app.get("/health", async (_req, res) => {
     res.setHeader("Cache-Control", "no-store");
