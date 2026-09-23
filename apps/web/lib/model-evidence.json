@@ -1,0 +1,189 @@
+{
+  "serving": {
+    "shots": 3770,
+    "matches": 147,
+    "folds": 5,
+    "auc": 0.7581487050960735,
+    "brierImprovement": 9.70098670256283,
+    "calibration20to30": 0.17625899280575538
+  },
+  "research": {
+    "shots": 30011,
+    "matches": 1206,
+    "revision": "4b73468fc5b0f1950f9f66fada70ad3a4f9327cb",
+    "competitions": [
+      {
+        "name": "1. Bundesliga",
+        "matches": 68,
+        "shots": 1737,
+        "seasons": [
+          "2015/2016",
+          "2023/2024"
+        ]
+      },
+      {
+        "name": "African Cup of Nations",
+        "matches": 52,
+        "shots": 1162,
+        "seasons": [
+          "2023"
+        ]
+      },
+      {
+        "name": "Champions League",
+        "matches": 4,
+        "shots": 127,
+        "seasons": [
+          "2015/2016",
+          "2016/2017",
+          "2017/2018",
+          "2018/2019"
+        ]
+      },
+      {
+        "name": "Copa America",
+        "matches": 32,
+        "shots": 741,
+        "seasons": [
+          "2024"
+        ]
+      },
+      {
+        "name": "FIFA World Cup",
+        "matches": 128,
+        "shots": 3068,
+        "seasons": [
+          "2018",
+          "2022"
+        ]
+      },
+      {
+        "name": "Indian Super league",
+        "matches": 115,
+        "shots": 3053,
+        "seasons": [
+          "2021/2022"
+        ]
+      },
+      {
+        "name": "La Liga",
+        "matches": 175,
+        "shots": 4274,
+        "seasons": [
+          "2015/2016",
+          "2016/2017",
+          "2017/2018",
+          "2018/2019",
+          "2019/2020",
+          "2020/2021"
+        ]
+      },
+      {
+        "name": "Ligue 1",
+        "matches": 175,
+        "shots": 4030,
+        "seasons": [
+          "2015/2016",
+          "2021/2022",
+          "2022/2023"
+        ]
+      },
+      {
+        "name": "Major League Soccer",
+        "matches": 6,
+        "shots": 146,
+        "seasons": [
+          "2023"
+        ]
+      },
+      {
+        "name": "Premier League",
+        "matches": 175,
+        "shots": 4563,
+        "seasons": [
+          "2015/2016"
+        ]
+      },
+      {
+        "name": "Serie A",
+        "matches": 174,
+        "shots": 4573,
+        "seasons": [
+          "2015/2016"
+        ]
+      },
+      {
+        "name": "UEFA Euro",
+        "matches": 102,
+        "shots": 2537,
+        "seasons": [
+          "2020",
+          "2024"
+        ]
+      }
+    ],
+    "testShots": 6022,
+    "testMatches": 238,
+    "small": {
+      "trainingShots": 3785,
+      "brier": 0.07498302763948816
+    },
+    "large": {
+      "trainingShots": 23989,
+      "brier": 0.07512259692884328
+    },
+    "brierDifference": {
+      "difference": 0.00013956928935510222,
+      "lower_95": -0.00010279732615564383,
+      "upper_95": 0.00037897069703448245,
+      "resamples": 1000
+    }
+  },
+  "modelReview": {
+    "selected": "boosted",
+    "shots": 3014,
+    "matches": 122,
+    "promotionEligible": false,
+    "competitions": [
+      {
+        "name": "La Liga",
+        "shots": 635
+      },
+      {
+        "name": "Ligue 1",
+        "shots": 757
+      },
+      {
+        "name": "Premier League",
+        "shots": 870
+      },
+      {
+        "name": "Serie A",
+        "shots": 752
+      }
+    ],
+    "metrics": {
+      "candidate": {
+        "log_loss": 0.27368161156119,
+        "brier_score": 0.07693733113044635,
+        "roc_auc": 0.7372109918379015
+      },
+      "expanded_linear": {
+        "log_loss": 0.2763265592818967,
+        "brier_score": 0.0772232288201391,
+        "roc_auc": 0.7310702300420279
+      },
+      "serving": {
+        "log_loss": 0.2766199833849192,
+        "brier_score": 0.07732610013688207,
+        "roc_auc": 0.730278898169615
+      }
+    },
+    "brierInterval": {
+      "difference": -0.00038876900643573304,
+      "lower_95": -0.0009796164309117473,
+      "upper_95": 0.0001333782847258416,
+      "resamples": 1000
+    }
+  }
+}

@@ -14,9 +14,10 @@
     "dev:api": "npm run dev --workspace services/api",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspace apps/web",
-    "check": "npm run lint && npm run build",
+    "check": "node scripts/sync-model-evidence.mjs --check && npm run lint && npm run build",
     "test": "npm run test --workspace services/api",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "evidence:sync": "node scripts/sync-model-evidence.mjs"
   },
   "engines": {
     "node": ">=20.9.0",

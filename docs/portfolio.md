@@ -41,3 +41,9 @@ The performance numbers describe cross-validation of the training procedure on t
 - Built a reproducible StatsBomb acquisition pipeline for 30,011 unique non-penalty shots across 1,206 matches and 12 men's competitions; compared nested training sizes using a fixed match holdout and paired match-bootstrap uncertainty.
 
 This is a valid additional résumé bullet. Do not claim that scaling improved accuracy: the experiment did not establish a gain. See the [comparison](../services/ml/reports/expanded/comparison.md) and [remaining release checklist](release-checklist.md).
+
+## Completed v1 model comparison
+
+Compared three fixed geometry models using nested match-grouped validation, then evaluated the selected candidate on 3,014 previously unused shots. The boosted candidate improved point estimates but failed the predefined uncertainty-based promotion rule; retained the serving baseline. This supports an interview discussion of selection bias, probability scoring, grouped evaluation, and release decisions, without claiming a statistically established accuracy improvement.
+
+The [fixed release roadmap](release-roadmap.md) now controls remaining work. Model experimentation is closed for v1.

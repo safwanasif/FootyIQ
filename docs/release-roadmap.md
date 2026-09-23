@@ -2,7 +2,7 @@
 
 This is the release scope. Complete these phases, release v1, and move to another project. After release, make only necessary security, reliability, or compatibility fixes until a later deliberate project revisit. New ideas go to the deferred list, not the release checklist.
 
-## Phase 1 — Evidence and source clarity
+## Phase 1 — Evidence and source clarity (complete)
 
 - Show the current model's 3,770-shot evaluation separately from the 30,011-shot research dataset.
 - List all sampled competitions, seasons, match counts and shot counts; link StatsBomb and reproducible reports.
@@ -11,7 +11,7 @@ This is the release scope. Complete these phases, release v1, and move to anothe
 
 Done when the dashboard accurately explains both datasets without implying the expanded candidate is deployed.
 
-## Phase 2 — One bounded model decision
+## Phase 2 — One bounded model decision (complete)
 
 Compare exactly three geometry-only candidates with fixed settings: baseline logistic regression, spline logistic regression, and small histogram gradient boosting. No additional feature controls, hyperparameter search, neural network, or recalibration round for v1.
 
@@ -20,6 +20,8 @@ Compare exactly three geometry-only candidates with fixed settings: baseline log
 3. Acquire at least 3,000 eligible shots in complete, previously unused matches from the same pinned source. Exclude all match IDs from both existing datasets. Use deterministic competition-balanced selection, with no outcome-dependent selection. Report the competitions actually available; this is a new-match test, not a future-season or unseen-competition benchmark.
 4. Evaluate the frozen candidate, an expanded-data linear baseline, and the unchanged serving artifact once on those matches. Publish probability metrics, calibration, per-competition results and paired match-bootstrap uncertainty.
 5. A nonlinear candidate qualifies for promotion only if log loss is lower and the upper endpoint of its paired 95% Brier-difference interval is below zero against both baselines. Also require finite bounded outputs across the pitch, sensible preset ordering and acceptable inference latency. Otherwise keep the serving baseline and close model experimentation for v1.
+
+Result: retain the serving baseline. The boosted candidate had slightly better point estimates on 3,014 unused shots, but both Brier intervals crossed zero. See the [final decision](../services/ml/reports/model-selection/decision.md). The protocol and selected candidate were committed in `bd4058e` before this final evaluation.
 
 Done when a documented keep/replace decision exists. Do not change the rule or tune against the final test after seeing results. No promised accuracy target.
 

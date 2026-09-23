@@ -1,0 +1,1581 @@
+{
+  "selected": "boosted",
+  "test_shots": 3014,
+  "test_matches": 122,
+  "source_revision": "4b73468fc5b0f1950f9f66fada70ad3a4f9327cb",
+  "source_matches": [
+    {
+      "match_id": 3754057,
+      "match_date": "2015-12-26",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 24,
+      "source_sha256": "45e8b16c8f7ae5e6cbbe96034cfc579a3fbb0facf9f68b2cf14bd2350c1ef849"
+    },
+    {
+      "match_id": 3901184,
+      "match_date": "2016-03-18",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 27,
+      "source_sha256": "b9c5d1c7ee7670ea7179819853ccd97dcf06be1525879896365ca9daa1e9ef03"
+    },
+    {
+      "match_id": 3825906,
+      "match_date": "2016-04-17",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 17,
+      "source_sha256": "bc84f65633c42d13dc4a1e78f8c9405ccb525b188639205016dffa57b973f0f2"
+    },
+    {
+      "match_id": 3879871,
+      "match_date": "2016-05-15",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 23,
+      "source_sha256": "c24249531495c82591abbd84aca420a75f5bc6d1d33249d2823e3cf9456df2ff"
+    },
+    {
+      "match_id": 3754258,
+      "match_date": "2015-11-08",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 16,
+      "source_sha256": "e0c8d30f2d256fe124a46214559531dc916cbd9897648d1b94d6ec813720f9fb"
+    },
+    {
+      "match_id": 3900494,
+      "match_date": "2015-10-31",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 15,
+      "source_sha256": "532b8114972c619c519169b00c1f6e390402a73aa7a51b209faff3cb255b91b5"
+    },
+    {
+      "match_id": 3825633,
+      "match_date": "2015-10-23",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 20,
+      "source_sha256": "2c9b84a6c7ad81be5360c7fe4df0a53e46fbf68d6a3c4beba8153243b12e0f9f"
+    },
+    {
+      "match_id": 3879622,
+      "match_date": "2015-11-22",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 28,
+      "source_sha256": "d03d732807d5e9ef8154a0a10d17535ff4ca1264ea8dc759a45cf86900abaa23"
+    },
+    {
+      "match_id": 3754078,
+      "match_date": "2015-08-08",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 25,
+      "source_sha256": "0db154ebd79ee2b79a3dcd805f1d0a54c0e23e2f2fba611cfe25d633458abad9"
+    },
+    {
+      "match_id": 3900548,
+      "match_date": "2015-12-06",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 23,
+      "source_sha256": "22b33e48ad04f51ae8d7c76282b03ca6e260ade6ae38286ab9fe0bc15b277495"
+    },
+    {
+      "match_id": 3825800,
+      "match_date": "2016-03-02",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 17,
+      "source_sha256": "c4bb4a4726f1af05f10bb3f0298af9c21661b830bf524b808cff53236e9767d1"
+    },
+    {
+      "match_id": 3879655,
+      "match_date": "2015-12-14",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 25,
+      "source_sha256": "028f191b8b833bc4952587ade20b40d16108b0aeb9abc65159e04aa9c5069468"
+    },
+    {
+      "match_id": 3754317,
+      "match_date": "2016-02-02",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 27,
+      "source_sha256": "ee96675a24d85ed638cb624034b79f3980a958eebece66bdaa9eb3d80ff01e8b"
+    },
+    {
+      "match_id": 3829448,
+      "match_date": "2015-08-29",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 27,
+      "source_sha256": "58c7bcb21eeefc57ebc8daf36bf9a8594122ac86ffbbb642207ec73ef44bc25b"
+    },
+    {
+      "match_id": 3825866,
+      "match_date": "2016-05-08",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 13,
+      "source_sha256": "8a863306962bc3f0a0dca5efa65259854fa06d519e619766ae83b09f982a5326"
+    },
+    {
+      "match_id": 3879809,
+      "match_date": "2016-04-09",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 26,
+      "source_sha256": "58018035cd9026c966ebc2298c701c5324149770fff4d6c575f818b607ada14c"
+    },
+    {
+      "match_id": 3754281,
+      "match_date": "2016-02-07",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 33,
+      "source_sha256": "4020668028eab8709b01ca74aa3988813e7b4bc732827cca2ba93a6950faa074"
+    },
+    {
+      "match_id": 3837918,
+      "match_date": "2023-03-19",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 235,
+      "season_name": "2022/2023",
+      "shots": 27,
+      "source_sha256": "5e18788c5ec58e367fcb23318f880b0e7a81d4ab2b651eea5faa31f136598a8c"
+    },
+    {
+      "match_id": 16196,
+      "match_date": "2019-03-02",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 4,
+      "season_name": "2018/2019",
+      "shots": 28,
+      "source_sha256": "41b6bbe6eb0a2fc8b585cdf4332bff8a0b8971855e7bb850ec37deab55c7300b"
+    },
+    {
+      "match_id": 3879751,
+      "match_date": "2016-02-21",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 29,
+      "source_sha256": "a40c0fe7fbb1a0595c89e03d0a7e064c586167703e674c9a9976b4328a6c9737"
+    },
+    {
+      "match_id": 3754016,
+      "match_date": "2016-04-09",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 25,
+      "source_sha256": "450f53ba0b8951d41b7d7b6983b115454f5ba71d1377f9a48855b20acd3df4ad"
+    },
+    {
+      "match_id": 3829479,
+      "match_date": "2015-09-23",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 23,
+      "source_sha256": "64fbf175f691d152605479e1fb4e60b5559d2bc85b086ebbd53bf092b949b8be"
+    },
+    {
+      "match_id": 3825813,
+      "match_date": "2016-03-12",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 22,
+      "source_sha256": "12ee8cce4e3181a4a9aa9a5ad4ac6dbd43c31f2de27f6305a498412a1149ae1b"
+    },
+    {
+      "match_id": 3879728,
+      "match_date": "2016-02-06",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 24,
+      "source_sha256": "0488c5d080ac0fbd565bce2b01069e745caedd7ba8b2e887d7004228229482d9"
+    },
+    {
+      "match_id": 3754074,
+      "match_date": "2015-10-04",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 32,
+      "source_sha256": "e2d9d6d867faad922d7be10a1b5c7dcd8b86bceb016670dfe519390e409eddcf"
+    },
+    {
+      "match_id": 3829462,
+      "match_date": "2015-09-13",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 36,
+      "source_sha256": "bdbfb5a4db4374b34da9719f10ad4cbf988c8ee698628bb2b8ebdd3c8083a79d"
+    },
+    {
+      "match_id": 303700,
+      "match_date": "2019-10-19",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 42,
+      "season_name": "2019/2020",
+      "shots": 15,
+      "source_sha256": "4f89343f7d796681e4b08e78e7690cf89b2a70f555e86f656e647748a40fb28b"
+    },
+    {
+      "match_id": 3879541,
+      "match_date": "2015-09-23",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 22,
+      "source_sha256": "2cd3ecce080852d7ab7b1f3ec369cf4f79266196633a033680546ced0b875002"
+    },
+    {
+      "match_id": 3754092,
+      "match_date": "2016-05-02",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 29,
+      "source_sha256": "2e03ee9864ffa7cb93914ccf88ddf8edad0f1d40d9a86bb4bb5976a9ff43926d"
+    },
+    {
+      "match_id": 3900557,
+      "match_date": "2015-12-13",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 19,
+      "source_sha256": "4ccce97089404db4eaa110d758823dad134e48fda1122672e63342bf6c402a68"
+    },
+    {
+      "match_id": 265944,
+      "match_date": "2016-04-23",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 24,
+      "source_sha256": "3f3d73fad49f30bc9700dd9feae8b541bebaa5241a3fbdde5c4759b719004635"
+    },
+    {
+      "match_id": 3879540,
+      "match_date": "2015-09-23",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 15,
+      "source_sha256": "1f5d7650daeff2976cb207094724f5d80555a014f7d7108ac5ef917a79dff414"
+    },
+    {
+      "match_id": 3754158,
+      "match_date": "2016-05-07",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 40,
+      "source_sha256": "58cefcbc1e116e94f29f19d56bd98c15ddbe1438f5b0aa2a24956ab4c9e4875f"
+    },
+    {
+      "match_id": 3901202,
+      "match_date": "2016-04-03",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 25,
+      "source_sha256": "1011afccf19ecdcde055c4692008bf0e72da19d8db5fee3e01a3775554cb657f"
+    },
+    {
+      "match_id": 3825762,
+      "match_date": "2016-02-06",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 16,
+      "source_sha256": "1cf17e513f0abb2233837a2479d369e047427f99082bd411d6c57b8230a848a2"
+    },
+    {
+      "match_id": 3879840,
+      "match_date": "2016-04-24",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 16,
+      "source_sha256": "943ddd420cd13771aa2b9866eecbfd645573a3d7cbca8c86bfa3f7e6488f3d91"
+    },
+    {
+      "match_id": 3754038,
+      "match_date": "2015-11-29",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 19,
+      "source_sha256": "b88313cac06eae62d09b22e078ff46f1e128a4bcc1231ff959391bc4dce2318a"
+    },
+    {
+      "match_id": 3900495,
+      "match_date": "2015-10-31",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 17,
+      "source_sha256": "daa5c9a315fc241c47e98cf72c8886c580616aebbe79e8fb3581ef668261df15"
+    },
+    {
+      "match_id": 266664,
+      "match_date": "2016-04-09",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 18,
+      "source_sha256": "47d896de53d8312b18ce3a5d3b6b7bc014a92a5bc23ac9682793711b0e649d25"
+    },
+    {
+      "match_id": 3878592,
+      "match_date": "2015-09-12",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 24,
+      "source_sha256": "22e513985380a2765f8ee7f26c83ef226cac19bc475bccd10033cabb8985120e"
+    },
+    {
+      "match_id": 3753994,
+      "match_date": "2016-05-15",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 34,
+      "source_sha256": "96a5172eb61c370d16d8393a3f7e1ccdefbf2cd74bfd67569bb03ac05a38538c"
+    },
+    {
+      "match_id": 3900563,
+      "match_date": "2015-12-19",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 22,
+      "source_sha256": "6ea8af92bb1d3f565bb8d219255ad641e360d6804285841a6ade6c7d6fbf7876"
+    },
+    {
+      "match_id": 303487,
+      "match_date": "2019-11-09",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 42,
+      "season_name": "2019/2020",
+      "shots": 14,
+      "source_sha256": "cc36bddd836bca8aa8a4947fbec96faae92a50371ffae07cff8696324f68340c"
+    },
+    {
+      "match_id": 3879761,
+      "match_date": "2016-02-28",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 22,
+      "source_sha256": "e07fa8d46fb7484d914107238991507f4f965dfd4ec18a5dd11df75395efb680"
+    },
+    {
+      "match_id": 3754337,
+      "match_date": "2015-08-30",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 29,
+      "source_sha256": "a06a27b76639b1f974f6b3e58ab7562ce556421c344a5768bbae8141af8dbb78"
+    },
+    {
+      "match_id": 3900639,
+      "match_date": "2016-02-14",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 28,
+      "source_sha256": "f5b4cbfc0c76e196d651141c3b4ddca7267e7eb4aeb1e45af4bff4b2737c27a9"
+    },
+    {
+      "match_id": 3825844,
+      "match_date": "2016-03-13",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 22,
+      "source_sha256": "291860f7fad794454d093272bac4d63978d48cdc2fffe65b7cd2ac6243d4e27e"
+    },
+    {
+      "match_id": 3879694,
+      "match_date": "2016-01-17",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 17,
+      "source_sha256": "bc54edbd41a28c8a267312f638c833fd5548dbfaca2c8bc5db88b724b1842374"
+    },
+    {
+      "match_id": 3753973,
+      "match_date": "2016-03-19",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 34,
+      "source_sha256": "171d8389a3882a642828de8a244902e49b9e89284ee8356b37e59d71e4221d10"
+    },
+    {
+      "match_id": 3900508,
+      "match_date": "2015-11-08",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 24,
+      "source_sha256": "7cf68eaf038bb6fa60f977ac7dc76925bb8286907cd05e645fc35fa5c356c04e"
+    },
+    {
+      "match_id": 9636,
+      "match_date": "2017-10-01",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 1,
+      "season_name": "2017/2018",
+      "shots": 33,
+      "source_sha256": "44f391eee13d0058a14ddce503eab36c4ce387dfa896040428666ebef352a7c5"
+    },
+    {
+      "match_id": 3879620,
+      "match_date": "2015-11-22",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 26,
+      "source_sha256": "5d59df4b817306d175cd86171f2a8b0232b967ab16cd4b536f028d75a578dba8"
+    },
+    {
+      "match_id": 3754128,
+      "match_date": "2015-08-08",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 19,
+      "source_sha256": "2af9501d7b7526d124835f1913f69da21050d7356c9a56aeeea3af57b78fd932"
+    },
+    {
+      "match_id": 3829444,
+      "match_date": "2015-08-29",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 26,
+      "source_sha256": "b549becf9f09ec25e3c2f10e626fd80f980d7a51f591576cec2373f7374c2dbf"
+    },
+    {
+      "match_id": 303493,
+      "match_date": "2020-06-23",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 42,
+      "season_name": "2019/2020",
+      "shots": 25,
+      "source_sha256": "ef763d692761ac64da7fc1b0806621ad43d9face22eb8c790339cc4d2f507905"
+    },
+    {
+      "match_id": 3879839,
+      "match_date": "2016-04-24",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 26,
+      "source_sha256": "28df07f090789092fc78c37bd015499cd9b48815b233be5b315af2191a1959a5"
+    },
+    {
+      "match_id": 3754282,
+      "match_date": "2016-04-23",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 35,
+      "source_sha256": "bb8d2fbbd38352edceebe3425c9870fd8b74f01318ef4f85b2fb6d000010d3e3"
+    },
+    {
+      "match_id": 3837947,
+      "match_date": "2023-04-15",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 235,
+      "season_name": "2022/2023",
+      "shots": 28,
+      "source_sha256": "69d1c825870850d7deb0db7473d50edcf29856d5bf3b4c7115bd928ae4f7429b"
+    },
+    {
+      "match_id": 303479,
+      "match_date": "2020-03-07",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 42,
+      "season_name": "2019/2020",
+      "shots": 22,
+      "source_sha256": "7e843507e85632d3d98b21222020ef6dce03a65eea092429f691a7ecae7ab693"
+    },
+    {
+      "match_id": 3879841,
+      "match_date": "2016-04-24",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 25,
+      "source_sha256": "7efa3e999fc4e0b4e231336ce21ba90530fbbc8150614fe6270855c8e998e6f2"
+    },
+    {
+      "match_id": 3754269,
+      "match_date": "2015-10-19",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 22,
+      "source_sha256": "2eb6a73bc40e6363a9b9908cf690dcb92349ca9bf96822f332cec1de98ac665e"
+    },
+    {
+      "match_id": 3900500,
+      "match_date": "2015-11-06",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 28,
+      "source_sha256": "1184d3ce568da1ed0a458c2bf78e785a9e5ccbbd39f2164ee652508515d38712"
+    },
+    {
+      "match_id": 3825624,
+      "match_date": "2015-10-17",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 29,
+      "source_sha256": "9cf814a8ded391c3eba61ff0671328fda9b52968da0c4ea4f65479e5a7769c4c"
+    },
+    {
+      "match_id": 3879595,
+      "match_date": "2015-10-28",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 11,
+      "source_sha256": "54e59aa22f8ea166c4a4d22cce5c0f88b6c6818f3d703caa6b069b8378365ac1"
+    },
+    {
+      "match_id": 3754087,
+      "match_date": "2016-04-02",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 33,
+      "source_sha256": "65255f38431b043bde60560f6ed703a20b7118f7ec0c0b3758f97002764ac7f8"
+    },
+    {
+      "match_id": 3838017,
+      "match_date": "2023-06-03",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 235,
+      "season_name": "2022/2023",
+      "shots": 26,
+      "source_sha256": "d2847898d8053346e9ffd7eba637f69a1e96142892efbfdddb2017951cad7026"
+    },
+    {
+      "match_id": 3825659,
+      "match_date": "2015-11-08",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 13,
+      "source_sha256": "80435a45aa8be7cbf35443dc97edc10eaee566998627043536a3a2681d4d3205"
+    },
+    {
+      "match_id": 3879561,
+      "match_date": "2015-10-04",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 33,
+      "source_sha256": "54832cbe57aa756220b12089018d33fae29fe12b49bdef63e6c930269a4dba95"
+    },
+    {
+      "match_id": 3753981,
+      "match_date": "2016-01-12",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 22,
+      "source_sha256": "e42cbccdea214a087120a11c5cb1d7298c1e172f28c96858cb3f82cfa6cea74f"
+    },
+    {
+      "match_id": 3900549,
+      "match_date": "2015-12-06",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 18,
+      "source_sha256": "bb0d506ca041e21121fda75849b0971e4140a8f1a52a225b642f2f7635841334"
+    },
+    {
+      "match_id": 3825767,
+      "match_date": "2016-02-08",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 17,
+      "source_sha256": "4d8a40ac27538e8008d1c95ab6625eed14a672e43c2d2a8d26562b9fd79d48d2"
+    },
+    {
+      "match_id": 3879597,
+      "match_date": "2015-10-31",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 27,
+      "source_sha256": "09c2ae2595479f3df10095abf1f62d94e44969ef4c71709e35a228a235861fad"
+    },
+    {
+      "match_id": 3754137,
+      "match_date": "2016-04-16",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 25,
+      "source_sha256": "fe16aa77c2197840fa74397929b2f651b4d576c97ac3a3fb508e2453281640cd"
+    },
+    {
+      "match_id": 3900613,
+      "match_date": "2016-02-03",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 19,
+      "source_sha256": "df24c46eeefb59f1a66f1f3297af18bce08d1a7441c5cb0da0cc8e686af1b17b"
+    },
+    {
+      "match_id": 16149,
+      "match_date": "2019-01-27",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 4,
+      "season_name": "2018/2019",
+      "shots": 28,
+      "source_sha256": "497e313e181367a6f274d8f1703841a3eb3279f03a090c5f64f88e2ba77451af"
+    },
+    {
+      "match_id": 3879603,
+      "match_date": "2015-11-01",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 20,
+      "source_sha256": "957bfcbc684b567e222e3139c5251385cc4f05565f822b16fcf438a365595afc"
+    },
+    {
+      "match_id": 3754115,
+      "match_date": "2015-10-17",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 20,
+      "source_sha256": "1c6e1becb9390e800e1892a0819e61444bc47aec43d7542ccbe60970872aae94"
+    },
+    {
+      "match_id": 3900581,
+      "match_date": "2016-01-16",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 24,
+      "source_sha256": "9e3483458d2818f35b2af33b3e5ddeddccdc9a596d9a4617ff7d189c41205f85"
+    },
+    {
+      "match_id": 303532,
+      "match_date": "2020-06-16",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 42,
+      "season_name": "2019/2020",
+      "shots": 15,
+      "source_sha256": "6d76015ddcc67e89d5bf23c474362dbdaf4ab002727900738388b778e293ef9b"
+    },
+    {
+      "match_id": 3879782,
+      "match_date": "2016-03-13",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 24,
+      "source_sha256": "c028ca4cc1baaead3b13724a94c912003129014049ebaa426bb6c537480d32ec"
+    },
+    {
+      "match_id": 3754075,
+      "match_date": "2016-04-02",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 25,
+      "source_sha256": "d5bd58e02377619947747ef9a43929c2b5dfdfdf23de91e59b7533caf34e4a00"
+    },
+    {
+      "match_id": 3900600,
+      "match_date": "2016-01-29",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 28,
+      "source_sha256": "e4a6c4cf9ea398b8789f5a2d32492fb1299becf141f787c5010966847f9841c6"
+    },
+    {
+      "match_id": 3825784,
+      "match_date": "2016-02-21",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 17,
+      "source_sha256": "2c48bf6b8d17a7848e8ec5016a1b99cce3012adc64a9852ca82a605098dae691"
+    },
+    {
+      "match_id": 3879763,
+      "match_date": "2016-02-28",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 40,
+      "source_sha256": "4ca80897216016033024f459f4f943fde6d148f0b3485aaa3a92ab8bd6178cd4"
+    },
+    {
+      "match_id": 3754247,
+      "match_date": "2015-11-21",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 32,
+      "source_sha256": "4b13a363a789eab5501f5db37ceeea332a297b07f564852a3abf043c214f0613"
+    },
+    {
+      "match_id": 3900506,
+      "match_date": "2015-11-07",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 26,
+      "source_sha256": "54f66e6868b27098b9feba36897ea75ef98d84609f4400a3c27ab57ebe49945c"
+    },
+    {
+      "match_id": 303377,
+      "match_date": "2020-02-15",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 42,
+      "season_name": "2019/2020",
+      "shots": 18,
+      "source_sha256": "ebfe3beb913fe9c23ae2fac6a2faab022862851040da75e84367c0a52478678d"
+    },
+    {
+      "match_id": 3879702,
+      "match_date": "2016-01-24",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 27,
+      "source_sha256": "8dfd7a89a6457500ae0e50f23e5cf64959bd699274df15c718cddfd83fdc98c7"
+    },
+    {
+      "match_id": 3754220,
+      "match_date": "2016-03-06",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 32,
+      "source_sha256": "28517fe2c70d6e0ace90021d458f405a9c7f942338d0296fd430847e11c8c2a3"
+    },
+    {
+      "match_id": 3900493,
+      "match_date": "2015-10-31",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 37,
+      "source_sha256": "e42af55bc37c23b3996c45defe984aad13d0621b83788602b3afce93303ca12a"
+    },
+    {
+      "match_id": 3825732,
+      "match_date": "2016-01-16",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 29,
+      "source_sha256": "c7d56114ecbfb60f4965e49fb79ebe43a719a248d9bf03185973c5de81c96fdc"
+    },
+    {
+      "match_id": 3879569,
+      "match_date": "2015-10-18",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 28,
+      "source_sha256": "d3def968f284112021df1a4e4125184599df5baf54e817007c654ffbdafcaa7f"
+    },
+    {
+      "match_id": 3754324,
+      "match_date": "2016-02-28",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 45,
+      "source_sha256": "142fa6dd4921d123020f923b176125000d4d12d24b5e9ec1eced196594cdebe4"
+    },
+    {
+      "match_id": 3829433,
+      "match_date": "2015-08-21",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 19,
+      "source_sha256": "08dd40b688d437f4299a67910b1c0f50cd6460e0a7138e290538e27f608784fd"
+    },
+    {
+      "match_id": 3773523,
+      "match_date": "2020-12-16",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 90,
+      "season_name": "2020/2021",
+      "shots": 26,
+      "source_sha256": "28d9d136e9fd821b7155b948e8bcbd59353977527cfe760ab2f1695d968aa288"
+    },
+    {
+      "match_id": 3879565,
+      "match_date": "2015-10-04",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 33,
+      "source_sha256": "1009615452dd3c77cb9e8496886138e76c0b37ccc129e3781853cd2bd6a1f387"
+    },
+    {
+      "match_id": 3754090,
+      "match_date": "2015-10-31",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 25,
+      "source_sha256": "0b8a5c189bd029204f430268f33cd61e6907b11bf47f5170536b44f8a0f03c76"
+    },
+    {
+      "match_id": 3802699,
+      "match_date": "2021-10-29",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 108,
+      "season_name": "2021/2022",
+      "shots": 28,
+      "source_sha256": "55a505d3bb278fae3eb1a873b79699dd980edaffd1e4864636848c3b25e3b80c"
+    },
+    {
+      "match_id": 3825868,
+      "match_date": "2016-04-25",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 27,
+      "source_sha256": "a9061ae8c1f0a42b8a3df5a69e7b958226b5866fc1ab5b99e56a01ed6dc2cadd"
+    },
+    {
+      "match_id": 3879646,
+      "match_date": "2015-12-06",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 22,
+      "source_sha256": "d81df54692937e1dab7369fae0b735d65c009481fa94dec46157b783239260a4"
+    },
+    {
+      "match_id": 3754333,
+      "match_date": "2016-05-15",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 36,
+      "source_sha256": "b5fb5b977d28012eeb5a7c8333f50646859f0c24be0f32cbf6e0a568cea13b48"
+    },
+    {
+      "match_id": 3829492,
+      "match_date": "2015-09-29",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 29,
+      "source_sha256": "f910597f1454d88eb99256527668e49ad8421ca64e3d3409296b8bae7d587209"
+    },
+    {
+      "match_id": 9642,
+      "match_date": "2017-10-14",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 1,
+      "season_name": "2017/2018",
+      "shots": 20,
+      "source_sha256": "a536cbdcc0bc06b39db051df79112d86716fbbf52db4df0281e7c30e72c55f5d"
+    },
+    {
+      "match_id": 3879663,
+      "match_date": "2015-12-20",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 27,
+      "source_sha256": "1041ed449559c8a3e0d1f80c68d9f1a60557d6cb905b9f7dd51ed58f9d35d7b1"
+    },
+    {
+      "match_id": 3754102,
+      "match_date": "2015-10-18",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 29,
+      "source_sha256": "641f16ba3ea0ad0a5c7d292f2b871eb746ba7e3533e0904c51e02fff6bbdae17"
+    },
+    {
+      "match_id": 3829509,
+      "match_date": "2015-10-18",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 26,
+      "source_sha256": "08604e7b8ced95191040d0e73e75d2e7f25746afe2d5feb9b5394a683c6d8ffd"
+    },
+    {
+      "match_id": 3825586,
+      "match_date": "2015-09-13",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 17,
+      "source_sha256": "e66b656d37c2c0cf69984ef3593802169376d5512ab933c0dc0863fb57fb85e0"
+    },
+    {
+      "match_id": 3879715,
+      "match_date": "2016-01-31",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 27,
+      "source_sha256": "450fee825818e890485a5fe6d7dc8fe0a3c206e410f00c301fa61da10aa7d753"
+    },
+    {
+      "match_id": 3754179,
+      "match_date": "2016-01-23",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 35,
+      "source_sha256": "0508df02431a359cea03cb2d4c7040d76578443cbaa1510fa629e4c05bb25531"
+    },
+    {
+      "match_id": 3829418,
+      "match_date": "2015-08-08",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 20,
+      "source_sha256": "985926092f0c4c59e63952fb70b9314450a66800045a2f42e219366db2bceb39"
+    },
+    {
+      "match_id": 3825570,
+      "match_date": "2015-08-24",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 23,
+      "source_sha256": "85a1705ee486b708f43dd426367513a498eafdc924a8820fd249c00b2bb4a210"
+    },
+    {
+      "match_id": 3879572,
+      "match_date": "2015-10-18",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 23,
+      "source_sha256": "bc6aabc02292342c0c31aa87743fcb00680cde24de0d54ec2106ec3128dc6c66"
+    },
+    {
+      "match_id": 3754225,
+      "match_date": "2016-05-07",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 24,
+      "source_sha256": "07e69435a97a2b263dbd7d1cfe3112a10b8d486cc2f8a36f8f1d0e6c671c3ee0"
+    },
+    {
+      "match_id": 3901230,
+      "match_date": "2016-04-24",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 24,
+      "source_sha256": "11e78e56b5af1d7ec7556ec709a79db10b6074816cc1d38608c152a1dbf6475a"
+    },
+    {
+      "match_id": 3825831,
+      "match_date": "2016-04-10",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 30,
+      "source_sha256": "26ce8e37d495f4ff76abb735cba49ffa4103c62162c3a7b8473a5ebf71f03261"
+    },
+    {
+      "match_id": 3879799,
+      "match_date": "2016-04-03",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 36,
+      "source_sha256": "a25432d3f8c0ce1a8e81007b540f4773ddbbe7f73797a55bce47f639de5a32f2"
+    },
+    {
+      "match_id": 3753977,
+      "match_date": "2016-03-19",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 18,
+      "source_sha256": "2bfd20b0d4b0732ed729e7ee06dd3ad98fde7401ffa6d57c5ad1b466d1173b8f"
+    },
+    {
+      "match_id": 3901211,
+      "match_date": "2016-04-10",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 16,
+      "source_sha256": "74422c30263e07699f51847f7f8efae9249736c5ad55b480c68264ef34934875"
+    },
+    {
+      "match_id": 266892,
+      "match_date": "2016-08-28",
+      "competition_id": 11,
+      "competition_name": "La Liga",
+      "season_id": 2,
+      "season_name": "2016/2017",
+      "shots": 20,
+      "source_sha256": "c5870136a2eee83e4b9a24d44f8479fb52e56a1c7e7c1196770311c6fb2efb8e"
+    },
+    {
+      "match_id": 3879592,
+      "match_date": "2015-10-28",
+      "competition_id": 12,
+      "competition_name": "Serie A",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 26,
+      "source_sha256": "9193f0d1b71a4937071b9e97693b43c8bd63b90cb125d8422eafa9e77449e797"
+    },
+    {
+      "match_id": 3754085,
+      "match_date": "2015-12-05",
+      "competition_id": 2,
+      "competition_name": "Premier League",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 26,
+      "source_sha256": "96244a3a300838d589ea1928195fa8ecd709600971243a5ad450937a7afae710"
+    },
+    {
+      "match_id": 3901185,
+      "match_date": "2016-03-19",
+      "competition_id": 7,
+      "competition_name": "Ligue 1",
+      "season_id": 27,
+      "season_name": "2015/2016",
+      "shots": 22,
+      "source_sha256": "8944a5384cfe80efacd9d0c4d8db25ab8f17ce952320db1dbd2d55d13a4366cc"
+    }
+  ],
+  "selection_sha256": "472ad6014d4a8d1e18729201a21ee1ec0b900eb211e65ff7323d152e1df75d90",
+  "test_dataset_sha256": "bad36098015c49eb8670c3707aa16e8397cc7977adf626fe352c9fd69483d670",
+  "artifact_hashes": {
+    "candidate": "c5921527124d05f59933edc50af21acbed20add053560d8eddfb6285a65ca7e9",
+    "expanded_linear": "95edf1ce0070b685f92d778df0ea15a3e716f53c9f5d788aa77245343f643e21",
+    "serving": "1e96bb354239452420c77bd17df50f77e7405c933c701fe697e9c930064770ba"
+  },
+  "results": {
+    "candidate": {
+      "metrics": {
+        "log_loss": 0.27368161156119,
+        "brier_score": 0.07693733113044635,
+        "roc_auc": 0.7372109918379015
+      },
+      "calibration": [
+        {
+          "lower": 0.0,
+          "upper": 0.1,
+          "count": 1756,
+          "mean_prediction": 0.04199466315402482,
+          "goal_rate": 0.03758542141230068
+        },
+        {
+          "lower": 0.1,
+          "upper": 0.2,
+          "count": 1070,
+          "mean_prediction": 0.14148989131045156,
+          "goal_rate": 0.14579439252336449
+        },
+        {
+          "lower": 0.2,
+          "upper": 0.3,
+          "count": 88,
+          "mean_prediction": 0.23044871052176183,
+          "goal_rate": 0.22727272727272727
+        },
+        {
+          "lower": 0.3,
+          "upper": 0.4,
+          "count": 83,
+          "mean_prediction": 0.3484960280291795,
+          "goal_rate": 0.27710843373493976
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "count": 0,
+          "mean_prediction": null,
+          "goal_rate": null
+        },
+        {
+          "lower": 0.5,
+          "upper": 0.6,
+          "count": 5,
+          "mean_prediction": 0.5143872946372928,
+          "goal_rate": 0.6
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.7,
+          "count": 12,
+          "mean_prediction": 0.6566077367100435,
+          "goal_rate": 0.6666666666666666
+        },
+        {
+          "lower": 0.7,
+          "upper": 0.8,
+          "count": 0,
+          "mean_prediction": null,
+          "goal_rate": null
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 0,
+          "mean_prediction": null,
+          "goal_rate": null
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "count": 0,
+          "mean_prediction": null,
+          "goal_rate": null
+        }
+      ],
+      "by_competition": {
+        "La Liga": {
+          "shots": 635,
+          "log_loss": 0.3013628642469702,
+          "brier_score": 0.0873649580083943,
+          "roc_auc": 0.7489095017868403
+        },
+        "Ligue 1": {
+          "shots": 757,
+          "log_loss": 0.2757955036626532,
+          "brier_score": 0.07600101060363226,
+          "roc_auc": 0.7191397034041119
+        },
+        "Premier League": {
+          "shots": 870,
+          "log_loss": 0.2820704930733469,
+          "brier_score": 0.07961857216111184,
+          "roc_auc": 0.7124208860759493
+        },
+        "Serie A": {
+          "shots": 752,
+          "log_loss": 0.23847398032202152,
+          "brier_score": 0.0659726660701037,
+          "roc_auc": 0.7765534682080926
+        }
+      }
+    },
+    "expanded_linear": {
+      "metrics": {
+        "log_loss": 0.2763265592818967,
+        "brier_score": 0.0772232288201391,
+        "roc_auc": 0.7310702300420279
+      },
+      "calibration": [
+        {
+          "lower": 0.0,
+          "upper": 0.1,
+          "count": 2047,
+          "mean_prediction": 0.051936531905647655,
+          "goal_rate": 0.05227161700048852
+        },
+        {
+          "lower": 0.1,
+          "upper": 0.2,
+          "count": 662,
+          "mean_prediction": 0.13977643363254122,
+          "goal_rate": 0.1419939577039275
+        },
+        {
+          "lower": 0.2,
+          "upper": 0.3,
+          "count": 221,
+          "mean_prediction": 0.24025614268144435,
+          "goal_rate": 0.20361990950226244
+        },
+        {
+          "lower": 0.3,
+          "upper": 0.4,
+          "count": 55,
+          "mean_prediction": 0.3458406670151609,
+          "goal_rate": 0.2
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "count": 15,
+          "mean_prediction": 0.4336978764355015,
+          "goal_rate": 0.6666666666666666
+        },
+        {
+          "lower": 0.5,
+          "upper": 0.6,
+          "count": 7,
+          "mean_prediction": 0.5415975092547769,
+          "goal_rate": 0.5714285714285714
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.7,
+          "count": 5,
+          "mean_prediction": 0.6222084415226374,
+          "goal_rate": 0.6
+        },
+        {
+          "lower": 0.7,
+          "upper": 0.8,
+          "count": 1,
+          "mean_prediction": 0.7229990559743832,
+          "goal_rate": 1.0
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 1,
+          "mean_prediction": 0.8702568247031632,
+          "goal_rate": 1.0
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "count": 0,
+          "mean_prediction": null,
+          "goal_rate": null
+        }
+      ],
+      "by_competition": {
+        "La Liga": {
+          "shots": 635,
+          "log_loss": 0.30326537465966263,
+          "brier_score": 0.08774609820326289,
+          "roc_auc": 0.7426424216943451
+        },
+        "Ligue 1": {
+          "shots": 757,
+          "log_loss": 0.27772753840887027,
+          "brier_score": 0.07582510286417109,
+          "roc_auc": 0.7063848163127737
+        },
+        "Premier League": {
+          "shots": 870,
+          "log_loss": 0.28375861791866525,
+          "brier_score": 0.07972000435171984,
+          "roc_auc": 0.7159018987341772
+        },
+        "Serie A": {
+          "shots": 752,
+          "log_loss": 0.24357046888563466,
+          "brier_score": 0.06685642639714567,
+          "roc_auc": 0.7641377649325627
+        }
+      }
+    },
+    "serving": {
+      "metrics": {
+        "log_loss": 0.2766199833849192,
+        "brier_score": 0.07732610013688207,
+        "roc_auc": 0.730278898169615
+      },
+      "calibration": [
+        {
+          "lower": 0.0,
+          "upper": 0.1,
+          "count": 2069,
+          "mean_prediction": 0.046283648263265885,
+          "goal_rate": 0.05268245529241179
+        },
+        {
+          "lower": 0.1,
+          "upper": 0.2,
+          "count": 625,
+          "mean_prediction": 0.14048541992147398,
+          "goal_rate": 0.1408
+        },
+        {
+          "lower": 0.2,
+          "upper": 0.3,
+          "count": 230,
+          "mean_prediction": 0.24229407247376636,
+          "goal_rate": 0.20869565217391303
+        },
+        {
+          "lower": 0.3,
+          "upper": 0.4,
+          "count": 59,
+          "mean_prediction": 0.3472791742548271,
+          "goal_rate": 0.1864406779661017
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "count": 17,
+          "mean_prediction": 0.4365678528288624,
+          "goal_rate": 0.6470588235294118
+        },
+        {
+          "lower": 0.5,
+          "upper": 0.6,
+          "count": 7,
+          "mean_prediction": 0.5451482134484443,
+          "goal_rate": 0.5714285714285714
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.7,
+          "count": 5,
+          "mean_prediction": 0.6228073508059236,
+          "goal_rate": 0.6
+        },
+        {
+          "lower": 0.7,
+          "upper": 0.8,
+          "count": 1,
+          "mean_prediction": 0.7196025754503291,
+          "goal_rate": 1.0
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 1,
+          "mean_prediction": 0.8571611928203217,
+          "goal_rate": 1.0
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "count": 0,
+          "mean_prediction": null,
+          "goal_rate": null
+        }
+      ],
+      "by_competition": {
+        "La Liga": {
+          "shots": 635,
+          "log_loss": 0.3031934244690981,
+          "brier_score": 0.0877780994979308,
+          "roc_auc": 0.7412497372293463
+        },
+        "Ligue 1": {
+          "shots": 757,
+          "log_loss": 0.279187695667874,
+          "brier_score": 0.07589777028924515,
+          "roc_auc": 0.7067007920458375
+        },
+        "Premier League": {
+          "shots": 870,
+          "log_loss": 0.2842338282219196,
+          "brier_score": 0.07991028642773076,
+          "roc_auc": 0.7150316455696203
+        },
+        "Serie A": {
+          "shots": 752,
+          "log_loss": 0.2427876186311416,
+          "brier_score": 0.06694841932219704,
+          "roc_auc": 0.7632947976878612
+        }
+      }
+    }
+  },
+  "paired_brier_candidate_minus_reference": {
+    "expanded_linear": {
+      "difference": -0.00028589768969276234,
+      "lower_95": -0.000826779688574794,
+      "upper_95": 0.00019870079930480863,
+      "resamples": 1000
+    },
+    "serving": {
+      "difference": -0.00038876900643573304,
+      "lower_95": -0.0009796164309117473,
+      "upper_95": 0.0001333782847258416,
+      "resamples": 1000
+    }
+  },
+  "sanity": {
+    "grid_points": 4941,
+    "finite_bounded": true,
+    "central_above_tight_and_long": true,
+    "preset_probabilities": [
+      0.14204243829316496,
+      0.026582757090979015,
+      0.02401349411839868
+    ],
+    "mean_single_inference_ms_two_threads": 1.5033559990115464
+  },
+  "promotion_eligible": false,
+  "serving_model_replaced": false,
+  "decision": "Keep serving baseline; close v1 model experimentation",
+  "limitations": "Unused matches from selective open-data coverage; not a future-season test. No retuning after this result."
+}

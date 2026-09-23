@@ -196,3 +196,23 @@ h2 { font-size: 22px; letter-spacing: -.5px; font-weight: 500; margin: 0; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Versioned serving evidence and expanded research provenance. */
+.evidence-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.evidence-heading h3 { margin: 0; font-size: 15px; font-weight: 500; }
+.evidence-tag { border: 1px solid var(--line); border-radius: 20px; padding: 5px 9px; font-size: 10px; color: var(--accent); }
+.evidence-description { color: var(--muted); font-size: 12px; line-height: 1.8; margin: 0 0 23px; }
+.research-evidence { margin-top: 28px; padding-top: 25px; border-top: 1px solid var(--line); }
+.research-tag { color: var(--muted); }
+.research-counts { margin-top: 22px; }
+.research-finding { font-size: 12px; line-height: 1.8; color: var(--muted); margin: 0 0 20px; }
+.research-finding strong { display: block; color: var(--text); font-weight: 500; margin-bottom: 4px; }
+.evidence-link { margin-top: 14px; }
+.evidence-links { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; }
+.source-table-wrap { margin-top: 16px; }
+.source-table { width: 100%; border-collapse: collapse; font-size: 11px; font-variant-numeric: tabular-nums; }
+.source-table caption { text-align: left; color: var(--muted); padding-bottom: 12px; }
+.source-table th, .source-table td { text-align: right; padding: 12px 5px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.source-table th:first-child { text-align: left; font-weight: 400; }
+.source-table th small { display: block; color: var(--muted); font-size: 10px; line-height: 1.7; margin-top: 4px; overflow-wrap: anywhere; }
+.source-table thead th { color: var(--muted); font-weight: 400; }

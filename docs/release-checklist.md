@@ -1,5 +1,7 @@
 # FootyIQ release checklist
 
+The [fixed v1 roadmap](release-roadmap.md) controls scope. Phases 1 and 2 are complete; next is phase 3, model identity and final product behavior. No further model experiments are planned for v1.
+
 ## Completed
 
 - [x] Interactive, responsive shot comparison and persistent browser collections.
@@ -13,8 +15,9 @@
 
 ## Before deployment
 
-- [ ] Model improvement experiment: predefine candidate features/model families, compare with nested match-grouped evaluation, then use a new untouched final test. Do not tune against the published scaling holdout.
-- [ ] Decide whether a validated candidate should replace the serving model; version the model and its evidence together.
+- [x] Model improvement experiment: three predefined geometry models, nested match-grouped evaluation, and 3,014 unused final-test shots. The candidate did not pass the predefined promotion rule; retain the serving baseline.
+- [x] Make the final keep/replace decision: keep the baseline and close model experimentation.
+- [ ] Add serving model identity to inference metadata and saved shots; version the model and its evidence together.
 - [ ] Finish data attribution, including the provider's requested logo, and model/data documentation.
 - [ ] Fresh-install verification and Python dependency security audit alongside npm audit.
 - [ ] Final keyboard, screen-reader, contrast, mobile and error-state review.

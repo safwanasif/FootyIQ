@@ -130,7 +130,7 @@ If that virtual environment already exists, skip its creation. Acquisition uses 
 
 The [scaling comparison](services/ml/reports/expanded/comparison.md) evaluates nested training samples on the **same 6,022 held-out shots**. Brier score was 0.07498 for 3,785 training shots and 0.07512 for 23,989. The paired match-bootstrap interval crosses zero: this experiment does **not** establish an improvement from more data. Five-fold evaluation on the full expanded dataset is documented separately. Its AUC must not be directly compared with the original World Cup score because the evaluation populations differ.
 
-The separate `expanded_candidate.pkl` is an experimental full-data fit. The serving artifact, app evidence panel, and original evaluation remain unchanged; the inference Docker image includes only the serving artifact.
+The separate `expanded_candidate.pkl` is an experimental full-data fit. The serving artifact and original evaluation remain unchanged; the app separately labels the expanded research evidence; the inference Docker image includes only the serving artifact.
 
 ## API safeguards
 
@@ -139,3 +139,18 @@ Per-IP, per-minute limits: session initialization 30, predictions 240, saves 60,
 Startup validates the database URL, ML service origin, port, frontend origin and cookie setting. Public frontend origins require HTTPS and secure cookies; local HTTP is supported explicitly. Model responses are checked for finite probabilities in [0,1], matching distance conversion and bounded text; upstream response bodies and connection URLs are not sent to browsers.
 
 See the [release checklist](docs/release-checklist.md) for remaining model, accessibility, documentation and deployment work.
+
+## Final v1 roadmap and model decision
+
+The [fixed five-phase roadmap](docs/release-roadmap.md) defines the finish line: evidence UI, one model decision, model/version integration, release readiness, and free deployment. Extra model searches and feature ideas are deferred until after v1.
+
+The bounded comparison tested linear, spline and small boosted geometry models using nested match-grouped evaluation. The selected boosted candidate then scored slightly better on **3,014 previously unused shots across 122 matches**, but its paired Brier uncertainty interval crossed zero against both references. Under the rule committed before that final test, **the current serving model stays** and v1 model experimentation is closed. Read the [final model decision](services/ml/reports/model-selection/decision.md).
+
+The dashboard now distinguishes the current model's 3,770-shot evaluation, the 30,011-shot development dataset, and the separate final model test. It lists sampled competitions/seasons and links source manifests. Frontend statistics are generated from versioned reports, not separately maintained numbers:
+
+```powershell
+npm run evidence:sync
+npm run check
+```
+
+Run the sync command whenever reports change, review the resulting UI copy, and commit the generated summary with the reports. Checks reject stale counts or a serving-artifact change without an updated evidence mapping. The frontend ships a compact summary rather than complete match manifests.
