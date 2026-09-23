@@ -7,6 +7,7 @@ const predictionSchema = z.object({
   xg_probability: z.number().finite().min(0).max(1),
   distance_yards: z.number().finite().min(0),
   interpretation: z.string().trim().min(1).max(200),
+  model_id: z.string().regex(/^[a-z][a-z0-9._-]{0,79}$/),
 });
 export type XGResponse = z.infer<typeof predictionSchema>;
 

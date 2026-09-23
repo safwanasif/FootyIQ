@@ -15,6 +15,7 @@ test("save, compare, revisit, download, reload and isolate two browsers", async 
   const initial = await (await page.request.get(`${API}/shots`)).json();
   expect(initial.shots).toHaveLength(1);
   expect(initial.shots[0].x).toBe(110);
+  expect(initial.shots[0].model_id).toBe("geometry-linear-30k-v1");
   const id = initial.shots[0].id;
   expect(initial.shots[0]).not.toHaveProperty("collection_id");
   await page.getByRole("button", { name: "Long range", exact: false }).click();
@@ -26,6 +27,7 @@ test("save, compare, revisit, download, reload and isolate two browsers", async 
   expect(download.suggestedFilename()).toBe("footyiq-shots-page-1.csv");
   const csv = await readFile((await download.path())!, "utf8");
   expect(csv).toContain(id);
+  expect(csv).toContain("geometry-linear-30k-v1");
   expect(csv.trim().split("\r\n")).toHaveLength(2);
   await page.reload();
   await expect(page.getByRole("button", { name: "Revisit shot at 110.0, 18.0" })).toBeVisible();

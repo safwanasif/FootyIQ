@@ -5,11 +5,11 @@ FootyIQ ML Service — Standalone xG Inference Engine (predict.py)
 PURPOSE:
     Standalone inference script, fully decoupled from training. Loads the
     serialized baseline Logistic Regression model from
-    services/ml/artifacts/baseline_xg.pkl and returns an xG probability for
+    the versioned artifact referenced by serving-model.json and returns an xG probability for
     a given shot geometry.
 
     This script NEVER loads world_cup_shots.csv and NEVER trains a model —
-    it only consumes the artifact produced by train_baseline.py.
+    it consumes the same verified artifact as the API.
 
 USAGE:
     # Predict a specific shot:
@@ -29,7 +29,7 @@ import logging
 from pathlib import Path
 
 import numpy as np
-import joblib
+from model_registry import load_serving_model
 
 # ============================================================================
 # LOGGING CONFIGURATION
@@ -45,7 +45,7 @@ logger = logging.getLogger("footyiq_predict")
 # CONFIG / CONSTANTS
 # ============================================================================
 SCRIPT_DIR = Path(__file__).resolve().parent
-MODEL_ARTIFACT_PATH = SCRIPT_DIR / "artifacts" / "baseline_xg.pkl"
+
 
 # StatsBomb pitch coordinates (and therefore our trained distance_to_goal
 # feature) are in YARDS, since StatsBomb defines the pitch as 120 x 80
@@ -66,18 +66,9 @@ DEMO_SCENARIOS = [
 # MODEL LOADING
 # ============================================================================
 def load_model():
-    """
-    Load the serialized LogisticRegression model artifact.
-    Exits with a clear error if the artifact doesn't exist — this is the
-    expected failure mode if train_baseline.py hasn't been run yet.
-    """
-    if not MODEL_ARTIFACT_PATH.exists():
-        logger.error(f"Model artifact not found at {MODEL_ARTIFACT_PATH}")
-        logger.error("Run train_baseline.py first to generate the artifact.")
-        sys.exit(1)
-
-    model = joblib.load(MODEL_ARTIFACT_PATH)
-    logger.info(f"Loaded model artifact: {MODEL_ARTIFACT_PATH}")
+    """Load and verify the same versioned serving artifact as the API."""
+    model, metadata = load_serving_model()
+    logger.info("Loaded serving model: %s", metadata["model_id"])
     return model
 
 

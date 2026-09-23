@@ -30,8 +30,8 @@ export function createShotsRouter(store: ShotStore, predict = getXGPrediction) {
     if (!query.success) return res.status(422).json({ error: "Invalid pagination" });
     try {
       const rows = await store.list(res.locals.collectionId, 10, query.data.offset);
-      const header = ["id", "saved_at", "x", "y", "distance_yards", "angle_degrees", "xg_probability"];
-      const csv = [header, ...rows.map((row) => [row.id, new Date(row.created_at).toISOString(), row.x, row.y, row.distance_yards, row.angle_degrees, row.xg_probability])]
+      const header = ["id", "saved_at", "x", "y", "distance_yards", "angle_degrees", "xg_probability", "model_id"];
+      const csv = [header, ...rows.map((row) => [row.id, new Date(row.created_at).toISOString(), row.x, row.y, row.distance_yards, row.angle_degrees, row.xg_probability, row.model_id])]
         .map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(",")).join("\r\n");
       res.setHeader("Cache-Control", "no-store");
       res.attachment(`footyiq-shots-page-${query.data.offset / 10 + 1}.csv`);

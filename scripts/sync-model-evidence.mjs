@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 const root = new URL("../", import.meta.url);
 const read = (path) => JSON.parse(readFileSync(new URL(path, root), "utf8"));
-const original = read("services/ml/reports/evaluation.json");
+const manifest = read("services/ml/serving-model.json");
 const dataset = read("services/ml/reports/expanded/dataset.json");
 const comparison = read("services/ml/reports/expanded/comparison.json");
 const expanded = read("services/ml/reports/expanded/evaluation.json");
@@ -16,8 +16,8 @@ if (selection.dataset_sha256 !== dataset.dataset_sha256 || selection.candidate_s
 if (finalTest.promotion_eligible || finalTest.selected !== "boosted") {
   throw new Error("The model decision changed; update the review copy before publishing.");
 }
-const servingHash = createHash("sha256").update(readFileSync(new URL("services/ml/artifacts/baseline_xg.pkl", root))).digest("hex");
-if (servingHash !== finalTest.artifact_hashes.serving || finalTest.serving_model_replaced) {
+const servingHash = createHash("sha256").update(readFileSync(new URL(`services/ml/artifacts/${manifest.artifact}`, root))).digest("hex");
+if (servingHash !== manifest.artifact_sha256 || servingHash !== finalTest.artifact_hashes.expanded_linear || manifest.dataset_sha256 !== dataset.dataset_sha256 || manifest.training_shots !== dataset.shots || manifest.training_matches !== dataset.matches.length) {
   throw new Error("Serving model changed: update its evidence mapping before publishing the frontend.");
 }
 if (dataset.dataset_sha256 !== comparison.dataset_sha256 || dataset.dataset_sha256 !== expanded.dataset_sha256) {
@@ -35,9 +35,9 @@ const competitions = [...groups.values()].sort((a, b) => a.name.localeCompare(b.
   .map((group) => ({ ...group, seasons: [...group.seasons].sort() }));
 if (competitions.reduce((sum, item) => sum + item.shots, 0) !== dataset.shots) throw new Error("Dataset totals disagree");
 const summary = {
-  serving: { shots: original.shots, matches: original.matches, folds: original.fold_count,
-    auc: original.model.roc_auc, brierImprovement: (1 - original.model.brier_score / original.goal_rate_baseline.brier_score) * 100,
-    calibration20to30: original.calibration.find((bin) => bin.lower === .2)?.goal_rate },
+  serving: { id: manifest.model_id, shots: manifest.training_shots, matches: manifest.training_matches, folds: expanded.fold_count,
+    auc: expanded.model.roc_auc, brierImprovement: (1 - expanded.model.brier_score / expanded.goal_rate_baseline.brier_score) * 100,
+    calibration20to30: expanded.calibration.find((bin) => bin.lower === .2)?.goal_rate },
   research: { shots: dataset.shots, matches: dataset.matches.length, revision: dataset.revision,
     competitions, testShots: comparison.test_shots, testMatches: comparison.test_matches,
     small: comparison.experiments.mixed_3770, large: comparison.experiments.mixed_all,
@@ -46,7 +46,7 @@ const summary = {
     promotionEligible: finalTest.promotion_eligible,
     competitions: Object.entries(finalTest.results.candidate.by_competition).map(([name, metrics]) => ({ name, shots: metrics.shots })),
     metrics: Object.fromEntries(Object.entries(finalTest.results).map(([name, item]) => [name, item.metrics])),
-    brierInterval: finalTest.paired_brier_candidate_minus_reference.serving },
+    brierInterval: finalTest.paired_brier_candidate_minus_reference.expanded_linear },
 };
 // Do not ship fold membership, match IDs or the complete source manifest to browsers.
 for (const key of ["small", "large"]) {

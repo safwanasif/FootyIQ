@@ -1,6 +1,6 @@
 # FootyIQ release checklist
 
-The [fixed v1 roadmap](release-roadmap.md) controls scope. Phases 1 and 2 are complete; next is phase 3, model identity and final product behavior. No further model experiments are planned for v1.
+The [fixed v1 roadmap](release-roadmap.md) controls scope. Phases 1–3 are complete; next is phase 4, release readiness. No further model experiments are planned for v1.
 
 ## Completed
 
@@ -15,9 +15,9 @@ The [fixed v1 roadmap](release-roadmap.md) controls scope. Phases 1 and 2 are co
 
 ## Before deployment
 
-- [x] Model improvement experiment: three predefined geometry models, nested match-grouped evaluation, and 3,014 unused final-test shots. The candidate did not pass the predefined promotion rule; retain the serving baseline.
-- [x] Make the final keep/replace decision: keep the baseline and close model experimentation.
-- [ ] Add serving model identity to inference metadata and saved shots; version the model and its evidence together.
+- [x] Model improvement experiment: three predefined geometry models, nested match-grouped evaluation, and 3,014 unused final-test shots. The candidate did not pass the predefined promotion rule; retain the linear algorithm; release its evaluated expanded-data fit for broader coverage.
+- [x] Make the final keep/replace decision: retain linear regression, adopt the 30,011-shot fit for coverage, and close model experimentation.
+- [x] Add serving model identity to inference metadata and saved shots; version the model and its evidence together.
 - [ ] Finish data attribution, including the provider's requested logo, and model/data documentation.
 - [ ] Fresh-install verification and Python dependency security audit alongside npm audit.
 - [ ] Final keyboard, screen-reader, contrast, mobile and error-state review.

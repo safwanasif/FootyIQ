@@ -15,7 +15,7 @@
 Use the claims that match what you can explain and demonstrate:
 
 - Built a full-stack football analytics app with Next.js, a TypeScript/Express gateway, a FastAPI inference service, and PostgreSQL; implemented interactive shot placement, probability comparisons, persistent history, and CSV export.
-- Evaluated a distance-and-angle logistic regression on 3,770 shots across 147 matches using grouped cross-validation, achieving 0.758 ROC-AUC and a 9.7% lower Brier score than a training-fold goal-rate baseline.
+- Trained and served a versioned expected-goals model on 30,011 shots across 1,206 matches and 12 competitions; evaluated it with match-grouped cross-validation (0.733 ROC-AUC) and 3,014 previously unused final-test shots.
 - Added idempotent saves, transactional schema migrations, database readiness checks, API failure tests, and GitHub Actions checks; verified PostgreSQL persistence and the browser save/revisit workflow.
 
 The performance numbers describe cross-validation of the training procedure on the local dataset. Do not describe them as production accuracy, an external benchmark, or proof of generalization to every competition. The app currently separates anonymous browser collections with private cookies; do not describe that as user accounts, cross-device recovery, or public deployment.
@@ -44,6 +44,6 @@ This is a valid additional résumé bullet. Do not claim that scaling improved a
 
 ## Completed v1 model comparison
 
-Compared three fixed geometry models using nested match-grouped validation, then evaluated the selected candidate on 3,014 previously unused shots. The boosted candidate improved point estimates but failed the predefined uncertainty-based promotion rule; retained the serving baseline. This supports an interview discussion of selection bias, probability scoring, grouped evaluation, and release decisions, without claiming a statistically established accuracy improvement.
+Compared three fixed geometry models using nested match-grouped validation, then evaluated the selected candidate on 3,014 previously unused shots. The boosted candidate improved point estimates but failed the predefined uncertainty-based promotion rule; kept the linear algorithm and subsequently released its 30,011-shot fit for broader competition coverage. This supports an interview discussion of selection bias, probability scoring, grouped evaluation, and release decisions, without claiming a statistically established accuracy improvement.
 
 The [fixed release roadmap](release-roadmap.md) now controls remaining work. Model experimentation is closed for v1.

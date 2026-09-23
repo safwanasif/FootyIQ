@@ -19,6 +19,7 @@ test("shot API validates, saves, paginates, deduplicates retries and handles fai
   let dbFailed = false;
   let mlFailed = false;
   let calls = 0;
+  let activeModel = "geometry-linear-30k-v1";
   const store: ShotStore = {
     async find(collectionId, id) { if (dbFailed) throw new Error("private DB detail"); return rows.get(`${collectionId}:${id}`); },
     async save(collectionId, shot) {
@@ -35,7 +36,7 @@ test("shot API validates, saves, paginates, deduplicates retries and handles fai
     calls++;
     if (mlFailed) throw new MLServiceError("private ML detail", 503);
     assert.ok(input.distance_meters > 0);
-    return { xg_probability: 0.142, distance_yards: input.distance_meters * 1.09361, interpretation: "Moderate probability effort" };
+    return { xg_probability: 0.142, distance_yards: input.distance_meters * 1.09361, model_id: activeModel, interpretation: "Moderate probability effort" };
   }));
   const server = app.listen(0, "127.0.0.1");
   await new Promise<void>((resolve) => server.once("listening", resolve));
@@ -58,7 +59,10 @@ test("shot API validates, saves, paginates, deduplicates retries and handles fai
   const saved = await first.json() as SavedShot;
   assert.equal(saved.distance_yards, 12);
   assert.equal(saved.xg_probability, 0.142);
-  assert.equal((await post(shot)).status, 200);
+  activeModel = "future-model";
+  const retried = await post(shot);
+  assert.equal(retried.status, 200);
+  assert.equal((await retried.json() as SavedShot).model_id, "geometry-linear-30k-v1");
   const stranger = await globalThis.fetch(`${base}/shots`, { headers: { Cookie: `footyiq_collection=${"b".repeat(64)}` } });
   assert.deepEqual(await stranger.json(), { shots: [], has_more: false });
   const strangerExport = await globalThis.fetch(`${base}/shots/export`, { headers: { Cookie: `footyiq_collection=${"b".repeat(64)}` } });
@@ -79,6 +83,8 @@ test("shot API validates, saves, paginates, deduplicates retries and handles fai
   const csv = await exported.text();
   assert.equal(csv.trim().split("\r\n").length, 3);
   assert.ok(csv.includes(shot.id));
+  assert.ok(csv.includes("geometry-linear-30k-v1"));
+  assert.ok(csv.includes("future-model"));
   assert.ok(csv.includes('"distance_yards"'));
   assert.equal((await fetch(`${base}/shots/export?offset=-1`)).status, 422);
   for (const query of ["limit=0", "limit=51", "offset=-1", "limit=nope"]) {

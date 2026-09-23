@@ -1,11 +1,12 @@
 {
   "serving": {
-    "shots": 3770,
-    "matches": 147,
+    "id": "geometry-linear-30k-v1",
+    "shots": 30011,
+    "matches": 1206,
     "folds": 5,
-    "auc": 0.7581487050960735,
-    "brierImprovement": 9.70098670256283,
-    "calibration20to30": 0.17625899280575538
+    "auc": 0.7331935163451337,
+    "brierImprovement": 8.026495366798613,
+    "calibration20to30": 0.20305781175346393
   },
   "research": {
     "shots": 30011,
@@ -180,9 +181,9 @@
       }
     },
     "brierInterval": {
-      "difference": -0.00038876900643573304,
-      "lower_95": -0.0009796164309117473,
-      "upper_95": 0.0001333782847258416,
+      "difference": -0.00028589768969276234,
+      "lower_95": -0.000826779688574794,
+      "upper_95": 0.00019870079930480863,
       "resamples": 1000
     }
   }

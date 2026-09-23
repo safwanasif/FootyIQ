@@ -1,3 +1,4 @@
+import evidence from "./model-evidence.json";
 /**
  * ============================================================================
  * FootyIQ Web — API Gateway Client (lib/api.ts)
@@ -44,6 +45,7 @@ export interface PredictionResponse {
   xg_probability: number;
   distance_yards: number;
   interpretation: string;
+  model_id: string;
 }
 
 export interface HealthResponse {
@@ -116,7 +118,11 @@ export async function getXgPrediction(
       );
     }
 
-    return await res.json();
+    const prediction = await res.json() as PredictionResponse;
+    if (prediction.model_id !== evidence.serving.id) {
+      throw new ApiError("The prediction service and model evidence are out of sync. Please retry after the service update.", 503);
+    }
+    return prediction;
   } catch (err) {
     if (err instanceof ApiError) throw err;
     if (err instanceof DOMException && err.name === "AbortError") throw err;

@@ -49,7 +49,7 @@ logger = logging.getLogger("footyiq_train")
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_PATH = SCRIPT_DIR / "data" / "world_cup_shots.csv"
 ARTIFACTS_DIR = SCRIPT_DIR / "artifacts"
-MODEL_ARTIFACT_PATH = ARTIFACTS_DIR / "baseline_xg.pkl"
+MODEL_ARTIFACT_PATH = ARTIFACTS_DIR / "world_cup_retrained_candidate.pkl"
 
 FEATURE_COLUMNS = ["distance_to_goal", "shot_angle"]
 TARGET_COLUMN = "is_goal"

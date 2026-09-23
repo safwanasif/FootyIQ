@@ -136,3 +136,4 @@ services/ml/artifacts/*.pkl
 playwright-report/
 test-results/
 services/ml/data/source-cache/
+!services/ml/artifacts/geometry_linear_30k_v1.pkl

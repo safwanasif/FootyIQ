@@ -3,8 +3,8 @@ import { test, expect } from "@playwright/test";
 test("evidence separates serving results, expanded data and the final model decision", async ({ page }) => {
   await page.goto("/#model-title");
   await expect(page.getByRole("heading", { name: "Current prediction model" })).toBeVisible();
-  await expect(page.getByText("3,770", { exact: true })).toBeVisible();
-  await expect(page.getByText("30,011", { exact: true })).toBeVisible();
+  await expect(page.getByText("Training shots", { exact: true })).toBeVisible();
+  await expect(page.getByText("30,011", { exact: true }).first()).toBeVisible();
   const disclosure = page.locator("summary").filter({ hasText: "See all 12 competitions" });
   await disclosure.focus();
   await page.keyboard.press("Enter");
@@ -18,5 +18,5 @@ test("evidence separates serving results, expanded data and the final model deci
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
   await page.locator("summary").filter({ hasText: "Final v1 model review" }).click();
   await expect(page.getByText(/3,014 previously unused shots/)).toBeVisible();
-  await expect(page.getByRole("link", { name: "Final model decision" })).toHaveAttribute("href", /model-selection\/decision\.md$/);
+  await expect(page.getByRole("link", { name: "Final model decision" })).toHaveAttribute("href", /model-selection\/release\.md$/);
 });

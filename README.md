@@ -89,26 +89,21 @@ Saved-shot endpoints require the collection cookie and return 401 when it is mis
 
 ## Model scope
 
-The baseline uses distance to goal and the angle between the goalposts. Evaluation on the local dataset of **3,770 shots from 147 matches**, using five folds grouped by match, produced **0.2697 log loss**, **0.0761 Brier score**, and **0.7581 ROC-AUC**. The training-fold goal-rate comparator scored 0.3092 log loss and 0.0842 Brier score. These are out-of-fold scores for the training procedure, not a separate external test of the serving artifact.
+The serving logistic-regression model, **geometry-linear-30k-v1**, was trained on **30,011 unique non-penalty shots from 1,206 matches across 12 men's competitions**. It uses distance to goal and the angle between the goalposts. Five-fold match-grouped evaluation produced **0.2839 log loss**, **0.0798 Brier score**, and **0.7332 ROC-AUC**. These cross-validation scores evaluate the training procedure; the released artifact was then fitted on all 30,011 training shots.
 
-See [the evaluation report](services/ml/reports/evaluation.md) for calibration, limitations, dataset fingerprint, and exact fold membership in the companion JSON. The 20–30% prediction bin averaged 24.01% predicted probability versus 17.63% observed goals; higher-probability bins have few examples. The serialized baseline model is included so local inference can start without retraining.
+On **3,014 previously unused shots across 122 matches**, that exact artifact scored **0.2763 log loss**, **0.0772 Brier score**, and **0.7311 ROC-AUC**. Final-test shots were not added to training. The broader dataset is the reason for this release; no statistically established improvement over the original World Cup model is claimed.
 
-With the existing ML environment, reproduce the report without changing the serving model:
+See the [training evaluation](services/ml/reports/expanded/evaluation.md), [release decision](services/ml/reports/model-selection/release.md), and [active artifact manifest](services/ml/serving-model.json). The original World Cup artifact and its evaluation remain archived for comparison and rollback. The active artifact is included, so no retraining is required to run the app.
 
-```powershell
-.\services\ml\venv\Scripts\python.exe -m unittest discover -s services/ml -p test_evaluate.py
-.\services\ml\venv\Scripts\python.exe services/ml/evaluate.py
-```
+Predictions, saved shots and CSV exports carry the model ID. Existing saved rows retain their probabilities and receive a legacy/unversioned label. Retries preserve the original saved model identity; revisiting requests a prediction from the current model. Both API and ML containers must be rebuilt for this versioned contract.
 
-For a fresh environment, create a Python 3.12+ virtual environment at `services/ml/venv` and install `services/ml/requirements.txt`. Evaluation requires the local `services/ml/data/world_cup_shots.csv`, which is not committed. The dataset SHA-256 in the report identifies the evaluated snapshot; regenerating with `etl.py` additionally requires `statsbombpy` and may retrieve changed upstream data. CI tests the evaluation logic using synthetic fixtures, rather than publishing scores from synthetic data.
-
-This is a geometry-only baseline. It omits goalkeeper and defender positions, shot technique, body part, and game context. Quality labels in the UI are illustrative probability buckets. The model treats StatsBomb coordinate units as yards and converts API meters accordingly. External validation on other competitions or future seasons is still needed before making broader performance claims.
+This remains a geometry-only model: defenders, goalkeeper position, body part and game context are omitted. Coverage is selective, and future-season performance is unproven. See the in-app competition table for exact sampled seasons and counts.
 
 ## Current scope and next milestones
 
-This version is a local demo with separate anonymous browser collections. It has no sign-in or cross-device recovery. Compose credentials are local development defaults. Local HTTP explicitly sets `COOKIE_SECURE=false`; HTTPS deployment must set it to `true` and serve the frontend and API on the same site so SameSite cookies work. `WEB_ORIGIN` must match the frontend origin exactly. Public deployment still needs deployment secrets, request limits, and production configuration.
+This version is a local demo with separate anonymous browser collections. It has no sign-in or cross-device recovery. Compose credentials are local development defaults. Local HTTP explicitly sets `COOKIE_SECURE=false`; HTTPS deployment must set it to `true` and serve the frontend and API on the same site so SameSite cookies work. `WEB_ORIGIN` must match the frontend origin exactly. Public deployment still needs deployment secrets, proxy-aware request limits, and hosting configuration.
 
-Next: add request limits and finish production configuration before a free-hosting deployment and recorded demo.
+Next: complete release readiness, then free-hosting deployment and the recorded demo.
 
 ## Expanded-data experiment
 
@@ -130,7 +125,7 @@ If that virtual environment already exists, skip its creation. Acquisition uses 
 
 The [scaling comparison](services/ml/reports/expanded/comparison.md) evaluates nested training samples on the **same 6,022 held-out shots**. Brier score was 0.07498 for 3,785 training shots and 0.07512 for 23,989. The paired match-bootstrap interval crosses zero: this experiment does **not** establish an improvement from more data. Five-fold evaluation on the full expanded dataset is documented separately. Its AUC must not be directly compared with the original World Cup score because the evaluation populations differ.
 
-The separate `expanded_candidate.pkl` is an experimental full-data fit. The serving artifact and original evaluation remain unchanged; the app separately labels the expanded research evidence; the inference Docker image includes only the serving artifact.
+The serving artifact is now `geometry_linear_30k_v1.pkl`, the evaluated full-data linear reference. Experimental boosted/spline work remains separate. The inference image includes only the active artifact and its manifest.
 
 ## API safeguards
 
@@ -144,9 +139,9 @@ See the [release checklist](docs/release-checklist.md) for remaining model, acce
 
 The [fixed five-phase roadmap](docs/release-roadmap.md) defines the finish line: evidence UI, one model decision, model/version integration, release readiness, and free deployment. Extra model searches and feature ideas are deferred until after v1.
 
-The bounded comparison tested linear, spline and small boosted geometry models using nested match-grouped evaluation. The selected boosted candidate then scored slightly better on **3,014 previously unused shots across 122 matches**, but its paired Brier uncertainty interval crossed zero against both references. Under the rule committed before that final test, **the current serving model stays** and v1 model experimentation is closed. Read the [final model decision](services/ml/reports/model-selection/decision.md).
+The bounded comparison tested linear, spline and small boosted geometry models using nested match-grouped evaluation. The selected boosted candidate then scored slightly better on **3,014 previously unused shots across 122 matches**, but its paired Brier uncertainty interval crossed zero against both references. The nonlinear candidate failed the rule committed before that test. We subsequently adopted the expanded linear reference for broader training coverage, without claiming an accuracy improvement. Model experimentation remains closed. Read the [release decision](services/ml/reports/model-selection/release.md).
 
-The dashboard now distinguishes the current model's 3,770-shot evaluation, the 30,011-shot development dataset, and the separate final model test. It lists sampled competitions/seasons and links source manifests. Frontend statistics are generated from versioned reports, not separately maintained numbers:
+The dashboard shows the current model's 30,011 training shots, matching cross-validation metrics, source coverage, and its separate final model test. It lists sampled competitions/seasons and links source manifests. Frontend statistics are generated from versioned reports, not separately maintained numbers:
 
 ```powershell
 npm run evidence:sync
