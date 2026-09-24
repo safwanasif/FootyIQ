@@ -18,8 +18,12 @@ if (selection.dataset_sha256 !== dataset.dataset_sha256 || selection.candidate_s
 if (finalTest.promotion_eligible || finalTest.selected !== "boosted") {
   throw new Error("The model decision changed; update the review copy before publishing.");
 }
+// Git normalizes report line endings; accept either byte representation of the same text.
+// Artifact hashes remain strict binary hashes.
+const selectionText = readFileSync(new URL("services/ml/reports/context/selection.json", root), "utf8").replace(/\r\n/g, "\n");
+const selectionHashes = [selectionText, selectionText.replace(/\n/g, "\r\n")].map(text => createHash("sha256").update(text).digest("hex"));
 const servingHash = createHash("sha256").update(readFileSync(new URL(`services/ml/artifacts/${manifest.artifact}`, root))).digest("hex");
-if (servingHash !== manifest.artifact_sha256 || servingHash !== contextSelection.artifact_sha256 || !contextTest.promotion_eligible || contextTest.selection_sha256 !== createHash("sha256").update(readFileSync(new URL("services/ml/reports/context/selection.json", root))).digest("hex") || manifest.dataset_sha256 !== dataset.dataset_sha256 || manifest.training_shots !== dataset.shots || manifest.training_matches !== dataset.matches.length) {
+if (servingHash !== manifest.artifact_sha256 || servingHash !== contextSelection.artifact_sha256 || !contextTest.promotion_eligible || !selectionHashes.includes(contextTest.selection_sha256) || manifest.dataset_sha256 !== dataset.dataset_sha256 || manifest.training_shots !== dataset.shots || manifest.training_matches !== dataset.matches.length) {
   throw new Error("Serving model changed: update its evidence mapping before publishing the frontend.");
 }
 if (dataset.dataset_sha256 !== comparison.dataset_sha256 || dataset.dataset_sha256 !== expanded.dataset_sha256) {
