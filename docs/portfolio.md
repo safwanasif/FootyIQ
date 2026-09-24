@@ -46,4 +46,4 @@ This is a valid additional résumé bullet. Do not claim that scaling improved a
 
 Compared three fixed geometry models using nested match-grouped validation, then evaluated the selected candidate on 3,014 previously unused shots. The boosted candidate improved point estimates but failed the predefined uncertainty-based promotion rule; kept the linear algorithm and subsequently released its 30,011-shot fit for broader competition coverage. This supports an interview discussion of selection bias, probability scoring, grouped evaluation, and release decisions, without claiming a statistically established accuracy improvement.
 
-The [fixed release roadmap](release-roadmap.md) now controls remaining work. Model experimentation is closed for v1.
+The [fixed release roadmap](release-roadmap.md) now controls remaining work. The September 24 scope amendment permits one final bounded context experiment; no new performance claim is supported until that experiment is completed.

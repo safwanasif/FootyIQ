@@ -1,6 +1,11 @@
 # FootyIQ release checklist
 
-The [fixed v1 roadmap](release-roadmap.md) controls scope. Phases 1–3 are complete; next is phase 4, release readiness. No further model experiments are planned for v1.
+The [fixed v1 roadmap](release-roadmap.md) controls scope. The September 24 amendment authorizes one final context audit and bounded experiment before release readiness; the original geometry experiment remains complete.
+
+- [x] Audit development context and unused-match availability: complete categorical fields on 30,011 shots; 926 candidate unused matches. See [audit](../services/ml/reports/context/audit.md).
+- [ ] Freeze the new protocol, then complete one context model decision.
+- [ ] Integrate context throughout the app only if promotion qualifies.
+- [ ] Complete onboarding, comparison explanations and collection privacy copy.
 
 ## Completed
 

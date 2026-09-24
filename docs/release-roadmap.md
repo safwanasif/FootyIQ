@@ -1,4 +1,20 @@
-# FootyIQ v1: fixed roadmap to deployment
+# FootyIQ v1: roadmap to deployment
+
+## September 24 scope amendment
+
+The user authorized one final shot-context experiment before release. This supersedes the earlier geometry-only freeze below; historical experiment results and promotion decisions remain unchanged.
+
+1. Audit body part, technique, shot type and play pattern on development data; count unused matches without inspecting their outcomes. Record missingness and rare combinations.
+2. Freeze a context experiment protocol before selection or fresh-test evaluation. Compare the current geometry baseline, context logistic regression and one small context nonlinear model. No further search rounds.
+3. Integrate context controls only if the candidate passes the frozen promotion rule. Carry inputs through prediction, storage, revisit, comparison and export; preserve historical model identities. Otherwise ship the current model.
+4. Polish onboarding, comparison explanations, error/retry states, collection privacy explanations and accessibility/mobile behavior.
+5. Verify clean setup, dependency audits, Docker, migrations, meaningful regression coverage, persistence and measured latency.
+6. Finish attribution, model card, screenshots, architecture diagram, demonstration and evidence-backed resume bullets.
+7. Verify a free hosting arrangement, deploy with HTTPS/secrets/backups, test public workflows and cold starts, then tag v1.0.0.
+
+After release, further improvements belong to a separate backlog and must not delay publishing or starting another project. Accounts, live feeds, defender/goalkeeper geometry and additional model searches remain deferred.
+
+## Completed foundation and original experiment record
 
 This is the release scope. Complete these phases, release v1, and move to another project. After release, make only necessary security, reliability, or compatibility fixes until a later deliberate project revisit. New ideas go to the deferred list, not the release checklist.
 
