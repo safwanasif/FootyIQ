@@ -157,7 +157,7 @@ export default function DashboardPage() {
               <div className="probability-track" aria-hidden="true"><span style={{ width: ready ? `${prediction!.xg_probability * 100}%` : "0%" }} /></div>
               <div className="scale-labels"><span>Less likely</span><span>More likely</span></div>
             </div>
-            <ContextControls value={shot.context} onChange={(context) => selectShot({ ...shot, context })} />
+
             {contextNotice && <p role="status" className="explanation">{contextNotice}</p>}
             <dl className="geometry"><div><dt>Distance to goal</dt><dd>{distance.toFixed(1)} <span>yd</span></dd></div><div><dt>View of goal</dt><dd>{angle.toFixed(1)}<span>°</span></dd></div></dl>
             {error ? <div className="error-note" role="alert"><p>{error}</p><button className="button secondary" onClick={() => { setLoading(true); setError(""); setRetry((n) => n + 1); }}><RotateCcw size={15} />Retry prediction</button></div> : <p className="explanation">{ready ? <>Roughly <strong>{Math.round(prediction!.xg_probability * 100)} in 100</strong> comparable chances would score according to this model.</> : "Move the marker to explore how distance and angle influence the prediction."} <a href="#model-title">How it works <ArrowRight size={12} /></a></p>}
@@ -165,6 +165,7 @@ export default function DashboardPage() {
               {comparison ? <><div className="compare-heading"><span><Pin size={14} /> Pinned chance · {(comparison.xg_probability * 100).toFixed(1)}%</span><button className="icon-button" aria-label="Clear pinned comparison" onClick={() => setComparison(null)}><X size={17} /></button></div><p className="comparison-result">{delta === null ? "Calculating comparison…" : <>{delta >= 0 ? <ArrowUpRight size={20} /> : <ArrowDownRight size={20} />}<strong>{delta > 0 ? "+" : ""}{delta.toFixed(1)}</strong> percentage points</>}</p><p className="explanation">Pinned: {comparison.context ? Object.values(comparison.context).join(" · ") : "Context not recorded"}. Current: {Object.values(shot.context).join(" · ")}. These estimates describe different inputs, not causal effects.</p><button className="text-button" onClick={() => selectShot(comparison)}>Return to pinned chance</button></> : <><p>What changes when you move wider?</p><button className="button secondary" disabled={!ready} onClick={() => setComparison({ ...shot, ...prediction! })}><Pin size={15} />Pin this chance to compare</button></>}
             </div>
           </section>
+          <ContextControls value={shot.context} onChange={(context) => selectShot({ ...shot, context })} />
         </section>
         <ShotHistory shot={shot} canSave={ready} onSelect={selectShot} />
         <ModelEvidence />
