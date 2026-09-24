@@ -3,7 +3,7 @@
 The [fixed v1 roadmap](release-roadmap.md) controls scope. The September 24 amendment authorizes one final context audit and bounded experiment before release readiness; the original geometry experiment remains complete.
 
 - [x] Audit development context and unused-match availability: complete categorical fields on 30,011 shots; 926 candidate unused matches. See [audit](../services/ml/reports/context/audit.md).
-- [ ] Freeze the new protocol, then complete one context model decision.
+- [x] Freeze the new protocol, then complete one context model decision: context boosting qualifies on 3,009 fresh shots; [decision and limitations](../services/ml/reports/context/decision.md). Not yet integrated.
 - [ ] Integrate context throughout the app only if promotion qualifies.
 - [ ] Complete onboarding, comparison explanations and collection privacy copy.
 
