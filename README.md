@@ -89,15 +89,17 @@ Saved-shot endpoints require the collection cookie and return 401 when it is mis
 
 ## Model scope
 
-The serving logistic-regression model, **geometry-linear-30k-v1**, was trained on **30,011 unique non-penalty shots from 1,206 matches across 12 men's competitions**. It uses distance to goal and the angle between the goalposts. Five-fold match-grouped evaluation produced **0.2839 log loss**, **0.0798 Brier score**, and **0.7332 ROC-AUC**. These cross-validation scores evaluate the training procedure; the released artifact was then fitted on all 30,011 training shots.
+The serving model, **context-boosted-30k-v1**, is gradient boosting trained on **30,011 unique non-penalty shots from 1,206 matches across 12 men's competitions**. Inputs are distance, angle, body part, technique, shot type and build-up. Model selection used nested match-grouped validation, with transformations fitted only on training folds.
 
-On **3,014 previously unused shots across 122 matches**, that exact artifact scored **0.2763 log loss**, **0.0772 Brier score**, and **0.7311 ROC-AUC**. Final-test shots were not added to training. The broader dataset is the reason for this release; no statistically established improvement over the original World Cup model is claimed.
+On **3,009 fresh shots across 121 matches**, the exact released artifact scored **0.2722 log loss**, **0.07928 Brier**, and **0.8194 ROC-AUC**. The previous geometry model scored 0.2923 / 0.08456 / 0.7765 on those same shots. Brier was 6.2% lower, with the paired match-bootstrap interval entirely favoring the context model. Neither this test nor the earlier 3,014-shot test was added to training. AUC is not percent accuracy.
 
-See the [training evaluation](services/ml/reports/expanded/evaluation.md), [release decision](services/ml/reports/model-selection/release.md), and [active artifact manifest](services/ml/serving-model.json). The original World Cup artifact and its evaluation remain archived for comparison and rollback. The active artifact is included, so no retraining is required to run the app.
+See the [selection](services/ml/reports/context/selection.md), [decision and limitations](services/ml/reports/context/decision.md), and [serving manifest](services/ml/serving-model.json). The previous geometry artifact remains available for rollback. No retraining is required to run the app.
 
-Predictions, saved shots and CSV exports carry the model ID. Existing saved rows retain their probabilities and receive a legacy/unversioned label. Retries preserve the original saved model identity; revisiting requests a prediction from the current model. Both API and ML containers must be rebuilt for this versioned contract.
+The linked controls offer 38 combinations observed at least 100 times in development. Defaults are Right Foot / Normal / Open Play / Regular Play, displayed explicitly. Changing an earlier selector may adjust later choices. The API rejects unsupported combinations; omitted context uses those documented defaults for compatibility. Shot type and build-up differ: a corner-derived chance is not a direct corner shot.
 
-This remains a geometry-only model: defenders, goalkeeper position, body part and game context are omitted. Coverage is selective, and future-season performance is unproven. See the in-app competition table for exact sampled seasons and counts.
+Saved shots and CSV exports include context and model ID. Database migration 4 preserves historical predictions and leaves their context null. Revisiting old shots clearly applies the displayed defaults to a new prediction without altering the saved result. Rebuild both API and ML containers after updating.
+
+Defender and goalkeeper positions are omitted. Calibration remains imperfect: the fresh-test 20-30% bin scored 33.7% of the time over 205 shots. High-probability bins are sparse. Open-data coverage is selective; future-season and universal competition performance are unproven.
 
 ## Current scope and next milestones
 
@@ -125,7 +127,7 @@ If that virtual environment already exists, skip its creation. Acquisition uses 
 
 The [scaling comparison](services/ml/reports/expanded/comparison.md) evaluates nested training samples on the **same 6,022 held-out shots**. Brier score was 0.07498 for 3,785 training shots and 0.07512 for 23,989. The paired match-bootstrap interval crosses zero: this experiment does **not** establish an improvement from more data. Five-fold evaluation on the full expanded dataset is documented separately. Its AUC must not be directly compared with the original World Cup score because the evaluation populations differ.
 
-The serving artifact is now `geometry_linear_30k_v1.pkl`, the evaluated full-data linear reference. Experimental boosted/spline work remains separate. The inference image includes only the active artifact and its manifest.
+The serving artifact is now `context_boosted_30k_v1.pkl`, promoted by the subsequent context experiment. Historical geometry experiments remain separate. The inference image includes only the active artifact and its manifest.
 
 ## API safeguards
 
@@ -137,11 +139,11 @@ See the [release checklist](docs/release-checklist.md) for remaining model, acce
 
 ## Final v1 roadmap and model decision
 
-The [fixed five-phase roadmap](docs/release-roadmap.md) defines the finish line: evidence UI, one model decision, model/version integration, release readiness, and free deployment. Extra model searches and feature ideas are deferred until after v1.
+The [release roadmap](docs/release-roadmap.md) defines the finish line: evidence UI, one model decision, model/version integration, release readiness, and free deployment. Extra model searches and feature ideas are deferred until after v1.
 
-The bounded comparison tested linear, spline and small boosted geometry models using nested match-grouped evaluation. The selected boosted candidate then scored slightly better on **3,014 previously unused shots across 122 matches**, but its paired Brier uncertainty interval crossed zero against both references. The nonlinear candidate failed the rule committed before that test. We subsequently adopted the expanded linear reference for broader training coverage, without claiming an accuracy improvement. Model experimentation remains closed. Read the [release decision](services/ml/reports/model-selection/release.md).
+The bounded comparison tested linear, spline and small boosted geometry models using nested match-grouped evaluation. The selected boosted candidate then scored slightly better on **3,014 previously unused shots across 122 matches**, but its paired Brier uncertainty interval crossed zero against both references. The nonlinear candidate failed the rule committed before that test. We subsequently adopted the expanded linear reference for broader training coverage, without claiming an accuracy improvement. That historical decision remains archived. The final authorized context experiment subsequently passed its separate promotion rule; see the [current decision](services/ml/reports/context/decision.md). Model search is now closed for v1.
 
-The dashboard shows the current model's 30,011 training shots, matching cross-validation metrics, source coverage, and its separate final model test. It lists sampled competitions/seasons and links source manifests. Frontend statistics are generated from versioned reports, not separately maintained numbers:
+The dashboard shows the current model's 30,011 training shots, fresh-test metrics and source coverage. It lists sampled competitions/seasons and links source manifests. Frontend statistics are generated from versioned reports, not separately maintained numbers:
 
 ```powershell
 npm run evidence:sync

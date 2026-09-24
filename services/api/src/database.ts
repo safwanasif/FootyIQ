@@ -44,13 +44,18 @@ export async function migrate() {
       await client.query("ALTER TABLE shots ADD COLUMN model_id text NOT NULL DEFAULT 'legacy-unversioned' CHECK (model_id ~ '^[a-z][a-z0-9._-]{0,79}$')");
       await client.query("INSERT INTO schema_migrations (version) VALUES (3)");
     }
+    const contextVersion = await client.query("SELECT version FROM schema_migrations WHERE version = 4");
+    if (!contextVersion.rowCount) {
+      await client.query("ALTER TABLE shots ADD COLUMN context jsonb CHECK (context IS NULL OR jsonb_typeof(context) = 'object')");
+      await client.query("INSERT INTO schema_migrations (version) VALUES (4)");
+    }
     await client.query("COMMIT");
   } catch (error) {
     await client.query("ROLLBACK");
     throw error;
   } finally { client.release(); }
 }
-const PUBLIC_COLUMNS = "id, x, y, distance_yards, angle_degrees, xg_probability, interpretation, model_id, created_at";
+const PUBLIC_COLUMNS = "id, x, y, distance_yards, angle_degrees, xg_probability, interpretation, model_id, context, created_at";
 export async function importLegacyShots(collectionId: string) {
   if (!/^[a-f0-9]{64}$/.test(collectionId)) throw new Error("Invalid collection ID");
   const result = await pool.query(`UPDATE shots AS legacy SET collection_id = $1
@@ -66,9 +71,9 @@ export const shotStore: ShotStore = {
   },
   async save(collectionId, shot) {
     const result = await pool.query<SavedShot>(`INSERT INTO shots
-      (id, x, y, distance_yards, angle_degrees, xg_probability, interpretation, collection_id, model_id)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (collection_id, id) DO NOTHING RETURNING ${PUBLIC_COLUMNS}`,
-      [shot.id, shot.x, shot.y, shot.distance_yards, shot.angle_degrees, shot.xg_probability, shot.interpretation, collectionId, shot.model_id]);
+      (id, x, y, distance_yards, angle_degrees, xg_probability, interpretation, collection_id, model_id, context)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) ON CONFLICT (collection_id, id) DO NOTHING RETURNING ${PUBLIC_COLUMNS}`,
+      [shot.id, shot.x, shot.y, shot.distance_yards, shot.angle_degrees, shot.xg_probability, shot.interpretation, collectionId, shot.model_id, shot.context]);
     return result.rows[0] ?? (await this.find(collectionId, shot.id))!;
   },
   async list(collectionId, limit, offset) {

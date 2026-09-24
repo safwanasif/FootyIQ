@@ -1,3 +1,4 @@
+import { defaultContext } from "./schemas/shot.schema";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
@@ -58,6 +59,9 @@ test("shot API validates, saves, paginates, deduplicates retries and handles fai
   assert.equal(first.status, 201);
   const saved = await first.json() as SavedShot;
   assert.equal(saved.distance_yards, 12);
+  assert.deepEqual(saved.context, defaultContext);
+  assert.equal((await post({ ...shot, context: { ...defaultContext, body_part: "Left Foot" } })).status, 409);
+  assert.equal((await post({ ...shot, id: randomUUID(), context: { ...defaultContext, body_part: "Head", technique: "Backheel" } })).status, 422);
   assert.equal(saved.xg_probability, 0.142);
   activeModel = "future-model";
   const retried = await post(shot);

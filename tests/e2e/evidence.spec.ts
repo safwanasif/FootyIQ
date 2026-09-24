@@ -17,6 +17,6 @@ test("evidence separates serving results, expanded data and the final model deci
   await expect(table).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
   await page.locator("summary").filter({ hasText: "Final v1 model review" }).click();
-  await expect(page.getByText(/3,014 previously unused shots/)).toBeVisible();
-  await expect(page.getByRole("link", { name: "Final model decision" })).toHaveAttribute("href", /model-selection\/release\.md$/);
+  await expect(page.getByText(/3,009 unused shots/)).toBeVisible();
+  await expect(page.getByRole("link", { name: "Final model decision" })).toHaveAttribute("href", /context\/decision\.md$/);
 });

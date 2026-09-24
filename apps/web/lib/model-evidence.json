@@ -1,12 +1,12 @@
 {
   "serving": {
-    "id": "geometry-linear-30k-v1",
+    "id": "context-boosted-30k-v1",
     "shots": 30011,
     "matches": 1206,
     "folds": 5,
-    "auc": 0.7331935163451337,
-    "brierImprovement": 8.026495366798613,
-    "calibration20to30": 0.20305781175346393
+    "auc": 0.8194191185115345,
+    "brierImprovement": 6.240050609990178,
+    "calibration20to30": 0.33658536585365856
   },
   "research": {
     "shots": 30011,
@@ -141,49 +141,44 @@
     }
   },
   "modelReview": {
-    "selected": "boosted",
-    "shots": 3014,
-    "matches": 122,
-    "promotionEligible": false,
+    "selected": "context_boosted",
+    "shots": 3009,
+    "matches": 121,
+    "promotionEligible": true,
     "competitions": [
       {
         "name": "La Liga",
-        "shots": 635
+        "shots": 720
       },
       {
         "name": "Ligue 1",
-        "shots": 757
+        "shots": 685
       },
       {
         "name": "Premier League",
-        "shots": 870
+        "shots": 808
       },
       {
         "name": "Serie A",
-        "shots": 752
+        "shots": 796
       }
     ],
     "metrics": {
       "candidate": {
-        "log_loss": 0.27368161156119,
-        "brier_score": 0.07693733113044635,
-        "roc_auc": 0.7372109918379015
-      },
-      "expanded_linear": {
-        "log_loss": 0.2763265592818967,
-        "brier_score": 0.0772232288201391,
-        "roc_auc": 0.7310702300420279
+        "log_loss": 0.27221860816232196,
+        "brier_score": 0.07928375007433487,
+        "roc_auc": 0.8194191185115345
       },
       "serving": {
-        "log_loss": 0.2766199833849192,
-        "brier_score": 0.07732610013688207,
-        "roc_auc": 0.730278898169615
+        "log_loss": 0.29230122609782855,
+        "brier_score": 0.08456035929002176,
+        "roc_auc": 0.7765042451514446
       }
     },
     "brierInterval": {
-      "difference": -0.00028589768969276234,
-      "lower_95": -0.000826779688574794,
-      "upper_95": 0.00019870079930480863,
+      "difference": -0.005276609215686877,
+      "lower_95": -0.006987078261621102,
+      "upper_95": -0.0036549713260870254,
       "resamples": 1000
     }
   }

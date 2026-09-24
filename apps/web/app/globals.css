@@ -218,3 +218,12 @@ h2 { font-size: 22px; letter-spacing: -.5px; font-weight: 500; margin: 0; }
 .source-table thead th { color: var(--muted); font-weight: 400; }
 
 .saved-model { display: block; color: var(--muted); font-size: 10px; line-height: 1.6; margin-top: 5px; overflow-wrap: anywhere; }
+.context-controls { border: 1px solid #355448; border-radius: 12px; padding: 14px; margin: 18px 0; min-width: 0; }
+.context-controls legend { color: #e6efdf; padding: 0 6px; font-size: .9rem; }
+.context-controls p { color: #b1c2b7; font-size: .75rem; line-height: 1.6; margin: 6px 0 12px; }
+.context-controls > div { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+.context-controls label { font-size: .8rem; color: #dce6da; min-width: 0; }
+.context-controls select { display: block; width: 100%; margin-top: 5px; padding: 10px 6px; border-radius: 6px; background: #102c24; color: #eef4e9; border: 1px solid #668576; }
+.context-controls select:focus-visible { outline: 2px solid #d7f58c; outline-offset: 3px; }
+
+.pitch-panel { align-self: start; }

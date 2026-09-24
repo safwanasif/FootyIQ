@@ -1,13 +1,16 @@
+import { ContextSchema, defaultContext, type ShotContext } from "./schemas/shot.schema";
 import { Router } from "express";
 import { z } from "zod";
 import { getXGPrediction, MLServiceError, type XGResponse } from "./services/ml.client";
 import { requireCollection } from "./collection";
 
 export const SaveShotSchema = z.object({
+  context: ContextSchema.default(defaultContext),
   id: z.uuid(), x: z.number().min(60).max(119.9), y: z.number().min(0).max(80),
 }).strict();
 export type ShotPosition = z.infer<typeof SaveShotSchema>;
-export interface SavedShot extends ShotPosition, XGResponse {
+export interface SavedShot extends Omit<ShotPosition, "context">, XGResponse {
+  context: ShotContext | null;
   angle_degrees: number;
   created_at: string;
 }
@@ -30,8 +33,8 @@ export function createShotsRouter(store: ShotStore, predict = getXGPrediction) {
     if (!query.success) return res.status(422).json({ error: "Invalid pagination" });
     try {
       const rows = await store.list(res.locals.collectionId, 10, query.data.offset);
-      const header = ["id", "saved_at", "x", "y", "distance_yards", "angle_degrees", "xg_probability", "model_id"];
-      const csv = [header, ...rows.map((row) => [row.id, new Date(row.created_at).toISOString(), row.x, row.y, row.distance_yards, row.angle_degrees, row.xg_probability, row.model_id])]
+      const header = ["id", "saved_at", "x", "y", "distance_yards", "angle_degrees", "xg_probability", "model_id", "body_part", "technique", "shot_type", "play_pattern"];
+      const csv = [header, ...rows.map((row) => [row.id, new Date(row.created_at).toISOString(), row.x, row.y, row.distance_yards, row.angle_degrees, row.xg_probability, row.model_id, row.context?.body_part ?? "", row.context?.technique ?? "", row.context?.shot_type ?? "", row.context?.play_pattern ?? ""])]
         .map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(",")).join("\r\n");
       res.setHeader("Cache-Control", "no-store");
       res.attachment(`footyiq-shots-page-${query.data.offset / 10 + 1}.csv`);
@@ -57,17 +60,18 @@ export function createShotsRouter(store: ShotStore, predict = getXGPrediction) {
   router.post("/shots", async (req, res) => {
     const parsed = SaveShotSchema.safeParse(req.body);
     if (!parsed.success) return res.status(422).json({ error: "Invalid shot", details: parsed.error.flatten().fieldErrors });
-    const { id, x, y } = parsed.data;
+    const { id, x, y, context } = parsed.data;
+    const sameContext = (stored: ShotContext | null) => stored === null ? req.body.context === undefined : ["body_part", "technique", "shot_type", "play_pattern"].every(key => stored[key as keyof ShotContext] === context[key as keyof ShotContext]);
     try {
       const existing = await store.find(res.locals.collectionId, id);
       if (existing) {
-        if (existing.x !== x || existing.y !== y) return res.status(409).json({ error: "This save ID belongs to a different shot." });
+        if (existing.x !== x || existing.y !== y || !sameContext(existing.context)) return res.status(409).json({ error: "This save ID belongs to a different shot." });
         return res.json(existing);
       }
       const geometry = shotGeometry(x, y);
-      const prediction = await predict({ distance_meters: geometry.distance_meters, angle_degrees: geometry.angle_degrees });
-      const saved = await store.save(res.locals.collectionId, { id, x, y, ...prediction, distance_yards: geometry.distance_yards, angle_degrees: geometry.angle_degrees });
-      if (saved.x !== x || saved.y !== y) return res.status(409).json({ error: "This save ID belongs to a different shot." });
+      const prediction = await predict({ distance_meters: geometry.distance_meters, angle_degrees: geometry.angle_degrees, context });
+      const saved = await store.save(res.locals.collectionId, { id, x, y, context, ...prediction, distance_yards: geometry.distance_yards, angle_degrees: geometry.angle_degrees });
+      if (saved.x !== x || saved.y !== y || !sameContext(saved.context)) return res.status(409).json({ error: "This save ID belongs to a different shot." });
       return res.status(201).json(saved);
     } catch (error) {
       if (error instanceof MLServiceError) return res.status(error.statusCode).json({ error: "Prediction unavailable. Your shot has not been saved." });

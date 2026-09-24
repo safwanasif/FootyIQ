@@ -21,7 +21,7 @@ export class MLServiceError extends Error {
 export function validatePrediction(data: unknown, shot: ShotInput): XGResponse {
   const parsed = predictionSchema.safeParse(data);
   // The inference service rounds yards to four decimals.
-  if (!parsed.success || Math.abs(parsed.data.distance_yards - shot.distance_meters * 1.09361) > 0.000051) {
+  if (!parsed.success || parsed.data.model_id !== "context-boosted-30k-v1" || Math.abs(parsed.data.distance_yards - shot.distance_meters * 1.09361) > 0.000051) {
     throw new MLServiceError("The prediction service returned an invalid result.", 502);
   }
   return parsed.data;

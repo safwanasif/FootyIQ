@@ -5,8 +5,10 @@ import logging
 import numpy as np
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
+from threadpoolctl import threadpool_limits
 
 from model_registry import load_serving_model
+from shot_context import ShotContext, default_context, model_input
 
 logger = logging.getLogger("footyiq_api")
 YARDS_PER_METER = 1.09361
@@ -30,6 +32,7 @@ app = FastAPI(title="FootyIQ xG Inference API", version="0.2.0", lifespan=lifesp
 
 
 class ShotInput(BaseModel):
+    context: ShotContext = Field(default_factory=default_context)
     distance_meters: float = Field(..., gt=0, allow_inf_nan=False)
     angle_degrees: float = Field(..., ge=0, le=180, allow_inf_nan=False)
 
@@ -72,6 +75,7 @@ async def predict_shot(shot: ShotInput):
     distance_yards = shot.distance_meters * YARDS_PER_METER
     if not np.isfinite(distance_yards):
         raise HTTPException(status_code=422, detail="Distance is outside the supported numeric range.")
-    probability = float(model.predict_proba(np.array([[distance_yards, shot.angle_degrees]]))[0, 1])
+    with threadpool_limits(limits=2):
+        probability = float(model.predict_proba(model_input(distance_yards, shot.angle_degrees, shot.context))[0, 1])
     return XGResponse(xg_probability=round(probability, 4), distance_yards=round(distance_yards, 4),
                       interpretation=interpret_xg(probability), model_id=ml_models["metadata"]["model_id"])

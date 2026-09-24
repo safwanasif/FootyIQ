@@ -28,7 +28,7 @@ import argparse
 import logging
 from pathlib import Path
 
-import numpy as np
+from shot_context import model_input, default_context
 from model_registry import load_serving_model
 
 # ============================================================================
@@ -90,7 +90,7 @@ def predict_xg(model, distance_meters: float, angle_deg: float) -> float:
     distance_yards = distance_meters * YARDS_PER_METER
 
     # Feature order MUST match training: [distance_to_goal, shot_angle]
-    X = np.array([[distance_yards, angle_deg]])
+    X = model_input(distance_yards, angle_deg, default_context())
     probability = model.predict_proba(X)[0, 1]
     return probability
 

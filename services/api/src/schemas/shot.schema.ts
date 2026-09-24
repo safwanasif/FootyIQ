@@ -21,6 +21,10 @@
  */
 
 import { z } from "zod";
+import contract from "../shot-context.json";
+export const ContextSchema = z.object({body_part:z.string(), technique:z.string(), shot_type:z.string(), play_pattern:z.string()}).strict().refine(value => contract.combinations.some(row => row.body_part === value.body_part && row.technique === value.technique && row.shot_type === value.shot_type && row.play_pattern === value.play_pattern), "Unsupported shot context combination");
+export type ShotContext = z.infer<typeof ContextSchema>;
+export const defaultContext = contract.defaults;
 
 // ----------------------------------------------------------------------------
 // ShotInputSchema
@@ -30,6 +34,7 @@ import { z } from "zod";
 // `.min(0).max(180)` for angle (inclusive bounds, matching Pydantic's
 // ge=0, le=180).
 export const ShotInputSchema = z.object({
+  context: ContextSchema.default(defaultContext),
   distance_meters: z
     .number({
       error: (issue) =>
@@ -54,4 +59,4 @@ export const ShotInputSchema = z.object({
 // Inferred TypeScript type — derived directly from the Zod schema so the
 // type and the runtime validator can never drift apart.
 // ----------------------------------------------------------------------------
-export type ShotInput = z.infer<typeof ShotInputSchema>;
+export type ShotInput = z.input<typeof ShotInputSchema>;

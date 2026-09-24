@@ -1,3 +1,6 @@
+import contract from "./shot-context.json";
+export type ShotContext = typeof contract.defaults;
+export const defaultContext: ShotContext = contract.defaults;
 import evidence from "./model-evidence.json";
 /**
  * ============================================================================
@@ -95,7 +98,8 @@ export async function checkHealth(signal?: AbortSignal): Promise<HealthResponse>
 export async function getXgPrediction(
   distanceMeters: number,
   angleDegrees: number,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  context: ShotContext = defaultContext
 ): Promise<PredictionResponse> {
   try {
     const res = await fetch(`${BASE_URL}/api/v1/predict-proxy`, {
@@ -104,6 +108,7 @@ export async function getXgPrediction(
       body: JSON.stringify({
         distance_meters: distanceMeters,
         angle_degrees: angleDegrees,
+        context,
       }),
       signal,
     });
@@ -131,6 +136,7 @@ export async function getXgPrediction(
 }
 
 export interface SavedShot extends PredictionResponse {
+  context: ShotContext | null;
   id: string;
   x: number;
   y: number;
@@ -169,7 +175,7 @@ export function shotExportUrl(offset: number) {
   return `${BASE_URL}/api/v1/shots/export?offset=${offset}`;
 }
 
-export function saveShot(shot: { id: string; x: number; y: number }) {
+export function saveShot(shot: { id: string; x: number; y: number; context: ShotContext }) {
   return shotRequest<SavedShot>("", {
     method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(shot),
   });

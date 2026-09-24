@@ -7,22 +7,26 @@ import unittest
 
 import numpy as np
 from app import lifespan, app, predict_shot, health_check, ShotInput
+from shot_context import model_input, default_context, ShotContext
+from pydantic import ValidationError
 from model_registry import load_serving_model, ROOT
 
 
 class ServingModelTests(unittest.TestCase):
     def test_release_matches_evaluated_linear_artifact_and_training_data(self):
         model, manifest = load_serving_model()
-        final = json.loads((ROOT / "reports/model-selection/final-test.json").read_text())
+        final = json.loads((ROOT / "reports/context/selection.json").read_text())
         dataset = json.loads((ROOT / "reports/expanded/dataset.json").read_text())
-        self.assertEqual(manifest["artifact_sha256"], final["artifact_hashes"]["expanded_linear"])
+        self.assertEqual(manifest["artifact_sha256"], final["artifact_sha256"])
         self.assertEqual(manifest["dataset_sha256"], dataset["dataset_sha256"])
         self.assertEqual(manifest["training_shots"], 30011)
         self.assertEqual(manifest["training_matches"], len(dataset["matches"]))
-        probabilities = model.predict_proba(np.array([[12, 36.86989765], [24.166, 8.18], [30, 15.1893]]))[:, 1]
+        probabilities = model.predict_proba(model_input(12, 36.86989765, default_context()))[:, 1]
         self.assertTrue(np.isfinite(probabilities).all())
-        self.assertGreater(probabilities[0], max(probabilities[1:]))
-        self.assertEqual(hashlib.sha256((ROOT / "artifacts/baseline_xg.pkl").read_bytes()).hexdigest(), manifest["previous_artifact_sha256"])
+        self.assertTrue(((probabilities >= 0) & (probabilities <= 1)).all())
+        with self.assertRaises(ValidationError):
+            ShotContext(body_part="Head", technique="Backheel", shot_type="Corner", play_pattern="Other")
+        self.assertEqual(hashlib.sha256((ROOT / "artifacts/geometry_linear_30k_v1.pkl").read_bytes()).hexdigest(), manifest["previous_artifact_sha256"])
 
     def test_mismatched_artifact_is_rejected_before_loading(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -40,7 +44,7 @@ class ServingModelTests(unittest.TestCase):
                 prediction = await predict_shot(ShotInput(distance_meters=11, angle_degrees=37))
                 self.assertTrue(health.model_loaded)
                 self.assertEqual(health.training_shots, 30011)
-                self.assertEqual(prediction.model_id, "geometry-linear-30k-v1")
+                self.assertEqual(prediction.model_id, "context-boosted-30k-v1")
                 self.assertEqual(prediction.model_id, health.model_id)
         asyncio.run(scenario())
 

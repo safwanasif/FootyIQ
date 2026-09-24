@@ -3,7 +3,7 @@
 ## A two-minute demo
 
 1. Start the backend with Docker Compose, then run `npm run dev:web` and open `http://localhost:3000`.
-2. Choose **Central chance**. Explain that xG is a probability estimate based on distance and angle, rather than a prediction that this specific shot will score.
+2. Choose **Central chance**. Explain that xG is a probability estimate based on geometry and the displayed shot context, rather than a prediction that this specific shot will score.
 3. Pin the central chance, then choose **Tight angle**. Point out the lower xG and the difference in **percentage points**. The outlined marker keeps the reference position visible.
 4. Drag the marker or use the arrow keys. The API returns model predictions; outdated requests are cancelled or ignored.
 5. Save a chance. Revisit it from the collection, reload the page, and export the visible page as CSV.
@@ -15,7 +15,7 @@
 Use the claims that match what you can explain and demonstrate:
 
 - Built a full-stack football analytics app with Next.js, a TypeScript/Express gateway, a FastAPI inference service, and PostgreSQL; implemented interactive shot placement, probability comparisons, persistent history, and CSV export.
-- Trained and served a versioned expected-goals model on 30,011 shots across 1,206 matches and 12 competitions; evaluated it with match-grouped cross-validation (0.733 ROC-AUC) and 3,014 previously unused final-test shots.
+- Trained and served a versioned expected-goals model on 30,011 shots across 1,206 matches and 12 competitions; evaluated it with nested match-grouped selection and 3,009 fresh test shots (0.819 ROC-AUC; 6.2% lower Brier than the previous geometry model on the same test).
 - Added idempotent saves, transactional schema migrations, database readiness checks, API failure tests, and GitHub Actions checks; verified PostgreSQL persistence and the browser save/revisit workflow.
 
 The performance numbers describe cross-validation of the training procedure on the local dataset. Do not describe them as production accuracy, an external benchmark, or proof of generalization to every competition. The app currently separates anonymous browser collections with private cookies; do not describe that as user accounts, cross-device recovery, or public deployment.

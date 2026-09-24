@@ -1,3 +1,4 @@
+import { defaultContext } from "./schemas/shot.schema";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
@@ -30,18 +31,20 @@ test("upgrade, real ML saves, concurrent retries and two-visitor HTTP isolation"
     await pool.query("INSERT INTO shots VALUES ($1, 108, 40, 12, 37, 0.14, 'Legacy shot', now())", [legacyId]);
     await migrate();
     await migrate();
-    assert.equal((await pool.query("SELECT * FROM schema_migrations")).rowCount, 3);
+    assert.equal((await pool.query("SELECT * FROM schema_migrations")).rowCount, 4);
     assert.equal((await pool.query("SELECT id FROM shots WHERE collection_id IS NULL")).rows[0].id, legacyId);
     assert.equal((await pool.query("SELECT model_id FROM shots WHERE id = $1", [legacyId])).rows[0].model_id, "legacy-unversioned");
     const owner = "a".repeat(64);
     const geometry = shotGeometry(108, 40);
     const prediction = await getXGPrediction({ distance_meters: geometry.distance_meters, angle_degrees: geometry.angle_degrees });
     assert.ok(prediction.xg_probability >= 0 && prediction.xg_probability <= 1);
-    const shot = { id: randomUUID(), x: 108, y: 40, ...prediction, distance_yards: geometry.distance_yards, angle_degrees: geometry.angle_degrees };
+    const shot = { context: defaultContext, id: randomUUID(), x: 108, y: 40, ...prediction, distance_yards: geometry.distance_yards, angle_degrees: geometry.angle_degrees };
     const [first, retry] = await Promise.all([shotStore.save(owner, shot), shotStore.save(owner, shot)]);
     assert.equal(first.id, retry.id);
-    assert.equal(first.model_id, "geometry-linear-30k-v1");
+    assert.equal(first.model_id, "context-boosted-30k-v1");
     assert.equal(retry.model_id, first.model_id);
+    assert.deepEqual(first.context, defaultContext);
+    assert.equal((await pool.query("SELECT context FROM shots WHERE id = $1", [legacyId])).rows[0].context, null);
     assert.equal((await shotStore.list(owner, 11, 0)).length, 1);
     assert.equal(await shotStore.find("b".repeat(64), shot.id), undefined);
     assert.equal((await shotStore.find(owner, shot.id))?.distance_yards, 12);

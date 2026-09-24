@@ -1,19 +1,23 @@
 {
-  "model_id": "geometry-linear-30k-v1",
-  "artifact": "geometry_linear_30k_v1.pkl",
-  "artifact_sha256": "95edf1ce0070b685f92d778df0ea15a3e716f53c9f5d788aa77245343f643e21",
-  "algorithm": "LogisticRegression",
+  "model_id": "context-boosted-30k-v1",
+  "artifact": "context_boosted_30k_v1.pkl",
+  "artifact_sha256": "709e39a78cea77b4fa9cf5b5eae7f0676e33d0620ca285f795148baf3ed43556",
+  "algorithm": "HistGradientBoostingClassifier",
   "features": [
     "distance_to_goal",
-    "shot_angle"
+    "shot_angle",
+    "body_part",
+    "technique",
+    "shot_type",
+    "play_pattern"
   ],
   "training_shots": 30011,
   "training_matches": 1206,
   "dataset_sha256": "18a39a9e382115dde555bd3c1e73aeffd8ffc57582ba1de144277d4294de6340",
   "source_revision": "4b73468fc5b0f1950f9f66fada70ad3a4f9327cb",
-  "evaluation_report": "reports/expanded/evaluation.json",
-  "final_test_reference": "expanded_linear",
-  "release_reason": "Broader multi-competition training coverage; no statistically established accuracy improvement claimed",
-  "previous_artifact": "baseline_xg.pkl",
-  "previous_artifact_sha256": "1e96bb354239452420c77bd17df50f77e7405c933c701fe697e9c930064770ba"
+  "evaluation_report": "reports/context/selection.json",
+  "final_test_reference": "reports/context/final-test.json",
+  "release_reason": "Passed predeclared fresh-test log loss and paired Brier uncertainty rule",
+  "previous_artifact": "geometry_linear_30k_v1.pkl",
+  "previous_artifact_sha256": "95edf1ce0070b685f92d778df0ea15a3e716f53c9f5d788aa77245343f643e21"
 }

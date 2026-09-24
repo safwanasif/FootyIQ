@@ -20,6 +20,6 @@ def load_serving_model(manifest_path=ROOT / "serving-model.json"):
     if hashlib.sha256(artifact.read_bytes()).hexdigest() != manifest["artifact_sha256"]:
         raise ValueError("Serving artifact fingerprint does not match its manifest")
     model = joblib.load(artifact)
-    if model.n_features_in_ != 2 or list(model.classes_) != [0, 1]:
+    if model.n_features_in_ != len(manifest["features"]) or list(model.feature_names_in_) != manifest["features"] or list(model.classes_) != [0, 1]:
         raise ValueError("Unexpected model feature/class contract")
     return model, manifest

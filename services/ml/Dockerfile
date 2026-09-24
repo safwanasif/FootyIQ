@@ -40,7 +40,8 @@ COPY app.py .
 COPY predict.py .
 COPY train_baseline.py .
 COPY model_registry.py serving-model.json ./
-COPY artifacts/geometry_linear_30k_v1.pkl ./artifacts/geometry_linear_30k_v1.pkl
+COPY shot_context.py shot-context.json ./
+COPY artifacts/context_boosted_30k_v1.pkl ./artifacts/context_boosted_30k_v1.pkl
 
 # --- Expose Port ---
 # Documents that the container listens on port 5000. Does not itself

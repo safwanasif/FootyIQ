@@ -4,9 +4,9 @@ import { validatePrediction, MLServiceError } from "./services/ml.client";
 
 test("ML boundary rejects invalid probabilities, geometry and text", () => {
   const shot = { distance_meters: 11, angle_degrees: 37 };
-  const valid = { xg_probability: .142, distance_yards: 12.0297, model_id: "geometry-linear-30k-v1", interpretation: "Moderate chance" };
+  const valid = { xg_probability: .142, distance_yards: 12.0297, model_id: "context-boosted-30k-v1", interpretation: "Moderate chance" };
   assert.deepEqual(validatePrediction({ ...valid, private_field: "removed" }, shot), valid);
-  for (const invalid of [null, {}, { ...valid, model_id: undefined }, { ...valid, model_id: "=formula" }, { ...valid, xg_probability: "0.5" },
+  for (const invalid of [{ ...valid, model_id: "geometry-linear-30k-v1" }, null, {}, { ...valid, model_id: undefined }, { ...valid, model_id: "=formula" }, { ...valid, xg_probability: "0.5" },
     { ...valid, xg_probability: NaN }, { ...valid, xg_probability: Infinity },
     { ...valid, xg_probability: -0.1 }, { ...valid, xg_probability: 1.1 },
     { ...valid, distance_yards: 11 }, { ...valid, distance_yards: Infinity },

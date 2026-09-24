@@ -1,0 +1,277 @@
+{
+  "minimum_training_shots": 100,
+  "defaults": {
+    "body_part": "Right Foot",
+    "technique": "Normal",
+    "shot_type": "Open Play",
+    "play_pattern": "Regular Play"
+  },
+  "combinations": [
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 4396
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 2827
+    },
+    {
+      "body_part": "Head",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 2151
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 2125
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 1454
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 1268
+    },
+    {
+      "body_part": "Head",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 1075
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 897
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Free Kick",
+      "play_pattern": "From Free Kick",
+      "shots": 862
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 802
+    },
+    {
+      "body_part": "Head",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 794
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 739
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Counter",
+      "shots": 661
+    },
+    {
+      "body_part": "Head",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 602
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 570
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 552
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Free Kick",
+      "play_pattern": "From Free Kick",
+      "shots": 521
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Goal Kick",
+      "shots": 490
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 486
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 484
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Counter",
+      "shots": 464
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 448
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 353
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 346
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 344
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Goal Kick",
+      "shots": 340
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 327
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 319
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 265
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Keeper",
+      "shots": 246
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 229
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 196
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 170
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 139
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Kick Off",
+      "shots": 135
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Keeper",
+      "shots": 132
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 131
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Goal Kick",
+      "shots": 112
+    }
+  ]
+}

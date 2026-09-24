@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 import { ArrowDownRight, ArrowUpRight, ArrowRight, Crosshair, Code2, Layers3, Loader2, Pin, RotateCcw, X } from "lucide-react";
-import { checkHealth, getXgPrediction, type PredictionResponse } from "@/lib/api";
+import { checkHealth, getXgPrediction, type PredictionResponse, type ShotContext, defaultContext } from "@/lib/api";
+import ContextControls from "./context-controls";
 import ShotHistory from "./shot-history";
 import ModelEvidence from "./model-evidence";
 
-type Position = { x: number; y: number };
+type Position = { x: number; y: number; context?: ShotContext | null };
 type Comparison = Position & PredictionResponse;
 const PRESETS = [
   { name: "Central chance", x: 108, y: 40, detail: "A clear view of goal" },
@@ -22,12 +23,13 @@ function geometry({ x, y }: Position) {
 function svgPoint({ x, y }: Position) { return { x: y * 10, y: (120 - x) * 10 }; }
 
 export default function DashboardPage() {
-  const [shot, setShot] = useState<Position>({ x: 108, y: 40 });
+  const [shot, setShot] = useState<Position & { context: ShotContext }>({ x: 108, y: 40, context: defaultContext });
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [status, setStatus] = useState<"checking" | "online" | "offline">("checking");
   const [comparison, setComparison] = useState<Comparison | null>(null);
+  const [contextNotice, setContextNotice] = useState("");
   const [retry, setRetry] = useState(0);
   const dragging = useRef(false);
   const sequence = useRef(0);
@@ -56,7 +58,7 @@ export default function DashboardPage() {
       const point = geometry(shot);
       try {
         const result = await getXgPrediction(point.distance / 1.09361, point.angle,
-          AbortSignal.any([controller.signal, AbortSignal.timeout(10000)]));
+          AbortSignal.any([controller.signal, AbortSignal.timeout(10000)]), shot.context);
         if (!controller.signal.aborted && current === sequence.current) setPrediction(result);
       } catch {
         if (!controller.signal.aborted && current === sequence.current) {
@@ -73,7 +75,8 @@ export default function DashboardPage() {
     setLoading(true);
     setPrediction(null);
     setError("");
-    setShot({ x: position.x, y: position.y });
+    setContextNotice(position.context === null ? "This older shot has no recorded context. Recalculated using the defaults shown below; its saved probability is unchanged." : "");
+    setShot({ x: position.x, y: position.y, context: position.context === null ? defaultContext : position.context ?? shot.context });
   }
   function movePointer(event: React.PointerEvent<SVGSVGElement>) {
     const svg = event.currentTarget;
@@ -151,10 +154,12 @@ export default function DashboardPage() {
               <div className="probability-track" aria-hidden="true"><span style={{ width: ready ? `${prediction!.xg_probability * 100}%` : "0%" }} /></div>
               <div className="scale-labels"><span>Less likely</span><span>More likely</span></div>
             </div>
+            <ContextControls value={shot.context} onChange={(context) => selectShot({ ...shot, context })} />
+            {contextNotice && <p role="status" className="explanation">{contextNotice}</p>}
             <dl className="geometry"><div><dt>Distance to goal</dt><dd>{distance.toFixed(1)} <span>yd</span></dd></div><div><dt>View of goal</dt><dd>{angle.toFixed(1)}<span>°</span></dd></div></dl>
             {error ? <div className="error-note" role="alert"><p>{error}</p><button className="button secondary" onClick={() => { setLoading(true); setError(""); setRetry((n) => n + 1); }}><RotateCcw size={15} />Retry prediction</button></div> : <p className="explanation">{ready ? <>Roughly <strong>{Math.round(prediction!.xg_probability * 100)} in 100</strong> comparable chances would score according to this model.</> : "Move the marker to explore how distance and angle influence the prediction."} <a href="#model-title">How it works <ArrowRight size={12} /></a></p>}
             <div className="compare-area">
-              {comparison ? <><div className="compare-heading"><span><Pin size={14} /> Pinned chance · {(comparison.xg_probability * 100).toFixed(1)}%</span><button className="icon-button" aria-label="Clear pinned comparison" onClick={() => setComparison(null)}><X size={17} /></button></div><p className="comparison-result">{delta === null ? "Calculating comparison…" : <>{delta >= 0 ? <ArrowUpRight size={20} /> : <ArrowDownRight size={20} />}<strong>{delta > 0 ? "+" : ""}{delta.toFixed(1)}</strong> percentage points</>}</p><button className="text-button" onClick={() => selectShot(comparison)}>Return to pinned position</button></> : <><p>What changes when you move wider?</p><button className="button secondary" disabled={!ready} onClick={() => setComparison({ ...shot, ...prediction! })}><Pin size={15} />Pin this chance to compare</button></>}
+              {comparison ? <><div className="compare-heading"><span><Pin size={14} /> Pinned chance · {(comparison.xg_probability * 100).toFixed(1)}%</span><button className="icon-button" aria-label="Clear pinned comparison" onClick={() => setComparison(null)}><X size={17} /></button></div><p className="comparison-result">{delta === null ? "Calculating comparison…" : <>{delta >= 0 ? <ArrowUpRight size={20} /> : <ArrowDownRight size={20} />}<strong>{delta > 0 ? "+" : ""}{delta.toFixed(1)}</strong> percentage points</>}</p><p className="explanation">Pinned: {comparison.context ? Object.values(comparison.context).join(" · ") : "Context not recorded"}. Current: {Object.values(shot.context).join(" · ")}. These estimates describe different inputs, not causal effects.</p><button className="text-button" onClick={() => selectShot(comparison)}>Return to pinned chance</button></> : <><p>What changes when you move wider?</p><button className="button secondary" disabled={!ready} onClick={() => setComparison({ ...shot, ...prediction! })}><Pin size={15} />Pin this chance to compare</button></>}
             </div>
           </section>
         </section>
