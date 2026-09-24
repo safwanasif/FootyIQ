@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { ArrowDownRight, ArrowUpRight, ArrowRight, Crosshair, Code2, Layers3, Loader2, Pin, RotateCcw, X } from "lucide-react";
 import { checkHealth, getXgPrediction, type PredictionResponse, type ShotContext, defaultContext } from "@/lib/api";
 import ContextControls from "./context-controls";
+import { distanceSupport } from "@/lib/distance-support";
 import ShotHistory from "./shot-history";
 import ModelEvidence from "./model-evidence";
 
@@ -56,13 +57,15 @@ export default function DashboardPage() {
     const current = ++sequence.current;
     const timer = setTimeout(async () => {
       const point = geometry(shot);
+      const unsupported = distanceSupport(point.distance, shot.context);
+      if (unsupported) { setError(unsupported); setPrediction(null); setLoading(false); return; }
       try {
         const result = await getXgPrediction(point.distance / 1.09361, point.angle,
           AbortSignal.any([controller.signal, AbortSignal.timeout(10000)]), shot.context);
         if (!controller.signal.aborted && current === sequence.current) setPrediction(result);
       } catch {
         if (!controller.signal.aborted && current === sequence.current) {
-          setError("We couldn’t calculate this chance. Check the connection and try again.");
+          setError(process.env.NEXT_PUBLIC_API_MODE === "same-origin" ? "The free demo backend may be waking up. Please retry in about a minute." : "We couldn’t calculate this chance. Check the connection and try again.");
           setPrediction(null);
         }
       } finally { if (!controller.signal.aborted && current === sequence.current) setLoading(false); }

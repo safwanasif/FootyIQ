@@ -11,7 +11,7 @@ export function requestLimit(limit: number, windowMs = 60000, now = Date.now): R
       nextSweep = time + windowMs;
     }
     // Express leaves trust proxy disabled: untrusted forwarded headers cannot rotate keys.
-    const key = req.ip ?? req.socket.remoteAddress ?? "unknown";
+    const key = res.locals.clientIP ?? req.ip ?? req.socket.remoteAddress ?? "unknown";
     let bucket = buckets.get(key);
     if (!bucket || bucket.reset <= time) {
       if (!bucket && buckets.size >= 10000) {

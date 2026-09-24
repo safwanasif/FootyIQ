@@ -1,3 +1,5 @@
+import { distanceSupport } from "./distance-support";
+import { defaultContext } from "./schemas/shot.schema";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { validatePrediction, MLServiceError } from "./services/ml.client";
@@ -14,4 +16,9 @@ test("ML boundary rejects invalid probabilities, geometry and text", () => {
     assert.throws(() => validatePrediction(invalid, shot), (error: unknown) =>
       error instanceof MLServiceError && error.statusCode === 502);
   }
+});
+
+test("distance coverage rejects extrapolated headers without altering in-range predictions", () => {
+ assert.equal(distanceSupport(12, defaultContext), null);
+ assert.match(distanceSupport(45, {...defaultContext, body_part:"Head"})!, /Outside training range/);
 });

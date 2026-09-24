@@ -1,3 +1,4 @@
+import { distanceSupport } from "../distance-support";
 import axios from "axios";
 import { z } from "zod";
 import type { ShotInput } from "../schemas/shot.schema";
@@ -28,6 +29,8 @@ export function validatePrediction(data: unknown, shot: ShotInput): XGResponse {
 }
 
 export async function getXGPrediction(shot: ShotInput): Promise<XGResponse> {
+  const unsupported = distanceSupport(shot.distance_meters * 1.09361, shot.context);
+  if (unsupported) throw new MLServiceError(unsupported, 422);
   try {
     const response = await axios.post<unknown>(PREDICT_ENDPOINT, shot, {
       timeout: 5000, maxContentLength: 16384, maxRedirects: 0,

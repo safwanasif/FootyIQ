@@ -5,6 +5,12 @@ import pandas as pd
 from pydantic import BaseModel, ConfigDict, model_validator
 
 CONTRACT = json.loads(Path(__file__).with_name("shot-context.json").read_text())
+COVERAGE = json.loads(Path(__file__).with_name("distance-support.json").read_text())["combinations"]
+
+def distance_supported(distance, context):
+    row = next((row for row in COVERAGE if all(row[key] == getattr(context, key) for key in KEYS)), None)
+    return row is not None and row["min_yards"] - .0001 <= distance <= row["max_yards"] + .0001
+
 KEYS = ["body_part", "technique", "shot_type", "play_pattern"]
 
 

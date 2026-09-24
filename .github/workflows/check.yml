@@ -67,3 +67,35 @@ jobs:
             playwright-report/
             test-results/
           retention-days: 7
+  deployment-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: footyiq_test
+          POSTGRES_PASSWORD: footyiq_test
+          POSTGRES_DB: footyiq_deploy
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U footyiq_test -d footyiq_deploy"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f deploy/Dockerfile -t footyiq-deploy .
+      - name: Verify combined backend under the free memory limit
+        shell: bash
+        run: |
+          docker run -d --name footyiq-deploy --network host --memory=512m --cpus=0.1 -e PORT=10000 -e COOKIE_SECURE=false -e WEB_ORIGIN=http://localhost:3000 -e DATABASE_URL=postgresql://footyiq_test:footyiq_test@localhost:5432/footyiq_deploy footyiq-deploy
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://localhost:10000/health; then break; fi
+            sleep 3
+          done
+          curl --fail --silent http://localhost:10000/health
+          curl --fail --silent --max-time 15 -H 'Content-Type: application/json' -d '{"distance_meters":11,"angle_degrees":37}' http://localhost:10000/api/v1/predict-proxy
+          docker stats --no-stream footyiq-deploy
+      - name: Container diagnostics
+        if: always()
+        run: docker logs footyiq-deploy

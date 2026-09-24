@@ -1,0 +1,348 @@
+{
+  "development_sha256": "f47748e54ab3f27d9552cb3be82f8c1f234b058dc46e4060dde5c44518251aad",
+  "combinations": [
+    {
+      "body_part": "Head",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 2151,
+      "min_yards": 1.529705854077835,
+      "max_yards": 19.27692921603438
+    },
+    {
+      "body_part": "Head",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 1075,
+      "min_yards": 0.7615773105863923,
+      "max_yards": 22.466196829904256
+    },
+    {
+      "body_part": "Head",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 602,
+      "min_yards": 1.860107523773824,
+      "max_yards": 22.57011298155151
+    },
+    {
+      "body_part": "Head",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 794,
+      "min_yards": 2.370653918225935,
+      "max_yards": 22.92007853389687
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 344,
+      "min_yards": 2.343074902771994,
+      "max_yards": 40.68537820888483
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 319,
+      "min_yards": 3.0083217912982625,
+      "max_yards": 49.021219895061776
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 346,
+      "min_yards": 4.130375285612671,
+      "max_yards": 42.38596465812711
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 484,
+      "min_yards": 3.56931365951495,
+      "max_yards": 60.70074134637896
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Free Kick",
+      "play_pattern": "From Free Kick",
+      "shots": 521,
+      "min_yards": 18.80106379968963,
+      "max_yards": 68.15541064361655
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 448,
+      "min_yards": 2.23606797749979,
+      "max_yards": 42.878082979536295
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Counter",
+      "shots": 464,
+      "min_yards": 4.41814440687491,
+      "max_yards": 72.80027472475636
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 897,
+      "min_yards": 2.1260291625469248,
+      "max_yards": 67.57580928113255
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Goal Kick",
+      "shots": 340,
+      "min_yards": 4.981967482832466,
+      "max_yards": 41.36496101775027
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Keeper",
+      "shots": 132,
+      "min_yards": 6.228964600958978,
+      "max_yards": 71.2643669725621
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 1268,
+      "min_yards": 2.1213203435596366,
+      "max_yards": 46.79540575740316
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 2827,
+      "min_yards": 2.5,
+      "max_yards": 88.83315822371733
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 170,
+      "min_yards": 1.4142135623730951,
+      "max_yards": 33.63406011768428
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 131,
+      "min_yards": 3.0,
+      "max_yards": 39.14613646325777
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 139,
+      "min_yards": 4.472135954999584,
+      "max_yards": 35.734717013011306
+    },
+    {
+      "body_part": "Left Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 196,
+      "min_yards": 4.41474801092882,
+      "max_yards": 40.94203219186854
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 486,
+      "min_yards": 1.9849433241279189,
+      "max_yards": 42.85148772213165
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 570,
+      "min_yards": 3.255764119219948,
+      "max_yards": 72.56810594193568
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Goal Kick",
+      "shots": 112,
+      "min_yards": 2.41867732448957,
+      "max_yards": 52.45045281024751
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 552,
+      "min_yards": 1.34536240470737,
+      "max_yards": 53.80752735445107
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Half Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 802,
+      "min_yards": 2.954657340538835,
+      "max_yards": 62.55909206502281
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Free Kick",
+      "play_pattern": "From Free Kick",
+      "shots": 862,
+      "min_yards": 18.110770276274835,
+      "max_yards": 53.64867193137216
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 739,
+      "min_yards": 2.408318915758458,
+      "max_yards": 44.9221548904324
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Counter",
+      "shots": 661,
+      "min_yards": 2.022374841615668,
+      "max_yards": 69.26037828369117
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 1454,
+      "min_yards": 0.921954445729292,
+      "max_yards": 63.85178149433264
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Goal Kick",
+      "shots": 490,
+      "min_yards": 4.393176527297756,
+      "max_yards": 53.87884557040917
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Keeper",
+      "shots": 246,
+      "min_yards": 5.235456045083365,
+      "max_yards": 42.44997055358225
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Kick Off",
+      "shots": 135,
+      "min_yards": 5.728001396647875,
+      "max_yards": 59.70678353420154
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 2125,
+      "min_yards": 1.1401754250991318,
+      "max_yards": 82.27496581585434
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Normal",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 4396,
+      "min_yards": 2.280350850198279,
+      "max_yards": 76.7521986655757
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Corner",
+      "shots": 353,
+      "min_yards": 3.195309061734092,
+      "max_yards": 40.049968789001575
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Free Kick",
+      "shots": 265,
+      "min_yards": 2.5961509971494348,
+      "max_yards": 61.5223536610881
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "From Throw In",
+      "shots": 229,
+      "min_yards": 3.900000000000001,
+      "max_yards": 50.29562605237159
+    },
+    {
+      "body_part": "Right Foot",
+      "technique": "Volley",
+      "shot_type": "Open Play",
+      "play_pattern": "Regular Play",
+      "shots": 327,
+      "min_yards": 4.110960958218887,
+      "max_yards": 35.6384623686264
+    }
+  ],
+  "policy": "Withhold estimates outside the observed distance range for this exact context. Coverage is not a confidence interval or guarantee of local accuracy."
+}

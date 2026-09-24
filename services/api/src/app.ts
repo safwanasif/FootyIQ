@@ -1,3 +1,4 @@
+import { deploymentProxy } from "./deployment-proxy";
 import express, { type ErrorRequestHandler } from "express";
 import cors from "cors";
 import { predictRouter } from "./routes/predict.route";
@@ -12,6 +13,7 @@ export function createApp(store: ShotStore, checkDatabase: () => Promise<unknown
   const origin = options.webOrigin ?? process.env.WEB_ORIGIN ?? "http://localhost:3000";
   const secureCookies = options.secureCookies ?? process.env.COOKIE_SECURE !== "false";
   app.disable("x-powered-by");
+  app.use(deploymentProxy(process.env.DEPLOYMENT_PROXY_SECRET));
   app.use(cors({ origin, credentials: true }));
   app.use((req, res, next) => {
     res.setHeader("X-Content-Type-Options", "nosniff");

@@ -18,7 +18,7 @@ import evidence from "./model-evidence.json";
  * ============================================================================
  */
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const BASE_URL = process.env.NEXT_PUBLIC_API_MODE === "same-origin" ? "" : process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 let collectionRequest: Promise<{ collection_id: string }> | null = null;
 function openCollection() {
@@ -33,7 +33,7 @@ function openCollection() {
   return collectionRequest;
 }
 
-if (!process.env.NEXT_PUBLIC_API_URL) {
+if (!process.env.NEXT_PUBLIC_API_URL && process.env.NEXT_PUBLIC_API_MODE !== "same-origin") {
   // Loud warning rather than a silent fallback — catches a missing
   // .env.local immediately instead of mysterious runtime fetch failures.
   console.warn(

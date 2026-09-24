@@ -40,7 +40,7 @@ COPY app.py .
 COPY predict.py .
 COPY train_baseline.py .
 COPY model_registry.py serving-model.json ./
-COPY shot_context.py shot-context.json ./
+COPY shot_context.py shot-context.json distance-support.json ./
 COPY artifacts/context_boosted_30k_v1.pkl ./artifacts/context_boosted_30k_v1.pkl
 
 # --- Expose Port ---

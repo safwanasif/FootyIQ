@@ -1,4 +1,4 @@
-"""Versioned geometry-only xG inference. Artifact and metadata load once at startup."""
+"""Versioned context-aware xG inference. Artifact and metadata load once at startup."""
 from contextlib import asynccontextmanager
 import logging
 
@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 from threadpoolctl import threadpool_limits
 
 from model_registry import load_serving_model
-from shot_context import ShotContext, default_context, model_input
+from shot_context import ShotContext, default_context, model_input, distance_supported
 
 logger = logging.getLogger("footyiq_api")
 YARDS_PER_METER = 1.09361
@@ -75,6 +75,8 @@ async def predict_shot(shot: ShotInput):
     distance_yards = shot.distance_meters * YARDS_PER_METER
     if not np.isfinite(distance_yards):
         raise HTTPException(status_code=422, detail="Distance is outside the supported numeric range.")
+    if not distance_supported(distance_yards, shot.context):
+        raise HTTPException(status_code=422, detail="Outside the observed training distance range for this context.")
     with threadpool_limits(limits=2):
         probability = float(model.predict_proba(model_input(distance_yards, shot.angle_degrees, shot.context))[0, 1])
     return XGResponse(xg_probability=round(probability, 4), distance_yards=round(distance_yards, 4),

@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: footyiq-backend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./deploy/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeployTrigger: off
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: DATABASE_URL
+        sync: false
+      - key: WEB_ORIGIN
+        sync: false
+      - key: DEPLOYMENT_PROXY_SECRET
+        generateValue: true

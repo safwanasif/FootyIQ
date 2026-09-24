@@ -1,3 +1,4 @@
+import { deploymentProxy } from "./deployment-proxy";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import express from "express";
@@ -36,4 +37,16 @@ test("rate limit rejects overflow, ignores spoofed forwarded IPs, and recovers",
   assert.equal(denied.headers.get("retry-after"), "1");
   now = 1000;
   assert.equal((await fetch(url)).status, 200);
+});
+
+test("deployment gate authenticates the proxy before trusting a client IP", async (t) => {
+ const app=express(), secret="a".repeat(40);
+ app.use(deploymentProxy(secret)); app.use(requestLimit(1)); app.get("/test",(_req,res)=>res.json({ok:true}));
+ const server=app.listen(0,"127.0.0.1"); await new Promise<void>(resolve=>server.once("listening",resolve));
+ t.after(()=>new Promise<void>(resolve=>{server.close(()=>resolve());server.closeAllConnections()}));
+ const addr=server.address(); assert.ok(addr && typeof addr!=="string"); const url=`http://127.0.0.1:${addr.port}/test`;
+ assert.equal((await fetch(url,{headers:{"x-footyiq-client-ip":"1.2.3.4"}})).status,403);
+ const headers={"x-footyiq-proxy-secret":secret,"x-footyiq-client-ip":"1.2.3.4"};
+ assert.equal((await fetch(url,{headers})).status,200); assert.equal((await fetch(url,{headers})).status,429);
+ assert.equal((await fetch(url,{headers:{...headers,"x-footyiq-client-ip":"2.3.4.5"}})).status,200);
 });

@@ -48,6 +48,11 @@ if (JSON.stringify(contextContract.combinations) !== JSON.stringify(expected)) t
 for (const path of ["services/api/src/shot-context.json", "apps/web/lib/shot-context.json"]) {
   if (JSON.stringify(read(path)) !== JSON.stringify(contextContract)) throw new Error("Context contracts are out of sync");
 }
+const distanceCoverage = read("services/ml/distance-support.json");
+if(distanceCoverage.development_sha256 !== contextSelection.development_sha256) throw new Error("Distance support uses different training data");
+for (const path of ["services/api/src/distance-support.json", "apps/web/lib/distance-support.json"]) {
+  if (JSON.stringify(read(path)) !== JSON.stringify(distanceCoverage)) throw new Error("Distance coverage contracts differ");
+}
 const summary = {
   serving: { id: manifest.model_id, shots: manifest.training_shots, matches: manifest.training_matches, folds: expanded.fold_count,
     auc: contextTest.candidate.metrics.roc_auc, brierImprovement: (1 - contextTest.candidate.metrics.brier_score / contextTest.serving.metrics.brier_score) * 100,

@@ -7,7 +7,7 @@ import unittest
 
 import numpy as np
 from app import lifespan, app, predict_shot, health_check, ShotInput
-from shot_context import model_input, default_context, ShotContext
+from shot_context import model_input, default_context, ShotContext, distance_supported
 from pydantic import ValidationError
 from model_registry import load_serving_model, ROOT
 
@@ -36,6 +36,12 @@ class ServingModelTests(unittest.TestCase):
             (path / "serving-model.json").write_text(json.dumps({"model_id": "test-model", "artifact": "model.pkl", "artifact_sha256": "0" * 64}))
             with self.assertRaisesRegex(ValueError, "fingerprint"):
                 load_serving_model(path / "serving-model.json")
+
+    def test_header_extrapolation_is_not_served(self):
+        ctx = default_context().model_dump()
+        ctx["body_part"] = "Head"
+        self.assertFalse(distance_supported(45, ShotContext(**ctx)))
+        self.assertTrue(distance_supported(12, ShotContext(**ctx)))
 
     def test_prediction_and_health_expose_the_loaded_model_identity(self):
         async def scenario():
