@@ -1,6 +1,8 @@
 # FootyIQ
 
-An interactive soccer expected-goals dashboard backed by a trained logistic-regression model. Place a shot on the attacking half, pin a chance to compare positions, and save it to PostgreSQL. The responsive collection supports revisiting chances and exporting the visible page as CSV. An in-app model section explains the measured results and limitations.
+An interactive soccer expected-goals dashboard backed by a gradient-boosted model trained on 30,011 shots. Place a shot on the attacking half, describe its context, pin a chance to compare positions, and save it to PostgreSQL. The responsive collection supports revisiting chances and exporting the visible page as CSV. An in-app model section explains the measured results and limitations.
+
+**[Try the live demo](https://footy-iq-web.vercel.app/)** — hosted on Vercel, Render, and Neon free plans. The backend sleeps after inactivity; if it is waking up, retry in about a minute. See the [deployment guide](docs/free-deployment.md) for configuration and verification status.
 
 For a short demo walkthrough, engineering talking points, and evidence-based resume bullets, see the [portfolio guide](docs/portfolio.md).
 
@@ -10,7 +12,7 @@ For a short demo walkthrough, engineering talking points, and evidence-based res
 
 `Express API → PostgreSQL shot history`
 
-The browser receives live predictions through the gateway. Saving sends only an ID and pitch coordinates; the API calculates distance and angle, requests a fresh model prediction, and stores the result. Repeated requests with the same ID and position return the original shot within the same collection. Database migrations run transactionally before the API starts listening.
+The browser receives live predictions through the gateway. Saving sends an ID, pitch coordinates, and shot context; the API calculates distance and angle, requests a fresh model prediction, and stores the result. Repeated requests with the same ID, position, and context return the original shot within the same collection. Database migrations run transactionally before the API starts listening.
 
 Saved shots belong to an anonymous browser collection. A 256-bit random, HttpOnly, SameSite=Lax cookie identifies the visitor; only its SHA-256 hash is stored with shots. List, save, retry, and export queries all include that collection hash. Clearing cookies or changing browsers creates a new collection. This is browser-based separation, not an account system or account recovery service.
 

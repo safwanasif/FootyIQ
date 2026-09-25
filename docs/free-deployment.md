@@ -1,6 +1,24 @@
 # Free deployment: Vercel + Render + Neon
 
-Prepared configuration; no public resources have been provisioned yet. Use free plans only. Do not enable paid upgrades or enter billing details to work around free-tier limits without a separate decision.
+Public deployment is live (2026-09-25); the broader v1 release gates below remain open. Use free plans only. Do not enable paid upgrades or enter billing details to work around free-tier limits without a separate decision.
+
+## Provisioning status
+
+- Vercel project `footy-iq-web`: connected production deployment is Ready on Hobby at https://footy-iq-web.vercel.app, from commit `1106177`, with Next.js root `apps/web` and `NEXT_PUBLIC_API_MODE=same-origin`. The backend origin and proxy secret are restricted to Production.
+- Neon project `footyiq`: created on the Free plan in AWS US West 2 (Oregon), PostgreSQL 18, with a fresh `production` branch. No local collections were imported.
+- Render Blueprint `footyiq`: Docker service `footyiq-backend` is Live on Free at https://footyiq-backend-ydh7.onrender.com. `WEB_ORIGIN` matches the Vercel production domain. The service uses Neon's pooled TLS connection; credentials are stored only in provider settings.
+- Render was connected through the public repository URL because its repository picker showed no authorized repositories despite GitHub sign-in. Backend deploys remain manual; Vercel is connected to the GitHub repository.
+
+## Public verification (2026-09-25)
+
+- Default central right-foot prediction: 26.3%; changing to Head: 7.0%.
+- A 30-yard header correctly abstains and explains the supported 2.4–22.9-yard range.
+- Saving, revisiting the original context, and reloading the collection passed in the public browser.
+- Separate HTTP cookie sessions verified collection isolation, saving/reading, CSV export, and a Secure collection cookie. Health reported the database healthy.
+- Direct Render API access without the proxy credential returned HTTP 403.
+- Render recorded a successful service restart; the browser's previously saved shot remained afterward.
+- The actual free service runs with a 512 MB limit. Render's free dashboard hides memory/CPU usage metrics, so no observed peak-memory claim is made. The earlier CI container check passed with a 512 MB memory constraint.
+- An idle-to-awake cold-start check, backup/restore rehearsal, dependency audit, attribution review, and final portfolio assets are still pending before a v1 release tag. No paid plan or keep-alive workaround was enabled.
 
 ## Layout
 
