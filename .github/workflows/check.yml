@@ -96,6 +96,10 @@ jobs:
           curl --fail --silent http://localhost:10000/health
           curl --fail --silent --max-time 15 -H 'Content-Type: application/json' -d '{"distance_meters":11,"angle_degrees":37}' http://localhost:10000/api/v1/predict-proxy
           docker stats --no-stream footyiq-deploy
+      - name: Rehearse database backup and restore
+        env:
+          POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
+        run: bash scripts/verify-backup-restore.sh
       - name: Container diagnostics
         if: always()
         run: docker logs footyiq-deploy
