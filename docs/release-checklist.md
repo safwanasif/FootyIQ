@@ -36,7 +36,7 @@ The [fixed v1 roadmap](release-roadmap.md) controls scope. The September 24 amen
 - [x] Configure same-site HTTPS frontend/API, production-only secrets, and proxy-aware request limits.
 - [x] Verify public predictions, distance guard, cookies, isolation, save/revisit/export and persistence after a backend restart.
 - [x] Verify a backup/restore rehearsal with realistic data in CI: [passing run](https://github.com/safwanasif/FootyIQ/actions/runs/36203108328).
-- [ ] Verify a production Neon archive using `scripts/backup-neon.ps1`; Docker is required and unavailable in the agent command environment.
+- [x] Verify a production Neon archive using `scripts/backup-neon.ps1`: user-run PostgreSQL 18 restore passed September 25, recovering 2 saved shots and migrations 1–4 into an isolated local database. Private archive retained outside Git.
 - [ ] Verify an idle-to-awake cold start.
 - [x] Add an on-demand public health and inference workflow; no scheduled traffic to defeat free-tier sleep. Local public check passed in 0.81 seconds on September 25.
 - [x] Finalize evidence-based résumé bullets and interview notes in the portfolio guide; prepare the two-minute recording script.

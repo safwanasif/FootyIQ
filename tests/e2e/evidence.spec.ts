@@ -4,7 +4,11 @@ test("evidence separates serving results, expanded data and the final model deci
   await page.goto("/#model-title");
   await expect(page.getByRole("heading", { name: "Current prediction model" })).toBeVisible();
   await expect(page.getByText("Training shots", { exact: true })).toBeVisible();
-  await expect(page.getByText("30,011", { exact: true }).first()).toBeVisible();
+  const trainingCount = page.locator(".evidence-grid > div").filter({
+    has: page.getByText("Training shots", { exact: true }),
+  }).locator("dd");
+  await expect(trainingCount).toBeVisible();
+  await expect(trainingCount).toHaveText("30,011Across 1,206 matches");
   const disclosure = page.locator("summary").filter({ hasText: "See all 12 competitions" });
   await disclosure.focus();
   await page.keyboard.press("Enter");

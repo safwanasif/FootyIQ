@@ -30,7 +30,7 @@ To rehearse recovery of the actual Neon database, run the following in PowerShel
 .\scripts\backup-neon.ps1
 ```
 
-At the hidden prompt, paste the production connection string from Neon's Connect dialog. The script uses PostgreSQL 18 tools, reads Neon with `pg_dump`, and restores the archive into a new local container. It never restores over Neon. It removes only its temporary restore container afterward and retains the backup under `%LOCALAPPDATA%\FootyIQ\backups`, outside the repository. Keep that directory private. A successful run prints restored shot counts and migration versions; record that result before checking off production recovery. Script syntax was checked, but this production run is still pending because Docker is unavailable in the agent environment. This is a manual recovery rehearsal, not a scheduled backup policy.
+At the hidden prompt, paste the production connection string from Neon's Connect dialog. The script uses PostgreSQL 18 tools, reads Neon with `pg_dump`, and restores the archive into a new local container. It never restores over Neon. It removes only its temporary restore container afterward and retains the backup under `%LOCALAPPDATA%\FootyIQ\backups`, outside the repository. Keep that directory private. A successful run prints restored shot counts and migration versions; record that result before checking off production recovery. The user ran this successfully on September 25: the isolated PostgreSQL 18 restore contained 2 saved shots and migration versions 1, 2, 3 and 4. The private archive remains outside Git; production was not overwritten. This is a manual recovery rehearsal, not a scheduled backup policy.
 
 ## Layout
 
