@@ -2,7 +2,7 @@
 
 ## A two-minute demo
 
-Use the [timed narration and recording script](demo-script.md) when capturing a video. The video itself remains to be recorded.
+Use the [timed narration and recording script](demo-script.md) when capturing a video. A [silent automated walkthrough](media/footyiq-demo.webm) is included; it demonstrates the app against isolated CI services.
 
 1. Open [the live demo](https://footy-iq-web.vercel.app/). If the free backend is waking up, retry after about a minute. For a local demo, start Docker Compose and `npm run dev:web`.
 2. Choose **Central chance**. Explain that xG is a probability estimate based on geometry and the displayed shot context, rather than a prediction that this specific shot will score.
@@ -36,9 +36,9 @@ The performance numbers describe the frozen context model's fresh, match-separat
 
 ## Remaining release work
 
-- Complete backup/restore and idle-to-awake cold-start checks.
-- Finish dependency auditing, attribution, accessibility review, and release documentation.
-- Capture screenshots and a concise demo recording, then tag the verified release.
+- Complete the idle-to-awake cold-start check; production backup/restore passed.
+- Finish manual assistive-technology review; automated accessibility checks, dependency audits and attribution are complete.
+- Screenshots and a silent demo are included. Tag the release after the remaining checklist gates are resolved.
 
 The public URL, HTTPS, production secrets, proxy-aware request limits, cookie isolation, CSV export, and persistence after a backend restart were verified on September 25. See [deployment evidence](free-deployment.md).
 

@@ -18,7 +18,7 @@ Public deployment is live (2026-09-25); the broader v1 release gates below remai
 - Direct Render API access without the proxy credential returned HTTP 403.
 - Render recorded a successful service restart; the browser's previously saved shot remained afterward.
 - The actual free service runs with a 512 MB limit. Render's free dashboard hides memory/CPU usage metrics, so no observed peak-memory claim is made. The earlier CI container check passed with a 512 MB memory constraint.
-- An idle-to-awake cold-start check, backup/restore rehearsal, dependency audit, attribution review, and final portfolio assets are still pending before a v1 release tag. No paid plan or keep-alive workaround was enabled.
+- Production backup/restore, dependency audits, attribution and the demo recording are complete. The controlled idle-to-awake check and hands-on screen-reader review remain open before the v1 tag. No paid plan or scheduled keep-alive workaround was enabled.
 
 ## Recovery and audit follow-up
 
@@ -54,7 +54,7 @@ The user already has Vercel. Create free accounts at [Render](https://dashboard.
 
 For an on-demand check, open GitHub Actions → **Public demo check** → **Run workflow**. It checks database readiness, a bounded prediction and the expected model ID without credentials or saved-shot writes. It allows one retry for startup. This is deliberately not scheduled and does not provide continuous uptime monitoring.
 
-For a controlled cold-start check, close the public app in all browsers and leave it without requests for at least 20 minutes. Then open it once and record whether the wake-up/retry message appears, whether Retry prediction recovers, and whether Refresh collection restores the saved history. Correlate with Render's lifecycle/log timestamps before claiming an actual sleep-to-awake test; a quick successful response alone could have reached an already-warm instance. The September 25 on-demand check passed in 0.81 seconds on its first attempt and is recorded only as warm availability evidence.
+An open app tab checks health every ten seconds, so leaving it open is not an idle test. For a controlled cold-start check, close the public app in all browsers and leave it without requests for at least 20 minutes. Then open it once and record whether the wake-up/retry message appears, whether Retry prediction recovers, and whether Refresh collection restores the saved history. Correlate with Render's lifecycle/log timestamps before claiming an actual sleep-to-awake test; a quick successful response alone could have reached an already-warm instance. The September 25 on-demand check passed in 0.81 seconds on its first attempt and is recorded only as warm availability evidence.
 
 [Render's free-service documentation](https://render.com/docs/free) says services sleep after 15 idle minutes and can take about a minute to wake. Its local filesystem is ephemeral, and its free PostgreSQL expires after 30 days, which is why this setup uses Neon. Do not run keep-alive traffic merely to defeat sleeping. The frontend explains that users may need to retry during startup.
 

@@ -26,9 +26,10 @@ The [fixed v1 roadmap](release-roadmap.md) controls scope. The September 24 amen
 - [x] Finish data attribution, including the official provider logo, source links, independence notice and versioned model/data evidence.
 - [x] npm and Python requirements advisory audits: no known vulnerabilities reported on September 25; see [scope and limitations](dependency-audit.md).
 - [x] Fresh CI checkout: npm clean install, Python dependencies, production build, full-stack browser workflow and clean deployment container verified in [run 36203384424](https://github.com/safwanasif/FootyIQ/actions/runs/36203384424).
-- [ ] Final keyboard, screen-reader, contrast, mobile and error-state review.
+- [x] Automated desktop/mobile accessibility, contrast, disclosure-keyboard and error-recovery checks passed in [release CI](https://github.com/safwanasif/FootyIQ/actions/runs/36206042342). See [verification scope](accessibility.md).
+- [ ] Hands-on screen-reader review of pitch navigation and prediction announcements; not covered by axe.
 - [x] README screenshot, deployment architecture diagram and written demo walkthrough.
-- [ ] Concise demo recording.
+- [x] [Silent automated demo recording](media/footyiq-demo.webm), with presentation pauses and verified results against isolated CI services.
 
 ## Deployment and release
 

@@ -115,9 +115,9 @@ Defender and goalkeeper positions are omitted. Calibration remains imperfect: th
 
 ## Current scope and next milestones
 
-This version is a local demo with separate anonymous browser collections. It has no sign-in or cross-device recovery. Compose credentials are local development defaults. Local HTTP explicitly sets `COOKIE_SECURE=false`; HTTPS deployment must set it to `true` and serve the frontend and API on the same site so SameSite cookies work. `WEB_ORIGIN` must match the frontend origin exactly. Public deployment still needs deployment secrets, proxy-aware request limits, and hosting configuration.
+The public demo is deployed on Vercel, Render and Neon with separate anonymous browser collections. It has no sign-in or cross-device recovery. Production uses secure cookies, same-origin frontend routes, server-only credentials and an exact `WEB_ORIGIN`. Compose credentials are local development defaults; local HTTP explicitly sets `COOKIE_SECURE=false`.
 
-Next: complete release readiness, then free-hosting deployment and the recorded demo.
+Model and feature work is frozen for v1. See the [release checklist](docs/release-checklist.md) for final verification and the [recorded walkthrough](docs/media/footyiq-demo.webm) for a silent demonstration against CI's isolated services.
 
 ## Expanded-data experiment
 
@@ -143,7 +143,7 @@ The serving artifact is now `context_boosted_30k_v1.pkl`, promoted by the subseq
 
 ## API safeguards
 
-Per-IP, per-minute limits: session initialization 30, predictions 240, saves 60, and collection reads/exports 120. Exhausted limits return HTTP 429 with `Retry-After`; memory is bounded. Limits are process-local and reset on restart. Forwarded IP headers are deliberately untrusted. Behind a reverse proxy, visitors will share the proxy's budget until deployment-specific trusted proxy configuration is implemented; multiple instances require a shared limiter.
+Per-IP, per-minute limits: session initialization 30, predictions 240, saves 60, and collection reads/exports 120. Exhausted limits return HTTP 429 with `Retry-After`; memory is bounded. Limits are process-local and reset on restart. The deployed backend trusts client IPs only on requests authenticated with the private Vercel proxy secret; arbitrary forwarded headers are untrusted. Multiple instances require a shared limiter.
 
 Startup validates the database URL, ML service origin, port, frontend origin and cookie setting. Public frontend origins require HTTPS and secure cookies; local HTTP is supported explicitly. Model responses are checked for finite probabilities in [0,1], matching distance conversion and bounded text; upstream response bodies and connection URLs are not sent to browsers.
 
