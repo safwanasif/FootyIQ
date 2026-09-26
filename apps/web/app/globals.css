@@ -130,7 +130,7 @@ h2 { font-size: 22px; letter-spacing: -.5px; font-weight: 500; margin: 0; }
 .evidence-grid dt { font-size: 11px; color: var(--muted); }
 .evidence-grid dd { font-size: 29px; font-weight: 400; margin: 9px 0 7px; letter-spacing: -.7px; font-variant-numeric: tabular-nums; }
 .evidence-grid dd span { font-size: 17px; }
-.evidence-grid small { display: block; font-size: 10px; color: var(--muted); }
+.evidence-grid small { display: block; margin-top: 7px; font-size: 10px; letter-spacing: normal; color: var(--muted); }
 .model-disclosure { border-top: 1px solid var(--line); padding: 15px 0; }
 .model-disclosure summary { font-size: 11px; cursor: pointer; }
 .model-disclosure p { color: var(--muted); line-height: 1.8; font-size: 11px; margin: 13px 0 0; }

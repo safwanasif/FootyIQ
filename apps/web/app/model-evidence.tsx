@@ -20,9 +20,9 @@ export default function ModelEvidence() {
         <div className="evidence-heading"><h3>Current prediction model</h3><span className="evidence-tag">Live in this app</span></div>
         <p className="evidence-description">Gradient boosting using distance, angle, body part, technique, shot type and build-up, trained across {research.competitions.length} men’s competitions. Model: {serving.id}.</p>
         <dl className="evidence-grid">
-          <div><dt>Training shots</dt><dd>{format(serving.shots)}</dd><small>Across {format(serving.matches)} matches</small></div>
-          <div><dt>ROC-AUC</dt><dd>{serving.auc.toFixed(3)}</dd><small>On the fresh test set</small></div>
-          <div><dt>Lower Brier score</dt><dd>{serving.brierImprovement.toFixed(1)}<span>%</span></dd><small>Vs. previous geometry model</small></div>
+          <div><dt>Training shots</dt><dd>{format(serving.shots)}<small>Across {format(serving.matches)} matches</small></dd></div>
+          <div><dt>ROC-AUC</dt><dd>{serving.auc.toFixed(3)}<small>On the fresh test set</small></dd></div>
+          <div><dt>Lower Brier score</dt><dd>{serving.brierImprovement.toFixed(1)}<span>%</span><small>Vs. previous geometry model</small></dd></div>
         </dl>
         <details className="model-disclosure"><summary>How the current model was evaluated</summary><p>The model was selected using nested match-grouped cross-validation, then fitted on all 30,011 development shots. Headline scores come from its separate test on 3,009 previously unused shots across 121 matches. These test shots were never used for training. ROC-AUC measures ranking, not percent accuracy; lower Brier means lower probability error.</p><a className="text-link evidence-link" href={`${reportUrl}context/selection.md`} target="_blank" rel="noreferrer">Training evaluation <ArrowUpRight size={14} /></a></details>
         <details className="model-disclosure"><summary>Limitations of today’s predictions</summary><p>The model includes shot context but omits defender and goalkeeper positions and player dominant foot. Tree estimates can flatten or behave unexpectedly in sparse regions. We withhold predictions outside the observed training distance range for the selected context; inside that range, estimates can still be poorly supported. Published metrics evaluate the model on the complete test set, before this serving restriction. Penalties and shootouts are excluded. On the fresh test, the 20–30% probability bin scored {(serving.calibration20to30 * 100).toFixed(1)}% of the time; higher-probability bins have few shots. The sample is selective; future-season and all-competition performance is not established.</p></details>
@@ -30,9 +30,9 @@ export default function ModelEvidence() {
         <div className="research-evidence" aria-labelledby="research-title">
           <div className="evidence-heading"><h3 id="research-title">Training data & sources</h3><span className="evidence-tag research-tag">Used by this model</span></div>
           <dl className="evidence-grid research-counts">
-            <div><dt>Unique shots</dt><dd>{format(research.shots)}</dd><small>Penalties and shootouts excluded</small></div>
-            <div><dt>Matches</dt><dd>{format(research.matches)}</dd><small>Whole matches stay together</small></div>
-            <div><dt>Competitions</dt><dd>{research.competitions.length}</dd><small>Senior men’s football</small></div>
+            <div><dt>Unique shots</dt><dd>{format(research.shots)}<small>Penalties and shootouts excluded</small></dd></div>
+            <div><dt>Matches</dt><dd>{format(research.matches)}<small>Whole matches stay together</small></dd></div>
+            <div><dt>Competitions</dt><dd>{research.competitions.length}<small>Senior men’s football</small></dd></div>
           </dl>
           <p className="research-finding"><strong>{uncertain ? "More shots alone did not establish a gain." : "The scaling comparison is available below."}</strong> That earlier geometry-only experiment is separate from the subsequent context-model improvement. On the same {format(research.testShots)} held-out shots, Brier score was {research.small.brier.toFixed(5)} with {format(research.small.trainingShots)} training shots and {research.large.brier.toFixed(5)} with {format(research.large.trainingShots)}. Lower is better.{uncertain ? " The uncertainty interval includes no difference." : ""}</p>
           <details className="model-disclosure">
