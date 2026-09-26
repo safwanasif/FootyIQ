@@ -18,9 +18,13 @@ Public deployment is live (2026-09-25); the broader v1 release gates below remai
 - Direct Render API access without the proxy credential returned HTTP 403.
 - Render recorded a successful service restart; the browser's previously saved shot remained afterward.
 - The actual free service runs with a 512 MB limit. Render's free dashboard hides memory/CPU usage metrics, so no observed peak-memory claim is made. The earlier CI container check passed with a 512 MB memory constraint.
-- Production backup/restore, dependency audits, attribution and the demo recording are complete. The controlled idle-to-awake check and hands-on screen-reader review remain open before the v1 tag. No paid plan or scheduled keep-alive workaround was enabled.
+- Production backup/restore, dependency audits, attribution, the demo recording and controlled idle-to-awake recovery are complete. Hands-on screen-reader review remains unverified before the v1 tag. No paid plan or scheduled keep-alive workaround was enabled.
 
 ## Recovery and audit follow-up
+
+### Confirmed cold start (September 25, MST)
+
+All live-demo tabs were closed and the backend was left without test requests for more than 20 minutes. Render recorded the old instance shutting down at 18:07:56, and a new instance starting at 18:42:53 after the demo was opened. ML startup completed at 18:43:02 and the API reported migrations applied at 18:43:06. The UI initially displayed its wake-up message and a collection connection error. Using **Retry prediction** and **Refresh collection** recovered the central 26.3% estimate and the existing 10:48 AM saved shot without reloading the page. Recovery was observed about 71 seconds after opening; this includes the manual wait and inspection time and is not a precise startup benchmark.
 
 The [September 25 CI run](https://github.com/safwanasif/FootyIQ/actions/runs/36203108328) passed a custom-format PostgreSQL backup and restore into a separate database. It compared complete shot rows (including context and collection ownership), migration versions and indexes, then verified the restored identity sequence. This uses disposable CI data, not a production Neon backup. The npm and Python advisory checks also passed; see [audit scope](dependency-audit.md).
 

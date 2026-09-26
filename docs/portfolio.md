@@ -36,7 +36,7 @@ The performance numbers describe the frozen context model's fresh, match-separat
 
 ## Remaining release work
 
-- Complete the idle-to-awake cold-start check; production backup/restore passed.
+- Production backup/restore and the idle-to-awake recovery check both passed.
 - Finish manual assistive-technology review; automated accessibility checks, dependency audits and attribution are complete.
 - Screenshots and a silent demo are included. Tag the release after the remaining checklist gates are resolved.
 
