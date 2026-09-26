@@ -52,6 +52,10 @@ The user already has Vercel. Create free accounts at [Render](https://dashboard.
 
 ## Free-tier limits and operations
 
+For an on-demand check, open GitHub Actions → **Public demo check** → **Run workflow**. It checks database readiness, a bounded prediction and the expected model ID without credentials or saved-shot writes. It allows one retry for startup. This is deliberately not scheduled and does not provide continuous uptime monitoring.
+
+For a controlled cold-start check, close the public app in all browsers and leave it without requests for at least 20 minutes. Then open it once and record whether the wake-up/retry message appears, whether Retry prediction recovers, and whether Refresh collection restores the saved history. Correlate with Render's lifecycle/log timestamps before claiming an actual sleep-to-awake test; a quick successful response alone could have reached an already-warm instance. The September 25 on-demand check passed in 0.81 seconds on its first attempt and is recorded only as warm availability evidence.
+
 [Render's free-service documentation](https://render.com/docs/free) says services sleep after 15 idle minutes and can take about a minute to wake. Its local filesystem is ephemeral, and its free PostgreSQL expires after 30 days, which is why this setup uses Neon. Do not run keep-alive traffic merely to defeat sleeping. The frontend explains that users may need to retry during startup.
 
 Render currently lists a 512 MB free instance. The combined container must pass an actual memory-constrained run; local unit tests alone cannot prove hosting capacity. [Neon's plans](https://neon.com/docs/introduction/plans) have usage/storage limits that must be confirmed during account setup. A free demo is not an availability SLA.

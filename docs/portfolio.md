@@ -2,6 +2,8 @@
 
 ## A two-minute demo
 
+Use the [timed narration and recording script](demo-script.md) when capturing a video. The video itself remains to be recorded.
+
 1. Open [the live demo](https://footy-iq-web.vercel.app/). If the free backend is waking up, retry after about a minute. For a local demo, start Docker Compose and `npm run dev:web`.
 2. Choose **Central chance**. Explain that xG is a probability estimate based on geometry and the displayed shot context, rather than a prediction that this specific shot will score.
 3. Pin the central chance, then choose **Tight angle**. Point out the lower xG and the difference in **percentage points**. The outlined marker keeps the reference position visible.
