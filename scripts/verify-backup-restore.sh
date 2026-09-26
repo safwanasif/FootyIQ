@@ -15,7 +15,8 @@ curl --fail --silent --cookie "$cookie_file" -H 'Content-Type: application/json'
   -d '{"id":"927f8515-e678-4941-87a8-9b6efec232fb","x":108,"y":40,"context":{"body_part":"Head","technique":"Normal","shot_type":"Open Play","play_pattern":"Regular Play"}}' \
   http://localhost:10000/api/v1/shots >/dev/null
 
-docker exec "$POSTGRES_CONTAINER" pg_dump -U "$db_user" -d "$source_db" --format=custom --no-owner --no-acl --file="$backup"
+# Exercise the same URI-through-environment expansion as backup-neon.ps1.
+docker exec -e "PGDATABASE=postgresql://footyiq_test:footyiq_test@127.0.0.1:5432/$source_db" "$POSTGRES_CONTAINER" sh -c 'exec pg_dump --dbname="$PGDATABASE" --format=custom --no-owner --no-acl --file=/tmp/footyiq-recovery.dump'
 # createdb fails if the target already exists; never overwrite a database.
 docker exec "$POSTGRES_CONTAINER" createdb -U "$db_user" "$restore_db"
 docker exec "$POSTGRES_CONTAINER" pg_restore -U "$db_user" -d "$restore_db" --exit-on-error --single-transaction --no-owner --no-acl "$backup"

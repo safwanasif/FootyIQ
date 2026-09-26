@@ -16,7 +16,9 @@ try {
     if ($env:PGDATABASE -notmatch '^postgres(?:ql)?://' -or $env:PGDATABASE -notmatch 'sslmode=(require|verify-full)') {
         throw 'Expected a PostgreSQL connection string with TLS required.'
     }
-    docker run --rm -e PGDATABASE -v "${backupDirectory}:/backup" postgres:18 pg_dump --format=custom --no-owner --no-acl --file=/backup/footyiq.dump
+    # libpq does not expand a URI supplied only through PGDATABASE into host/user settings.
+    # Expand it as pg_dump's explicit dbname inside the container, never in the host command.
+    docker run --rm -e PGDATABASE -v "${backupDirectory}:/backup" postgres:18 sh -c 'exec pg_dump --dbname="$PGDATABASE" --format=custom --no-owner --no-acl --file=/backup/footyiq.dump'
     Assert-DockerSuccess 'Neon backup'
     $env:PGDATABASE = $null
     $env:POSTGRES_PASSWORD = [guid]::NewGuid().ToString('N')
