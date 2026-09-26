@@ -24,15 +24,19 @@ The [fixed v1 roadmap](release-roadmap.md) controls scope. The September 24 amen
 - [x] Make the final keep/replace decision: retain linear regression, adopt the 30,011-shot fit for coverage, and close model experimentation.
 - [x] Add serving model identity to inference metadata and saved shots; version the model and its evidence together.
 - [ ] Finish data attribution, including the provider's requested logo, and model/data documentation.
-- [ ] Fresh-install verification and Python dependency security audit alongside npm audit.
+- [x] npm and Python requirements advisory audits: no known vulnerabilities reported on September 25; see [scope and limitations](dependency-audit.md).
+- [ ] Final fresh-install verification.
 - [ ] Final keyboard, screen-reader, contrast, mobile and error-state review.
 - [ ] README screenshots, architecture diagram and a concise demo recording.
 
 ## Deployment and release
 
-- [ ] Choose a free hosting layout after the project is ready; confirm current free-tier constraints.
-- [ ] Configure same-site HTTPS frontend/API, secrets, database backups, and proxy-aware request limits.
-- [ ] Verify public cookies, persistence, cold starts and the complete workflow.
+- [x] Deploy on Vercel Hobby, Render Free and Neon Free; document sleeping services and free-tier constraints.
+- [x] Configure same-site HTTPS frontend/API, production-only secrets, and proxy-aware request limits.
+- [x] Verify public predictions, distance guard, cookies, isolation, save/revisit/export and persistence after a backend restart.
+- [x] Verify a backup/restore rehearsal with realistic data in CI: [passing run](https://github.com/safwanasif/FootyIQ/actions/runs/36203108328).
+- [ ] Verify a production Neon archive using `scripts/backup-neon.ps1`; Docker is required and unavailable in the agent command environment.
+- [ ] Verify an idle-to-awake cold start.
 - [ ] Configure uptime checks, tag a release, and finalize accurate résumé bullets and interview notes.
 
-Deployment is intentionally pending. Current request limits use local process memory; restarts reset them and multiple instances need shared storage. Proxy trust remains disabled until the actual hosting topology can be configured safely.
+The [public deployment](https://footy-iq-web.vercel.app/) is live. See [verification evidence](free-deployment.md). Current request limits use local process memory; restarts reset them and multiple instances need shared storage. The backend trusts forwarded client IPs only on requests authenticated with the private Vercel proxy secret. A final release tag remains pending the unfinished checks above.

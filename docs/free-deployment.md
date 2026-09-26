@@ -20,6 +20,18 @@ Public deployment is live (2026-09-25); the broader v1 release gates below remai
 - The actual free service runs with a 512 MB limit. Render's free dashboard hides memory/CPU usage metrics, so no observed peak-memory claim is made. The earlier CI container check passed with a 512 MB memory constraint.
 - An idle-to-awake cold-start check, backup/restore rehearsal, dependency audit, attribution review, and final portfolio assets are still pending before a v1 release tag. No paid plan or keep-alive workaround was enabled.
 
+## Recovery and audit follow-up
+
+The [September 25 CI run](https://github.com/safwanasif/FootyIQ/actions/runs/36203108328) passed a custom-format PostgreSQL backup and restore into a separate database. It compared complete shot rows (including context and collection ownership), migration versions and indexes, then verified the restored identity sequence. This uses disposable CI data, not a production Neon backup. The npm and Python advisory checks also passed; see [audit scope](dependency-audit.md).
+
+To rehearse recovery of the actual Neon database, run the following in PowerShell with Docker Desktop running:
+
+```powershell
+.\scripts\backup-neon.ps1
+```
+
+At the hidden prompt, paste the production connection string from Neon's Connect dialog. The script uses PostgreSQL 18 tools, reads Neon with `pg_dump`, and restores the archive into a new local container. It never restores over Neon. It removes only its temporary restore container afterward and retains the backup under `%LOCALAPPDATA%\FootyIQ\backups`, outside the repository. Keep that directory private. A successful run prints restored shot counts and migration versions; record that result before checking off production recovery. Script syntax was checked, but this production run is still pending because Docker is unavailable in the agent environment. This is a manual recovery rehearsal, not a scheduled backup policy.
+
 ## Layout
 
 Vercel hosts `apps/web`. Its server routes proxy the existing API paths to one Render Docker service running Express and the Python model. Neon provides persistent PostgreSQL. Cookies stay on the Vercel domain, with their existing `/api/v1` path. Python listens only on the container loopback interface.
