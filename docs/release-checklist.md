@@ -23,11 +23,12 @@ The [fixed v1 roadmap](release-roadmap.md) controls scope. The September 24 amen
 - [x] Model improvement experiment: three predefined geometry models, nested match-grouped evaluation, and 3,014 unused final-test shots. The candidate did not pass the predefined promotion rule; retain the linear algorithm; release its evaluated expanded-data fit for broader coverage.
 - [x] Make the final keep/replace decision: retain linear regression, adopt the 30,011-shot fit for coverage, and close model experimentation.
 - [x] Add serving model identity to inference metadata and saved shots; version the model and its evidence together.
-- [ ] Finish data attribution, including the provider's requested logo, and model/data documentation.
+- [x] Finish data attribution, including the official provider logo, source links, independence notice and versioned model/data evidence.
 - [x] npm and Python requirements advisory audits: no known vulnerabilities reported on September 25; see [scope and limitations](dependency-audit.md).
 - [ ] Final fresh-install verification.
 - [ ] Final keyboard, screen-reader, contrast, mobile and error-state review.
-- [ ] README screenshots, architecture diagram and a concise demo recording.
+- [x] README screenshot, deployment architecture diagram and written demo walkthrough.
+- [ ] Concise demo recording.
 
 ## Deployment and release
 

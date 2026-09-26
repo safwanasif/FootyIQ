@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 import evidence from "../lib/model-evidence.json";
 
 const format = (value: number) => value.toLocaleString("en-US");
@@ -47,7 +48,10 @@ export default function ModelEvidence() {
           <p>Test coverage: {modelReview.competitions.map(item => item.name).join(", ")}. Brier difference: {modelReview.brierInterval.difference.toFixed(6)}, with a 95% match-bootstrap interval from {modelReview.brierInterval.lower_95.toFixed(6)} to {modelReview.brierInterval.upper_95.toFixed(6)}. This supports improvement on this test population; calibration and broader generalization remain limited.</p>
           <a className="text-link evidence-link" href={`${reportUrl}context/decision.md`} target="_blank" rel="noreferrer">Final model decision <ArrowUpRight size={14} /></a>
         </details>
-        <p className="data-credit">Source: StatsBomb Open Data · Counts and metrics generated from versioned reports</p>
+        <div className="data-attribution">
+          <a href="https://github.com/statsbomb/open-data" target="_blank" rel="noreferrer" className="provider-logo"><Image src="/statsbomb-logo.png" alt="StatsBomb — source of the open football data" width={5885} height={943} sizes="180px" style={{ width: 180, height: "auto" }} /></a>
+          <p className="data-credit">Source: StatsBomb Open Data · Counts and metrics generated from versioned reports. FootyIQ is an independent project, not affiliated with or endorsed by StatsBomb.</p>
+        </div>
       </div>
     </section>
   );

@@ -6,11 +6,21 @@ An interactive soccer expected-goals dashboard backed by a gradient-boosted mode
 
 For a short demo walkthrough, engineering talking points, and evidence-based resume bullets, see the [portfolio guide](docs/portfolio.md).
 
+![FootyIQ live shot analysis showing the pitch and expected-goals estimate](docs/images/shot-lab.png)
+
 ## Architecture
 
-`Next.js dashboard → Express API → FastAPI model service`
+```mermaid
+flowchart LR
+  Visitor[Browser: interactive pitch] --> Web[Vercel: Next.js UI and same-origin routes]
+  Web -->|Authenticated server requests| API[Render: Express gateway]
+  API -->|Container loopback| Model[FastAPI: versioned xG model]
+  API -->|TLS| DB[(Neon PostgreSQL: saved shots)]
+  Source[StatsBomb Open Data] --> Training[Offline training and match-grouped evaluation]
+  Training -->|Hash-verified artifact| Model
+```
 
-`Express API → PostgreSQL shot history`
+The database and proxy credentials remain server-side. The backend runs as one Docker service; the Python inference port is not public. Training is offline and does not run when visitors request predictions. [Data and logo attribution](docs/attribution.md).
 
 The browser receives live predictions through the gateway. Saving sends an ID, pitch coordinates, and shot context; the API calculates distance and angle, requests a fresh model prediction, and stores the result. Repeated requests with the same ID, position, and context return the original shot within the same collection. Database migrations run transactionally before the API starts listening.
 
