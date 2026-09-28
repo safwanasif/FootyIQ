@@ -4,7 +4,7 @@ An interactive soccer expected-goals dashboard backed by a gradient-boosted mode
 
 **[Try the live demo](https://footy-iq-web.vercel.app/)** — hosted on Vercel, Render, and Neon free plans. The backend sleeps after inactivity; if it is waking up, retry in about a minute. See the [deployment guide](docs/free-deployment.md) for configuration and verification status.
 
-For a short demo walkthrough, engineering talking points, and evidence-based resume bullets, see the [portfolio guide](docs/portfolio.md).
+See the [demo and engineering guide](docs/portfolio.md) for a walkthrough and the main implementation decisions.
 
 ![FootyIQ live shot analysis showing the pitch and expected-goals estimate](docs/images/shot-lab.png)
 

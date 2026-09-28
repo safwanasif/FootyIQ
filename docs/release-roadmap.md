@@ -9,7 +9,7 @@ The user authorized one final shot-context experiment before release. This super
 3. Integrate context controls only if the candidate passes the frozen promotion rule. Carry inputs through prediction, storage, revisit, comparison and export; preserve historical model identities. Otherwise ship the current model.
 4. Polish onboarding, comparison explanations, error/retry states, collection privacy explanations and accessibility/mobile behavior.
 5. Verify clean setup, dependency audits, Docker, migrations, meaningful regression coverage, persistence and measured latency.
-6. Finish attribution, model card, screenshots, architecture diagram, demonstration and evidence-backed resume bullets.
+6. Finish attribution, model card, screenshots, architecture diagram, demonstration and engineering documentation.
 7. Verify a free hosting arrangement, deploy with HTTPS/secrets/backups, test public workflows and cold starts, then tag v1.0.0.
 
 After release, further improvements belong to a separate backlog and must not delay publishing or starting another project. Accounts, live feeds, defender/goalkeeper geometry and additional model searches remain deferred.

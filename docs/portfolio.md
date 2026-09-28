@@ -1,4 +1,4 @@
-# FootyIQ portfolio guide
+# FootyIQ demo and engineering guide
 
 ## A two-minute demo
 
@@ -12,20 +12,7 @@ Use the [timed narration and recording script](demo-script.md) when capturing a 
 6. Open **The model**. Explain match-grouped evaluation, the baseline comparison, and the calibration limitations. Follow the link to the reproducible report.
 7. Show a passing GitHub Actions run and the API/database integration test. Explain the Vercel frontend, Render backend, and Neon database, including free-tier sleeping behavior.
 
-## Resume bullets
-
-Use the claims that match what you can explain and demonstrate:
-
-- Built and deployed a full-stack expected-goals app with an interactive pitch, shot comparisons, persistent collections, and CSV export.
-- Trained a gradient-boosted model on 30,011 StatsBomb shots across 12 competitions, achieving 0.819 ROC-AUC and 6.2% lower Brier score than the geometry baseline on 3,009 held-out shots.
-- Implemented validated API requests, idempotent saves, transactional database migrations, and cookie-scoped collections; verified isolation and persistence after a service restart.
-- Automated API, model, browser, and container checks with GitHub Actions; deployed the frontend, inference backend, and database on Vercel, Render, and Neon.
-
-Suggested heading: **FootyIQ — Soccer Analytics | Next.js, TypeScript, FastAPI, PostgreSQL, Docker**. Link the project title to the live demo and add the GitHub repository if space permits.
-
-The performance numbers describe the frozen context model's fresh, match-separated test set, following nested match-grouped model selection. They are not cross-validation scores, production accuracy, an external benchmark, or proof of generalization to every competition. The 6.2% figure is a relative reduction in Brier score against the geometry baseline on the same test set, not a percentage-point increase in classification accuracy. Anonymous cookie-scoped collections are not user accounts or cross-device recovery.
-
-## Engineering decisions worth discussing
+## Engineering decisions
 
 - **Gateway boundary:** the deployed browser calls same-origin Next.js routes, which authenticate requests to Express; Python listens inside the backend container. The browser holds no database or proxy credentials.
 - **Server-owned saved results:** saves accept coordinates, shot context, and an ID; the gateway derives geometry and requests the prediction before storing it.
@@ -46,10 +33,10 @@ The public URL, HTTPS, production secrets, proxy-aware request limits, cookie is
 
 - Built a reproducible StatsBomb acquisition pipeline for 30,011 unique non-penalty shots across 1,206 matches and 12 men's competitions; compared nested training sizes using a fixed match holdout and paired match-bootstrap uncertainty.
 
-This is a valid additional résumé bullet. Do not claim that scaling improved accuracy: the experiment did not establish a gain. See the [comparison](../services/ml/reports/expanded/comparison.md) and [remaining release checklist](release-checklist.md).
+This is a valid additional résumé bullet. Do not claim that scaling improved accuracy: the experiment did not establish a gain. See the [comparison](../services/ml/reports/expanded/comparison.md) and [release checklist](release-checklist.md).
 
 ## Completed v1 model comparison
 
-Compared three fixed geometry models using nested match-grouped validation, then evaluated the selected candidate on 3,014 previously unused shots. The boosted candidate improved point estimates but failed the predefined uncertainty-based promotion rule; kept the linear algorithm and subsequently released its 30,011-shot fit for broader competition coverage. This supports an interview discussion of selection bias, probability scoring, grouped evaluation, and release decisions, without claiming a statistically established accuracy improvement.
+Compared three fixed geometry models using nested match-grouped validation, then evaluated the selected candidate on 3,014 previously unused shots. The boosted candidate improved point estimates but failed the predefined uncertainty-based promotion rule; kept the linear algorithm and subsequently released its 30,011-shot fit for broader competition coverage. The experiment did not establish a statistically supported accuracy improvement.
 
-This geometry-only experiment is historical. The subsequent bounded context experiment qualified the current gradient-boosted model on a separate 3,009-shot test set. Its [decision](../services/ml/reports/context/decision.md) supports the current resume metrics. The [fixed release roadmap](release-roadmap.md) controls remaining release work; further model searches are deferred.
+This geometry-only experiment is historical. The subsequent bounded context experiment qualified the current gradient-boosted model on a separate 3,009-shot test set. Its [decision](../services/ml/reports/context/decision.md) documents the current model metrics. The [fixed release roadmap](release-roadmap.md) controls remaining release work; further model searches are deferred.
