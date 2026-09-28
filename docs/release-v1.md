@@ -1,4 +1,4 @@
-# FootyIQ v1.0.0 release notes (candidate)
+# FootyIQ v1.0.0 release notes
 
 Live demo: https://footy-iq-web.vercel.app/
 
@@ -28,7 +28,7 @@ Next.js runs on Vercel, the Express gateway and FastAPI model share a Render Doc
 
 ## Release status
 
-This is a release candidate document, not evidence that the release tag exists. The [checklist](release-checklist.md) records completed verification and remaining items. Promote only after its required checks are resolved; do not add features to finish the release.
+Release v1.0.0 closes the fixed feature and model scope on September 28, 2026. Verification includes passing CI, production backup/restore, confirmed sleep-to-awake recovery, automated accessibility checks and a user-reported Windows Narrator smoke check. See the [checklist](release-checklist.md) and [accessibility scope](accessibility.md).
 
 ## Maintenance policy
 

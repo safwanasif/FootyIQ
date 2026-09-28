@@ -1,6 +1,6 @@
 # Free deployment: Vercel + Render + Neon
 
-Public deployment is live (2026-09-25); the broader v1 release gates below remain open. Use free plans only. Do not enable paid upgrades or enter billing details to work around free-tier limits without a separate decision.
+Public deployment is live (2026-09-25); v1 verification completed September 28, 2026. Use free plans only. Do not enable paid upgrades or enter billing details to work around free-tier limits without a separate decision.
 
 ## Provisioning status
 
@@ -18,7 +18,7 @@ Public deployment is live (2026-09-25); the broader v1 release gates below remai
 - Direct Render API access without the proxy credential returned HTTP 403.
 - Render recorded a successful service restart; the browser's previously saved shot remained afterward.
 - The actual free service runs with a 512 MB limit. Render's free dashboard hides memory/CPU usage metrics, so no observed peak-memory claim is made. The earlier CI container check passed with a 512 MB memory constraint.
-- Production backup/restore, dependency audits, attribution, the demo recording and controlled idle-to-awake recovery are complete. Hands-on screen-reader review remains unverified before the v1 tag. No paid plan or scheduled keep-alive workaround was enabled.
+- Production backup/restore, dependency audits, attribution, the demo recording and controlled idle-to-awake recovery are complete. The user reported a successful Windows Narrator smoke check on September 28; this is not an exhaustive accessibility audit. No paid plan or scheduled keep-alive workaround was enabled.
 
 ## Recovery and audit follow-up
 

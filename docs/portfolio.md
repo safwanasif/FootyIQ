@@ -34,11 +34,11 @@ The performance numbers describe the frozen context model's fresh, match-separat
 - **Interaction correctness:** shot requests are debounced, aborted when superseded, and guarded against stale results. Pointer conversion accounts for the SVG viewBox.
 - **Honest evaluation:** matches stay together across folds, and the baseline learns its goal rate only from each training fold. Calibration bins show where estimates are unreliable.
 
-## Remaining release work
+## Release verification
 
 - Production backup/restore and the idle-to-awake recovery check both passed.
-- Finish manual assistive-technology review; automated accessibility checks, dependency audits and attribution are complete.
-- Screenshots and a silent demo are included. Tag the release after the remaining checklist gates are resolved.
+- User-reported Windows Narrator smoke check, automated accessibility checks, dependency audits and attribution are complete; see the documented test scope.
+- Screenshots and a silent demo are included in [v1.0.0](https://github.com/safwanasif/FootyIQ/releases/tag/v1.0.0).
 
 The public URL, HTTPS, production secrets, proxy-aware request limits, cookie isolation, CSV export, and persistence after a backend restart were verified on September 25. See [deployment evidence](free-deployment.md).
 

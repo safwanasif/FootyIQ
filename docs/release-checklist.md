@@ -27,7 +27,7 @@ The [fixed v1 roadmap](release-roadmap.md) controls scope. The September 24 amen
 - [x] npm and Python requirements advisory audits: no known vulnerabilities reported on September 25; see [scope and limitations](dependency-audit.md).
 - [x] Fresh CI checkout: npm clean install, Python dependencies, production build, full-stack browser workflow and clean deployment container verified in [run 36203384424](https://github.com/safwanasif/FootyIQ/actions/runs/36203384424).
 - [x] Automated desktop/mobile accessibility, contrast, disclosure-keyboard and error-recovery checks passed in [release CI](https://github.com/safwanasif/FootyIQ/actions/runs/36206042342). See [verification scope](accessibility.md).
-- [ ] Hands-on screen-reader review of pitch navigation and prediction announcements; not covered by axe.
+- [x] User-reported Windows Narrator smoke check passed September 28 for the requested keyboard/control and prediction-feedback workflow; see [scope and limitations](accessibility.md).
 - [x] README screenshot, deployment architecture diagram and written demo walkthrough.
 - [x] [Silent automated demo recording](media/footyiq-demo.webm), with presentation pauses and verified results against isolated CI services.
 
@@ -41,6 +41,6 @@ The [fixed v1 roadmap](release-roadmap.md) controls scope. The September 24 amen
 - [x] Verify an idle-to-awake cold start: September 25 Render logs show shutdown at 18:07:56 MST and a new instance starting at 18:42:53. The wake-up message appeared; prediction and collection retries recovered 26.3% xG and the existing saved shot without a page reload.
 - [x] Add an on-demand public health and inference workflow; no scheduled traffic to defeat free-tier sleep. Local public check passed in 0.81 seconds on September 25.
 - [x] Finalize evidence-based résumé bullets and interview notes in the portfolio guide; prepare the two-minute recording script.
-- [ ] Tag the final release after remaining checks are resolved.
+- [x] Publish the final [v1.0.0 release](https://github.com/safwanasif/FootyIQ/releases/tag/v1.0.0).
 
-The [public deployment](https://footy-iq-web.vercel.app/) is live. See [verification evidence](free-deployment.md). Current request limits use local process memory; restarts reset them and multiple instances need shared storage. The backend trusts forwarded client IPs only on requests authenticated with the private Vercel proxy secret. A final release tag remains pending the unfinished checks above.
+The [public deployment](https://footy-iq-web.vercel.app/) is live. See [verification evidence](free-deployment.md). Current request limits use local process memory; restarts reset them and multiple instances need shared storage. The backend trusts forwarded client IPs only on requests authenticated with the private Vercel proxy secret. The v1.0.0 release closes this checklist; further feature/model work is deferred.

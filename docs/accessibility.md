@@ -4,7 +4,7 @@ The September 25 [release CI run](https://github.com/safwanasif/FootyIQ/actions/
 
 Browser regression tests verify keyboard activation of the competition disclosure, prediction/history error recovery, and understandable unsupported-distance feedback. The pitch supports arrow keys and Shift for larger steps, context selectors have labels, predictions use a polite live region, and the page has a skip link.
 
-These checks do not establish full WCAG conformance. A hands-on NVDA/VoiceOver review has not been completed; in particular, the usability of pitch navigation and live prediction announcements with a screen reader remains unverified. This limitation must remain visible in release documentation rather than being represented as a passed manual screen-reader test.
+On September 28, the user reported that the requested Windows Narrator smoke check worked: keyboard focus/control announcements, changing Body part to Head, and the Long range unsupported-distance message. This is a user-reported smoke check, not an exhaustive assistive-technology audit. Browser and Narrator versions were not recorded. These results do not establish full WCAG conformance or coverage of other screen readers.
 
 ## Manual release check
 
