@@ -33,7 +33,7 @@ The public URL, HTTPS, production secrets, proxy-aware request limits, cookie is
 
 - Built a reproducible StatsBomb acquisition pipeline for 30,011 unique non-penalty shots across 1,206 matches and 12 men's competitions; compared nested training sizes using a fixed match holdout and paired match-bootstrap uncertainty.
 
-This is a valid additional résumé bullet. Do not claim that scaling improved accuracy: the experiment did not establish a gain. See the [comparison](../services/ml/reports/expanded/comparison.md) and [release checklist](release-checklist.md).
+The scaling experiment did not establish an accuracy improvement. See the [comparison](../services/ml/reports/expanded/comparison.md) and [release checklist](release-checklist.md).
 
 ## Completed v1 model comparison
 

@@ -40,7 +40,7 @@ The [fixed v1 roadmap](release-roadmap.md) controls scope. The September 24 amen
 - [x] Verify a production Neon archive using `scripts/backup-neon.ps1`: user-run PostgreSQL 18 restore passed September 25, recovering 2 saved shots and migrations 1–4 into an isolated local database. Private archive retained outside Git.
 - [x] Verify an idle-to-awake cold start: September 25 Render logs show shutdown at 18:07:56 MST and a new instance starting at 18:42:53. The wake-up message appeared; prediction and collection retries recovered 26.3% xG and the existing saved shot without a page reload.
 - [x] Add an on-demand public health and inference workflow; no scheduled traffic to defeat free-tier sleep. Local public check passed in 0.81 seconds on September 25.
-- [x] Finalize evidence-based résumé bullets and interview notes in the portfolio guide; prepare the two-minute recording script.
+- [x] Finalize the demo and engineering guide and the two-minute recording script.
 - [x] Publish the final [v1.0.0 release](https://github.com/safwanasif/FootyIQ/releases/tag/v1.0.0).
 
 The [public deployment](https://footy-iq-web.vercel.app/) is live. See [verification evidence](free-deployment.md). Current request limits use local process memory; restarts reset them and multiple instances need shared storage. The backend trusts forwarded client IPs only on requests authenticated with the private Vercel proxy secret. The v1.0.0 release closes this checklist; further feature/model work is deferred.

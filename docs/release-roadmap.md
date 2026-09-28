@@ -54,7 +54,7 @@ Done when the model, UI claims and saved predictions are traceable and regressio
 
 - Verify clean setup, dependency audits, full-stack tests and Docker rebuild.
 - Complete StatsBomb attribution, including its requested logo, and document data/model limitations.
-- Add README screenshots, an architecture diagram, a two-minute demo, and final résumé bullets supported by measured results.
+- Add README screenshots, an architecture diagram, a two-minute demo, and engineering documentation supported by measured results.
 
 Done when another developer can run the project and a reviewer can understand it without this conversation.
 
